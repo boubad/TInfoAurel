@@ -11,5 +11,20 @@
         "./**/*.ts",
         "!./jspm_packages/**/*.ts",
         "!./node_modules/**/*.ts"
+    ],
+    "files": [
+        "./src/appconfig.ts",
+        "./src/data/domain/baseitem.ts",
+        "./src/data/domain/departement.ts",
+        "./src/data/domain/itemgenerator.ts",
+        "./src/data/domain/mycrypto.ts",
+        "./src/data/domain/person.ts",
+        "./src/data/domain/siglenameitem.ts",
+        "./src/data/services/pouchdb/maintainsdatabase.ts",
+        "./src/data/services/pouchdb/pouchdatabase.ts",
+        "./src/infodata.d.ts",
+        "./src/resources/index.ts",
+        "./typings/aurelia/aurelia.d.ts",
+        "./typings/pouchdb/pouchdb.d.ts"
     ]
 }

@@ -4,6 +4,7 @@ import {IBaseItem,IItemGenerator} from '../../infodata.d';
 //
 import {BaseItem} from './baseitem';
 import {Person} from './person';
+import {Departement} from './departement';
 //
 export class ItemGenerator implements IItemGenerator {
 	constructor(){}
@@ -17,6 +18,8 @@ export class ItemGenerator implements IItemGenerator {
            let t = oMap.type.trim().toLowerCase();
            if (t == 'person'){
                return new Person(oMap);
+           } else if (t == 'departement'){
+            return new Departement(oMap);
            }
 		 return null;
 		}// create_item

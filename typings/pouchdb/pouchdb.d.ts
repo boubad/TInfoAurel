@@ -170,6 +170,15 @@ interface PouchQueryOptions {
 	error?: (err: PouchError) => void;
 	descending?: boolean;
 	reduce?: boolean;
+	startkey?:any;
+	endkey?:any;
+	inclusive_end?:boolean;
+	skip?:number;
+	limit?:number;
+	keys?:any[];
+	group?:boolean;
+	group_level?:number;
+	stale?:string;
 }
 
 interface PouchQueryResponse {

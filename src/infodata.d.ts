@@ -49,17 +49,23 @@ export interface ISigleNameItem extends IBaseItem {
 	sigle:string;
 	name: string;
 }//interface ISigleNameItem
+export interface IDepartement extends ISigleNameItem {
+
+}// interface IDepartement
 export interface IItemGenerator {
      create_item : (oMap?:any) => IBaseItem;
      convert_items: (docs:any[]) => IBaseItem[];
      }// interface IItemGenerator
 export interface IElementDesc {
      id:string;
+     rev?:string;
      text:string;
      avatardocid?:string;
      avatarid?:string;
      url?:string;
      personid?:string;
+     startDate?:Date;
+     endDate?:Date;
      //
      has_url?:boolean;
 }// interface IElementDesc
@@ -67,4 +73,14 @@ export interface IDatabaseManager {
      check_admin: () => Promise<any>;
      find_item_by_id: (id:string,bAttach?:boolean) => Promise<IBaseItem>;
      find_person_by_username: (username:string,bAttach?:boolean) => Promise<IPerson>;
+     find_items_array: (ids:string[],bAttachments?:boolean) => Promise<IBaseItem[]> ;
+     find_elements: (viewName:string,startKey?:any,
+      skip?:number,limit?:number,bDesc?:boolean) => Promise<IElementDesc[]>;
+     maintains_item : (item:IBaseItem) => Promise<IBaseItem>;
+     maintains_items : (items:IBaseItem[]) => Promise<IBaseItem[]>;
+     remove_item : (item:IBaseItem) => Promise<any>;
+    find_attachment: (docid:string,attachmentId:string) => Promise<Blob>;
+    maintains_attachment : (docid:string,attachmentId:string,
+    attachmentData:Blob,attachmentType:string) => Promise<any>;
+    remove_attachment : (docid:string,attachmentId:string) => Promise<any>;
      }// IDatabaseManager
