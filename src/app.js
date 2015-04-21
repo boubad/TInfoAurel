@@ -8,11 +8,10 @@ export class App {
   constructor(router) {
     this.router = router;
     this.router.configure(config => {
-      config.title = 'Aurelia';
+      config.title = 'InfoApp';
       config.map([
-        { route: ['','welcome'],  moduleId: './welcome',      nav: true, title:'Welcome' },
-        { route: 'flickr',        moduleId: './flickr',       nav: true },
-        { route: 'child-router',  moduleId: './child-router', nav: true, title:'Child Router' }
+        { route: ['','home'],  moduleId: './viewmodels/login',      nav: true, title:'Accueil' },
+        { route: 'admin-router',  moduleId: './viewmodels/admin/admin-router', nav: true, title:'Administration' }
       ]);
     });
   }

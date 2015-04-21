@@ -13,6 +13,7 @@ export class ElementDesc implements IElementDesc {
      public personid:string;
      public startDate:Date;
      public endDate:Date;
+     public key:any;
      //
   constructor(oMap?: any) {
     this.id = null;
@@ -24,6 +25,7 @@ export class ElementDesc implements IElementDesc {
     this.personid = null;
     this.startDate = null;
     this.endDate = null;
+    this.key = null;
     if ((oMap !== undefined) && (oMap !== null)) {
       if (oMap.id !== undefined) {
         this.id = oMap.id;
@@ -48,6 +50,9 @@ export class ElementDesc implements IElementDesc {
       }
       if (oMap.endDate !== undefined) {
         this.endDate = oMap.endDate;
+      }
+      if (oMap.key !== undefined){
+        this.key = oMap.key;
       }
     }// oMap
   }// constructor

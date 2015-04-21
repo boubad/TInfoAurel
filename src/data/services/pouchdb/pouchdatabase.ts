@@ -4,7 +4,6 @@
 /// <reference path='../../../infodata.d.ts' />
 //
 import {IBaseItem,IPerson,IItemGenerator,IDatabaseManager,IElementDesc} from '../../../infodata.d';
-import {PouchDB} from 'pouchdb';
 import {MyCrypto} from '../../domain/mycrypto';
 import {Person} from '../../domain/person';
 import {ElementDesc} from '../../domain/elementdesc';
@@ -12,7 +11,7 @@ import {ItemGenerator} from '../../domain/itemgenerator';
 //
 const DATABASE_NAME = 'geninfo';
 //
-
+declare var PouchDB:any;
 //
 export class PouchDatabase implements IDatabaseManager {
 		private generator:IItemGenerator;
@@ -31,7 +30,7 @@ export class PouchDatabase implements IDatabaseManager {
 					resolve(self._db);
 				} else {
 					let xx = new PouchDB(self.url,(err,xdb)=>{
-						if ((err !== undefined) && (self !== null)){
+						if ((err !== undefined) && (err !== null)){
 							reject(new Error(err.reason));
 						} else {
 							self._db = xdb;

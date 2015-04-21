@@ -508,4 +508,19 @@ export class MaintainsDatabase extends PouchDatabase {
     pp.push(this.create_etudevents_design_docs());
     return Promise.all(pp);
   }//create_design_docs
+  public check_schema(): Promise<any> {
+      let id = '_design/departements';
+      let self = this;
+      return this.db.then((xdb) =>{
+        return xdb.get(id);
+        }).then((p)=>{
+            return true;
+          },(err)=>{
+            if (err.status == 404){
+                return self.create_design_docs();
+              } else {
+                throw new Error(err.status);
+              }
+            });
+    }// check_schema
 }// class MaintainsDatabase

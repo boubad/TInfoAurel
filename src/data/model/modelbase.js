@@ -1,0 +1,134 @@
+import { DataService } from '../services/dataservice';
+import { UserInfo } from './userinfo';
+//
+export class BaseViewModel {
+    //
+    constructor() {
+        this._userinfo = null;
+        this._dataService = null;
+        this.infoMessage = null;
+        this.errorMessage = null;
+    } // constructor
+    confirm(message) {
+        return window.confirm(message);
+    }
+    createUrl(blob) {
+        let sRet = null;
+        if ((blob !== undefined) && (blob !== null)) {
+            try {
+                sRet = window.URL.createObjectURL(blob);
+            }
+            catch (e) {
+                console.log(e.toString());
+            }
+        }
+        return sRet;
+    }
+    revokeUrl(s) {
+        if ((s !== undefined) && (s !== null)) {
+            window.revokeObjectURL(s);
+        }
+    }
+    get userInfo() {
+        if (this._userinfo === null) {
+            this._userinfo = new UserInfo();
+        }
+        return this._userinfo;
+    } // userInfo
+    get dataService() {
+        if (this._dataService === null) {
+            this._dataService = new DataService();
+        }
+        return this._dataService;
+    } // dataService
+    update_title() {
+    } // update_title
+    get hasErrorMessage() {
+        return (this.errorMessage !== null) && (this.errorMessage.length > 0);
+    }
+    set hasErrorMessage(b) {
+    }
+    get hasInfoMessage() {
+        return (this.infoMessage !== null) && (this.infoMessage.length > 0);
+    }
+    set hasInfoMessage(b) {
+    }
+    clear_error() {
+        this.errorMessage = null;
+        this.hasInfoMessage = null;
+    }
+    set_error(err) {
+        if ((err !== undefined) && (err !== null)) {
+            if ((err.message !== undefined) && (err.message !== null)) {
+                this.errorMessage = (err.message.length > 0) ? err.message : 'Erreur inconnue...';
+            }
+            else if ((err.msg !== undefined) && (err.msg !== null)) {
+                this.errorMessage = (err.msg.length > 0) ? err.msg : 'Erreur inconnue...';
+            }
+            else if ((err.reason !== undefined) && (err.reason !== null)) {
+                this.errorMessage = err.reason;
+            }
+            else {
+                this.errorMessage = JSON.stringify(err);
+            }
+        }
+        else {
+            this.errorMessage = 'Erreur inconnue...';
+        }
+    } // set_error
+    get isConnected() {
+        let x = this.userInfo;
+        return x.isConnected;
+    } // isConnected
+    get isNotConnected() {
+        return (!this.isConnected);
+    }
+    disconnect() {
+        if (this.confirm("Voulez-vous vraiment quitter?")) {
+            this.userInfo.person = null;
+        }
+    } // disconnect
+    get fullname() {
+        return this.userInfo.fullname;
+    }
+    get photoUrl() {
+        return this.userInfo.photoUrl;
+    }
+    get hasPhoto() {
+        return this.userInfo.hasPhoto;
+    }
+    retrieve_one_avatar(item) {
+        let service = this.dataService;
+        let self = this;
+        return new Promise((resolve, reject) => {
+            let docid = item.avatardocid;
+            let id = item.avatarid;
+            item.url = null;
+            if ((docid === null) || (id === null)) {
+                resolve(item);
+            }
+            else {
+                service.find_attachment(docid, id).then((blob) => {
+                    if ((blob === undefined) || (blob === null)) {
+                        resolve(item);
+                    }
+                    else {
+                        let x = self.createUrl(blob);
+                        item.url = x;
+                        resolve(item);
+                    }
+                }, (err) => {
+                    resolve(item);
+                });
+            }
+        });
+    } // retrieve_one_avatar
+    retrieve_avatars(elems) {
+        let pp = [];
+        for (let elem of elems) {
+            pp.push(this.retrieve_one_avatar(elem));
+        }
+        return Promise.all(pp);
+    } // retrieve_avatars
+}
+ // class BaseViewModel

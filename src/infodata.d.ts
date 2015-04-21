@@ -20,6 +20,9 @@ export interface IBaseItem {
      to_map: (oMap:any) => void;
      toString: () =>string;
      sort_func : (p1:IBaseItem, p2:IBaseItem)=> number;
+     //
+     sigle?:string;
+     name?:string;
 	}// interface IBaseItem
 export interface IPerson extends IBaseItem {
       username:string;
@@ -66,6 +69,7 @@ export interface IElementDesc {
      personid?:string;
      startDate?:Date;
      endDate?:Date;
+     key?:any;
      //
      has_url?:boolean;
 }// interface IElementDesc
