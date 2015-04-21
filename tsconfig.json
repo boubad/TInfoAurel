@@ -1,0 +1,15 @@
+{
+    "version": "1.5.0-alpha",
+    "compilerOptions": {
+        "target": "es6",
+        "declaration": false,
+        "noImplicitAny": false,
+        "removeComments": true,
+        "noLib": false
+    },
+    "filesGlob": [
+        "./**/*.ts",
+        "!./jspm_packages/**/*.ts",
+        "!./node_modules/**/*.ts"
+    ]
+}
