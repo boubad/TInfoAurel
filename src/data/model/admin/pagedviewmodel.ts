@@ -3,16 +3,15 @@
 import {IBaseItem,IElementDesc,IItemGenerator} from '../../../infodata.d';
 //
 import {BaseViewModel} from '../modelbase';
-import {ItemGenerator} from '../../domain/itemgenerator';
+
 //
 export class PagedViewModel extends BaseViewModel {
 	//
 	protected modelItem:IBaseItem;
-	protected generator:IItemGenerator;
 	protected add_mode:boolean;
-	protected old_elem:IElementDesc;
+	protected old_elem:IBaseItem;
 	protected _current:IBaseItem;
-	protected _current_element:IElementDesc;
+	protected _current_element:IBaseItem;
 	protected next_key:any;
 	protected prev_key:any;
 	protected start_key:any;
@@ -21,15 +20,14 @@ export class PagedViewModel extends BaseViewModel {
 	protected skip:number;
 	protected hasAvatars:boolean;
 	//
-	public elements:IElementDesc[];
+	public elements:IBaseItem[];
 	//
 	constructor(model:IBaseItem){
 		super();
 		this.modelItem = model;
-		this.generator = null;
 		this.add_mode = false;
 		this.old_elem = null;
-    	this._current = null;
+    this._current = this.generator.create_item({type: model.type});
 		this._current_element = null;
 		this.next_key = null;
 		this.prev_key = null;
@@ -62,9 +60,6 @@ export class PagedViewModel extends BaseViewModel {
      this.post_change_item();
   }
 protected create_item(): IBaseItem {
-    if (this.generator === null){
-      this.generator = new ItemGenerator();
-    }
     let model = this.modelItem;
     let p = this.generator.create_item({type: model.type});
 	return p;
@@ -72,6 +67,7 @@ protected create_item(): IBaseItem {
 public addNew() : void {
 		this.old_elem = this.current_element;
 		this.current_element = null;
+    this.change_current();
 		this.add_mode = true;
 	}// addNew
 public cancel_add(): void {
@@ -81,28 +77,28 @@ public cancel_add(): void {
 protected change_current() : any {
 		let ep = this.current_element;
 		if (ep === null){
-			this.current_item = null;
+			this.current_item = this.create_item();
 			return true;
 		}
 		let id = ((ep.id !== undefined) && (ep.id !== null)) ? ep.id : null;
 		if (id === null){
-			this.current_item = null;
+			this.current_item = this.create_item();
 			return true;
 		}
 		var self = this;
 		return this.dataService.find_item_by_id(id,true).then((r)=>{
-			self.current_item = ((r !== undefined) && (r !== null)) ? r : null;
+			self.current_item = ((r !== undefined) && (r !== null)) ? r : this.create_item();;
 		},(err)=>{
-			self.current_item = null;
+			self.current_item = this.create_item();;
 		});
 	}// change_current
   protected post_change_item() : any {
     return true;
   }// post_change_item
-  public get current_element(): IElementDesc{
+  public get current_element(): IBaseItem{
     return this._current_element;
   }
-  public set current_element(s:IElementDesc){
+  public set current_element(s:IBaseItem){
     this._current_element = ((s !== undefined) && (s !== null)) ? s : null;
     this.change_current();
   }
@@ -112,17 +108,29 @@ protected change_current() : any {
   public get hasElements(): boolean {
     return ((this.elements !== null) && (this.elements.length > 0));
   }
+  public set hasElements(b:boolean){
+
+  }
  public get canAdd(): boolean {
 		return (!this.add_mode);
 	}
+  public set canAdd(s:boolean){
+
+  }
 public get canCancel(): boolean {
 		return this.add_mode;
 	}
+  public set canCancel(s:boolean){
+
+  }
 public get canRemove(): boolean {
 		let x = this.current_element;
 		return ((x !== null) && (x.id !== undefined) && (x.rev !== undefined) &&
 			(x.id !== null) && (x.rev !== null));
 	}
+  public set canRemove(s:boolean){
+
+  }
 public remove() : any {
 		let item = this.current_item;
 		if (item === null){
@@ -144,12 +152,15 @@ public remove() : any {
 		let x = this.current_item;
 		return (x !== null) && (x.is_storeable !== undefined) && (x.is_storeable() == true);
 	}
+  public set canSave(s:boolean){
+
+  }
 	public save(): any {
 		let item = this.current_item;
 		if (item === null){
 			return false;
 		}
-		if (!item.is_storeable){
+		if (!item.is_storeable()){
 			return false;
 		}
 		var self = this;
@@ -184,7 +195,7 @@ public remove() : any {
     let oldid = (this.current_item !== null) ? this.current_item.id : null;
     var self = this;
     let viewName = model.index_name;
-    return this.dataService.find_elements(viewName,startKey,
+    return this.dataService.get_items(model,startKey,
       skip,limit,descending).then((rr)=>{
       	if (self.hasAvatars){
       		return self.retrieve_avatars(rr);
@@ -204,9 +215,9 @@ public remove() : any {
         } else  if (n > 0) {
           self.skip = 0;
           let y = dd[0];
-          self.prev_key = y.key;
+          self.prev_key = y.id;
           let x = dd[ n - 1];
-          self.next_key = x.key;
+          self.next_key = x.id;
           self.canNextPage = true;
         }
         self.elements = dd;

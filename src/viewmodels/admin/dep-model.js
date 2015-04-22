@@ -1,6 +1,5 @@
 //dep-model.js
 //
-import {inject} from 'aurelia-framework';
 //
 import {SigleNameModel} from '../../data/model/admin/siglenamemodel';
 import {Departement} from '../../data/domain/departement';

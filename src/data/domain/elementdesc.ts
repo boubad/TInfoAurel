@@ -56,8 +56,14 @@ export class ElementDesc implements IElementDesc {
       }
     }// oMap
   }// constructor
-  get hasUrl(): boolean {
+  public get hasUrl(): boolean {
     return ((this.url !== undefined) &&
       (this.url !== null) && (this.url.trim().length > 0));
+  }
+  public set hasUrl(b:boolean){
+
+  }
+  public toString():string {
+    return this.text;
   }
 }// class ElementDesc

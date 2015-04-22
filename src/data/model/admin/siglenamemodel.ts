@@ -1,4 +1,4 @@
-//siglenamemodel.js
+//siglenamemodel.ts
 import {IBaseItem} from '../../../infodata.d';
 //
 import {PagedViewModel} from './pagedviewmodel';

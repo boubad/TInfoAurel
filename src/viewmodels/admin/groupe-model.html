@@ -1,0 +1,72 @@
+<template>
+	<h2>${title}</h2>
+	<div class="container" if.bind="isConnected">
+		<div>
+			<div class="row">
+				<div class="col-md-4">&nbsp;</div>
+				<div class="col-md-1">
+						${fullname}
+				</div>
+				<div class="col-md-1">
+					<img show.bind="hasPhoto" src.bind="photoUrl" heigth="48"></img>
+				</div>
+				<div class="col-md-1">
+					<a href="#" click.delegate="disconnect()">Déconnecter</a>
+				</div>
+				<div class="col-md-4">&nbsp;</div>
+			</div>
+		</div>
+		<h3 show.bind = "hasErrorMessage" class="text-danger">$(errorMessage)</h3>
+		<h3 show.bind = "hasInfoMessage" class="text-success">$(infoMessage)</h3>
+		<div class="row">
+			<div class="col-md-4">&nbsp;</div>
+			<div class="col-md-4">
+				<div class="form-group">
+					<label class="form-label" for="departements">Département</label>
+					<select id="departements" value.bind="departement_elem">
+						<option>Département...</option>
+				<option repeat.for="depelem of departements" model.bind="depelem">${depelem.text}</option>
+			</select>
+				</div>
+			</div>
+			<div class="col-md-4">&nbsp;</div>
+		</div>
+		<div class="row" if.bind="hasDepartement">
+			<div class="col-md-4" if.bind="hasElements">
+			<select value.bind="current_element" size.bind="itemsPerPage">
+				<option repeat.for="elem of elements" model.bind="elem">${elem.text}</option>
+			</select>
+			<div class="btn-group" show.bind="hasPages">
+				<button type="button" show.bind="canPrevPage" click.delegate="prevPage()" class="btn btn-primary">Pg. précédente</button>
+				<button type="button" show.bind="canNextPage" click.delegate="nextPage()" class="btn btn-primary">Pg. suivante</button>
+			</div>
+		</div>
+		<div class="col-md-4">
+			<div>
+				<button type="button" click.delegate="refreshAll()" class="btn btn-primary">Rafraîchir</button>
+			</div>
+			<form role="form">
+				<div class="form-group">
+					<label class="form-label" for="sigle">Abbréviation</label>
+					<input class="form-control" type="text" id="sigle" value.bind="sigle" 
+					placeholder="Abbréviation" required></input>
+				</div>
+				<div class="form-group">
+					<label class="form-label" for="name">Nom</label>
+					<input class="form-control" type="text" id="name" value.bind="name" placeholder="Nom"></input>
+				</div>
+				<div class="form-group">
+					<label class="form-label" for="description">Description</label>
+					<textarea class="form-control" id="description" value.bind="description"></textarea>
+				</div>
+				<div class="btn-group">
+                      <button type="button" show.bind="canAdd" click.delegate="addNew()" class="btn btn-primary">Nouveau</button>
+                      <button type="button" show.bind="canCancel" click.delegate="cancel_add()" class="btn btn-primary">Annuler</button>
+                      <button type="button" show.bind="canSave" click.delegate="save()" class="btn btn-primary">Enregistrer</button>
+                      <button type="button" show.bind="canRemove" click.delegate="remove()" class="btn btn-primary">Supprimer</button>
+                </div>
+			</form>
+		</div>
+		</div>
+	</div>
+</template>

@@ -13,6 +13,12 @@ export class UserInfo extends SessionObjectStore {
     super();
     this._person = null;
   }// constructor
+  public get username():string {
+    return super.get_value('username');
+  }
+  public set username(s:string){
+    super.store_value('username',s);
+  }
   public get description():string {
     return super.get_value('description');
   }
@@ -155,6 +161,7 @@ export class UserInfo extends SessionObjectStore {
     this.firstname = null;
     this.lastname = null;
     this.fullname = null;
+    this.username = null;
     this.email = null;
     this.phone = null;
     this.description = null;
@@ -165,6 +172,7 @@ export class UserInfo extends SessionObjectStore {
       let docid = p.id;
       this.personid = docid;
       this.personrev = p.rev;
+      this.username = p.username;
       this.firstname = p.firstname;
       this.lastname = p.lastname;
       this.fullname = p.fullname;

@@ -1,7 +1,9 @@
 //modelbase.ts
 //
-import {IElementDesc, IPerson,IDatabaseManager} from '../../infodata.d';
+import {IBaseItem,
+  IItemGenerator, IElementDesc, IPerson,IDatabaseManager} from '../../infodata.d';
 import {DataService} from '../services/dataservice';
+import {ItemGenerator} from '../domain/itemgenerator';
 import {UserInfo} from './userinfo';
 //
 declare var window:any;
@@ -10,6 +12,7 @@ export class BaseViewModel {
 	//
 	private _userinfo:UserInfo;
 	private _dataService :IDatabaseManager;
+  private _gen:IItemGenerator;
 	//
 	public title:string;
 	public errorMessage:string;
@@ -18,6 +21,7 @@ export class BaseViewModel {
 	constructor(){
 			this._userinfo = null;
 			this._dataService = null;
+      this._gen = null;
 			this.infoMessage = null;
 			this.errorMessage = null;
 		}// constructor
@@ -39,6 +43,12 @@ export class BaseViewModel {
     if ((s !== undefined) && (s !== null)){
       window.revokeObjectURL(s);
     }
+  }
+  public get generator(): IItemGenerator {
+    if (this._gen === null){
+      this._gen = new ItemGenerator();
+    }
+    return this._gen;
   }
 	public get userInfo(): UserInfo {
 		if (this._userinfo === null){
@@ -89,8 +99,14 @@ export class BaseViewModel {
     	 let x = this.userInfo;
     	 return x.isConnected;
     	}// isConnected
+      public set isConnected(s:boolean){
+
+      }
     public get isNotConnected() : boolean {
     	return (!this.isConnected);
+    }
+    public set isNotConnected(s:boolean){
+
     }
     public disconnect() : void {
     	 if (this.confirm("Voulez-vous vraiment quitter?")){
@@ -106,7 +122,10 @@ export class BaseViewModel {
      public get hasPhoto():boolean {
       return this.userInfo.hasPhoto;
      }
-     protected retrieve_one_avatar(item:IElementDesc) : Promise<IElementDesc> {
+     public set hasPhoto(s:boolean){
+
+     }
+     protected retrieve_one_avatar(item:IBaseItem) : Promise<IBaseItem> {
   let service = this.dataService;
   let self = this;
      return new Promise((resolve,reject) =>{
@@ -130,7 +149,7 @@ export class BaseViewModel {
        }
       });
     }// retrieve_one_avatar
-    protected retrieve_avatars(elems:IElementDesc[]) : Promise<IElementDesc[]>  {
+    protected retrieve_avatars(elems:IBaseItem[]) : Promise<IBaseItem[]>  {
     let pp = [];
     for (let elem of elems){
       pp.push(this.retrieve_one_avatar(elem));

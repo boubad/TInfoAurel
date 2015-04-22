@@ -1,4 +1,5 @@
 import { DataService } from '../services/dataservice';
+import { ItemGenerator } from '../domain/itemgenerator';
 import { UserInfo } from './userinfo';
 //
 export class BaseViewModel {
@@ -6,6 +7,7 @@ export class BaseViewModel {
     constructor() {
         this._userinfo = null;
         this._dataService = null;
+        this._gen = null;
         this.infoMessage = null;
         this.errorMessage = null;
     } // constructor
@@ -28,6 +30,12 @@ export class BaseViewModel {
         if ((s !== undefined) && (s !== null)) {
             window.revokeObjectURL(s);
         }
+    }
+    get generator() {
+        if (this._gen === null) {
+            this._gen = new ItemGenerator();
+        }
+        return this._gen;
     }
     get userInfo() {
         if (this._userinfo === null) {
@@ -80,8 +88,12 @@ export class BaseViewModel {
         let x = this.userInfo;
         return x.isConnected;
     } // isConnected
+    set isConnected(s) {
+    }
     get isNotConnected() {
         return (!this.isConnected);
+    }
+    set isNotConnected(s) {
     }
     disconnect() {
         if (this.confirm("Voulez-vous vraiment quitter?")) {
@@ -96,6 +108,8 @@ export class BaseViewModel {
     }
     get hasPhoto() {
         return this.userInfo.hasPhoto;
+    }
+    set hasPhoto(s) {
     }
     retrieve_one_avatar(item) {
         let service = this.dataService;

@@ -17,11 +17,11 @@ export class AdminRouterClass {
         { route: 'affprofs',  moduleId: NOT_IMPLEMENTED, nav: true, title:'Affectations enseignants' },
         { route: 'etudiants',  moduleId: NOT_IMPLEMENTED, nav: true, title:'Etudiants' },
         { route: 'semestre',  moduleId:NOT_IMPLEMENTED, nav: true, title:'Semestres' },
-        { route: 'annees',  moduleId: NOT_IMPLEMENTED, nav: true, title:'Années' },
+        { route: 'annees',  moduleId: './annee-model', nav: true, title:'Années' },
         { route: 'enseignants',  moduleId: NOT_IMPLEMENTED, nav: true, title:'Enseignants' },
-        { route: 'groupes',  moduleId: NOT_IMPLEMENTED, nav: true, title:'Groupes' },
+        { route: 'groupes',  moduleId: './groupe-model', nav: true, title:'Groupes' },
         { route: 'matieres',  moduleId: NOT_IMPLEMENTED, nav: true, title:'Matières' },
-        { route: 'unites',  moduleId: NOT_IMPLEMENTED, nav: true, title:'Unités' },
+        { route: 'unites',  moduleId: './unite-model', nav: true, title:'Unités' },
         { route: 'departements',  moduleId: './dep-model', nav: true, title:'Départements' }
       ]);
     });

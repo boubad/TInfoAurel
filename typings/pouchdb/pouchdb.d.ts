@@ -57,6 +57,14 @@ interface PouchGetOptions {
 	rev?: string;
 	revs?: boolean;
 	revs_info?: boolean;
+    startkey?:any;
+    endkey?:any;
+    keys?:any;
+    descending?:boolean;
+    include_docs?:boolean;
+    inclusive_end?:boolean;
+    skip?:number;
+    limit?:number;
 }
 
 interface PouchGetResponse {

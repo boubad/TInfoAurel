@@ -434,6 +434,9 @@ export class Person extends BaseItem implements IPerson {
     oMap.mentionBac = this.mentionBac;
     oMap.etudesSuperieures = this.etudesSuperieures;
   } // to_insert_map
+  public toString(): string {
+    return this.fullname;
+  }
   public is_storeable(): boolean {
     return (this.username !== null) && (this.firstname !== null) &&
       (this.lastname !== null);

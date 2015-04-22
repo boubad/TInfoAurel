@@ -8,14 +8,18 @@ export class BaseItem implements IBaseItem {
     public rev:string;
     public attachments:any;
     public avatarid:string;
+    public avatardocid:string;
     public description:string;
+    public url:string;
     //
     constructor(oMap?:any) {
         this.id = null;
         this.rev = null;
         this.attachments = null;
         this.avatarid = null;
+        this.avatardocid = null;
         this.description = null;
+        this.url = null;
         if ((oMap !== undefined) && (oMap !== null)) {
             if (oMap._id !== undefined) {
                 this.id = oMap._id;
@@ -32,20 +36,32 @@ export class BaseItem implements IBaseItem {
             if (oMap.avatarid !== undefined) {
                 this.avatarid = oMap.avatarid;
             }
+            if (oMap.avatardocid !== undefined) {
+                this.avatardocid = oMap.avatardocid;
+            }
         } // oMap
     } // constructor
     public get base_prefix():string {
         return null;
     }
-    public get start_key():string{
+    public set base_prefix(s:string){
+
+    }
+    public get start_key():any{
         return (this.base_prefix !== null) ? this.base_prefix + '-' : null;
     }
-    public get end_key():string{
+    public set start_key(s:any) {
+
+    }
+    public get end_key():any{
         return (this.start_key !== null) ? this.start_key + '\uffff' : null;
     }
     public get index_name():string {
         return (this.collection_name !== null) ?
             this.collection_name + '/by_id' : null;
+    }
+    public set index_name(s:string){
+
     }
     public create_id() :string {
         let n = Math.floor(Math.random() * 10000.0);
@@ -70,8 +86,14 @@ export class BaseItem implements IBaseItem {
     public get type():string {
         return null;
     }
+    public set type(s:string){
+
+    }
     public get collection_name() :string{
         return null;
+    }
+    public set collection_name(s:string){
+        
     }
     public is_storeable():boolean{
         return (this.type !== null) && (this.collection_name !== null);
@@ -97,6 +119,18 @@ export class BaseItem implements IBaseItem {
         if ((this.avatarid !== undefined) && (this.avatarid !== null)) {
             oMap.avatarid = this.avatarid;
         }
+        if ((this.avatardocid !== undefined) && (this.avatardocid !== null)) {
+            oMap.avatardocid = this.avatardocid;
+        }
+    }
+    public get text() : string {
+        return this.toString();
+    }
+    public get has_url():boolean {
+        return (this.url !== null);
+    }
+    public set has_url(b:boolean){
+
     }
     public toString():string {
         let oMap = {};
