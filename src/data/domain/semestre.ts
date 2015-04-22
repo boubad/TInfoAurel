@@ -20,6 +20,13 @@ export class Semestre extends IntervalItem implements ISemestre {
     public set base_prefix(s:string){
 
     }
+     public get start_key(): string {
+        return this.base_prefix + '-' + this.anneeid;
+    }
+    public set start_key(s: string) {
+
+
+    }
      public create_id() : string {
          let d = (this.startDate !== null) ? this.startDate : new Date();
          let ss = d.toISOString().substr(0, 10);

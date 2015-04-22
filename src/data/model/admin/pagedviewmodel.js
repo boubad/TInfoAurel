@@ -165,20 +165,15 @@ export class PagedViewModel extends BaseViewModel {
                 elem.url = null;
             }
         } // elem
-        let limit = this.itemsPerPage;
-        let skip = this.skip;
         let startKey = this.start_key;
         if (startKey === null) {
             startKey = this.create_start_key();
         }
-        let descending = this.isDescending;
-        let bAttach = null;
         let model = this.modelItem;
         this.clear_error();
         let oldid = (this.current_item !== null) ? this.current_item.id : null;
         var self = this;
-        let viewName = model.index_name;
-        return this.dataService.get_items(model, startKey, skip, limit, descending).then((rr) => {
+        return this.dataService.get_items(model, startKey).then((rr) => {
             if (self.hasAvatars) {
                 return self.retrieve_avatars(rr);
             }
@@ -187,23 +182,6 @@ export class PagedViewModel extends BaseViewModel {
             }
         }).then((dd) => {
             if ((dd !== undefined) && (dd !== null)) {
-                self.prev_key = startKey;
-                if (self.start_key === null) {
-                    self.canPrevPage = false;
-                }
-                let n = dd.length;
-                if (n < limit) {
-                    self.next_key = null;
-                    self.canNextPage = false;
-                }
-                else if (n > 0) {
-                    self.skip = 0;
-                    let y = dd[0];
-                    self.prev_key = y.id;
-                    let x = dd[n - 1];
-                    self.next_key = x.id;
-                    self.canNextPage = true;
-                }
                 self.elements = dd;
                 let pSel = null;
                 if (oldid !== null) {

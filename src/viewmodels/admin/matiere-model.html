@@ -18,7 +18,7 @@
 		<h3 show.bind = "hasErrorMessage" class="text-danger">${errorMessage}</h3>
 		<h3 show.bind = "hasInfoMessage" class="text-success">${infoMessage}</h3>
 		<div class="row">
-			<div class="col-md-4 col-sm-4 col-xs-4">&nbsp;</div>
+			<div class="col-md-2 col-sm-2 col-xs-2">&nbsp;</div>
 			<div class="col-md-4 col-sm-4 col-xs-4">
 				<div class="form-group">
 					<label class="form-label" for="departements">Département</label>
@@ -28,9 +28,18 @@
 			</select>
 				</div>
 			</div>
+			<div class="col-md-4 col-sm-4 col-xs-4">
+				<div class="form-group">
+					<label class="form-label" for="unites">Unité</label>
+					<select id="unités" value.bind="unite_elem">
+						<option>Unité...</option>
+				<option repeat.for="unelem of unites" model.bind="unelem">${unelem.text}</option>
+			</select>
+				</div>
+			</div>
 		</div>
-		<div class="row" if.bind="hasDepartement">
-			<div class="col-md-4" if.bind="hasElements">
+		<div class="row">
+			<div class="col-md-4 col-sm-4 col-xs-4" if.bind="hasElements">
 			<select value.bind="current_element" size.bind="itemsPerPage">
 				<option repeat.for="elem of elements" model.bind="elem">${elem.text}</option>
 			</select>
@@ -52,6 +61,27 @@
 				<div class="form-group">
 					<label class="form-label" for="name">Nom</label>
 					<input class="form-control" type="text" id="name" value.bind="name" placeholder="Nom"></input>
+				</div>
+				<div class="form-group">
+					<label class="form-label" for="genre">Nom</label>
+					<select class="form-control" id="genre" value.bind="genre">
+						<option>Genre...</option>
+						<option value.bind="genre">Pratique<option/>
+						<option value.bind="genre">Théorie<option/>
+						<option value.bind="genre">Autre<option/>	
+					</select>
+				</div>
+				<div class="form-group">
+					<label class="form-label" for="mat_module">Module</label>
+					<input class="form-control" type="text" id="mat_module" value.bind="mat_module" placeholder="Module"></input>
+				</div>
+				<div class="form-group">
+					<label class="form-label" for="coefficient">Coefficient</label>
+					<input class="form-control" type="number" id="coefficient" value.bind="coefficient" placeholder="Coefficient"></input>
+				</div>
+				<div class="form-group">
+					<label class="form-label" for="ecs">ECS</label>
+					<input class="form-control" type="number" id="ecs" value.bind="ecs" placeholder="ECS"></input>
 				</div>
 				<div class="form-group">
 					<label class="form-label" for="description">Description</label>

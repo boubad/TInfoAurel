@@ -11,6 +11,34 @@ export class BaseViewModel {
         this.infoMessage = null;
         this.errorMessage = null;
     } // constructor
+    string_to_date(s) {
+        let dRet = null;
+        if ((s !== undefined) && (s !== null)) {
+            try {
+                let t = Date.parse(s.toString());
+                if (!isNaN(t)) {
+                    dRet = new Date(t);
+                }
+            }
+            catch (e) {
+            }
+        }
+        return dRet;
+    }
+    date_to_string(d) {
+        let sRet = null;
+        if ((d !== undefined) && (d !== null)) {
+            try {
+                let t = Date.parse(d.toString());
+                if (!isNaN(t)) {
+                    let dd = new Date(t);
+                    sRet = dd.toISOString().substr(0, 10);
+                }
+            }
+            catch (e) { }
+        }
+        return sRet;
+    }
     confirm(message) {
         return window.confirm(message);
     }

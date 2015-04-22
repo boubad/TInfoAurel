@@ -2,24 +2,23 @@
 	<div class="container">
 		<div if.bind="isConnected">
 			<div class="row">
-				<div class="col-md-4">&nbsp;</div>
-				<div class="col-md-1">
+				<div class="col-md-4 col-sm-4 col-xs-4">&nbsp;</div>
+				<div class="col-md-2 col-sm-2 col-xs-2">
 						${fullname}
 				</div>
-				<div class="col-md-1">
+				<div class="col-md-1 col-sm-1 col-xs-1">
 					<img show.bind="hasPhoto" src.bind="photoUrl" heigth="48"></img>
 				</div>
-				<div class="col-md-1">
+				<div class="col-md-1 col-sm-1 col-xs-1">
 					<a href="#" click.delegate="disconnect()">Déconnecter</a>
 				</div>
-				<div class="col-md-4">&nbsp;</div>
 			</div>
 		</div>
 		<div if.bind="isNotConnected">
 			<h3 show.bind = "hasErrorMessage" class="text-danger">${errorMessage}<h3>
 			<div class="row">
-				<div class="col-md-4">&nbsp;</div>
-				<div class="col-md-4">
+				<div class="col-md-4 col-sm-4 col-xs-4">&nbsp;</div>
+				<div class="col-md-4 col-sm-4 col-xs-4">
 					<h2>${title}</h2>
 					<form role="form">
 						<div class="form-group">
@@ -37,7 +36,6 @@
                     </div>
 					</form>
 				</div>
-				<div class="col-md-4">&nbsp;</div>
 			</div>	
 		</div>
 	</div>

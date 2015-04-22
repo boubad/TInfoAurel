@@ -13,43 +13,23 @@ export class IntervalViewModel extends DepSigleNameModel {
   public get startDate(): string {
     let x = this.current_item;
     let d = ((x !== undefined) && (x !== null)) ? x.startDate : null;
-    if (d === null){
-      return null;
-    }
-    let t = Date.parse(d.toString());
-    if (isNaN(t)){
-      return null;
-    }
-    let dt = new Date(t);
-    return dt.toISOString().substr(0,10);
+    return this.date_to_string(d);
   }
   public set startDate(s: string) {
     let x = this.current_item;
     if ((x !== undefined) && (x !== null)) {
-       let t = Date.parse(s);
-       let d = (isNaN(t)) ? null : new Date(t);
-       x.startDate = d;
+       x.startDate = this.string_to_date(s);
     }
   }
    public get endDate(): string {
     let x = this.current_item;
     let d = ((x !== undefined) && (x !== null)) ? x.endDate : null;
-    if (d === null){
-      return null;
-    }
-    let t = Date.parse(d.toString());
-    if (isNaN(t)){
-      return null;
-    }
-    let dt = new Date(t);
-    return dt.toISOString().substr(0,10);
+    return this.date_to_string(d);
   }
   public set endDate(s: string) {
     let x = this.current_item;
     if ((x !== undefined) && (x !== null)) {
-      let t = Date.parse(s);
-       let d = (isNaN(t)) ? null : new Date(t);
-       x.endDate = d;
+       x.endDate = this.string_to_date(s);
     }
   }
 }// class IntervalViewModel

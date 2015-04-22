@@ -47,6 +47,8 @@ export class DepSigleNameModel extends SigleNameModel {
             }
         }
     } // activate
+    departement_changed() {
+    }
     get departement_elem() {
         return this._depelem;
     }
@@ -56,6 +58,7 @@ export class DepSigleNameModel extends SigleNameModel {
         this.modelItem.departementid = id;
         this.userInfo.departementid = id;
         this.current_item = this.create_item();
+        this.departement_changed();
         this.update_title();
         this.refreshAll();
     }

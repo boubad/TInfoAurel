@@ -7,10 +7,10 @@
 				<div class="col-md-2 col-sm-2 col-xs-2">
 						${fullname}
 				</div>
-				<div class="col-md-1 col-sm-1 col-xs-1">
+				<div class="col-md-1 col-sm-1 cols-xs-1">
 					<img show.bind="hasPhoto" src.bind="photoUrl" heigth="48"></img>
 				</div>
-				<div class="col-md-1 col-sm-1 col-xs-1">
+				<div class="col-md-1 col-sm-4 col-xs-1">
 					<a href="#" click.delegate="disconnect()">Déconnecter</a>
 				</div>
 			</div>
@@ -18,7 +18,7 @@
 		<h3 show.bind = "hasErrorMessage" class="text-danger">${errorMessage}</h3>
 		<h3 show.bind = "hasInfoMessage" class="text-success">${infoMessage}</h3>
 		<div class="row">
-			<div class="col-md-4 col-sm-4 col-xs-4">&nbsp;</div>
+			<div class="col-md-2 col-sm-2 col-sx-2">&nbsp;</div>
 			<div class="col-md-4 col-sm-4 col-xs-4">
 				<div class="form-group">
 					<label class="form-label" for="departements">Département</label>
@@ -28,9 +28,25 @@
 			</select>
 				</div>
 			</div>
+			<div class="col-md-4 col-sm-4 col-xs-4">
+				<div class="form-group">
+					<label class="form-label" for="annees">Année</label>
+					<select id="annees" value.bind="annee_elem">
+						<option>Année...</option>
+				<option repeat.for="anelem of annees" model.bind="anelem">${anelem.text}</option>
+			</select>
+				</div>
+			</div>
+			<div class="col-md-2">&nbsp;</div>
 		</div>
-		<div class="row" if.bind="hasDepartement">
-			<div class="col-md-4" if.bind="hasElements">
+		<div class="row">
+			<div class="col-md-4 col-sm-4 col-xs-4">&nbsp;</div>
+			<div class="col-md-4 col-sm-4 col-xs-4">
+				<h3>${anneeStatus}</h3>
+			</div>
+		</div>
+		<div class="row" if.bind="hasAnnee">
+			<div class="col-md-4 col-sm-4 col-xs-4" if.bind="hasElements">
 			<select value.bind="current_element" size.bind="itemsPerPage">
 				<option repeat.for="elem of elements" model.bind="elem">${elem.text}</option>
 			</select>
@@ -44,6 +60,16 @@
 				<button type="button" click.delegate="refreshAll()" class="btn btn-primary">Rafraîchir</button>
 			</div>
 			<form role="form">
+				<div class="form-group">
+					<label class="form-label" for="startDate">Date de début</label>
+					<input class="form-control" type="date" id="startDate" value.bind="startDate" 
+					placeholder="Date de début" required></input>
+				</div>
+				<div class="form-group">
+					<label class="form-label" for="endDate">Date de fin</label>
+					<input class="form-control" type="date" id="endDate" value.bind="endDate" 
+					placeholder="Date de fin" required></input>
+				</div>
 				<div class="form-group">
 					<label class="form-label" for="sigle">Abbréviation</label>
 					<input class="form-control" type="text" id="sigle" value.bind="sigle" 

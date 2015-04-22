@@ -2,7 +2,9 @@ import {inject} from 'aurelia-framework';
 import {Router} from 'aurelia-router';
 import 'bootstrap';
 import 'bootstrap/css/bootstrap.css!';
-
+//
+PouchDB.debug.enable('*');
+//
 @inject(Router)
 export class App {
   constructor(router) {

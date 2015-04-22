@@ -4,15 +4,15 @@
 import {IBaseItem} from '../../infodata.d';
 //
 export class BaseItem implements IBaseItem {
-    public id:string;
-    public rev:string;
-    public attachments:any;
-    public avatarid:string;
-    public avatardocid:string;
-    public description:string;
-    public url:string;
+    public id: string;
+    public rev: string;
+    public attachments: any;
+    public avatarid: string;
+    public avatardocid: string;
+    public description: string;
+    public url: string;
     //
-    constructor(oMap?:any) {
+    constructor(oMap?: any) {
         this.id = null;
         this.rev = null;
         this.attachments = null;
@@ -41,29 +41,29 @@ export class BaseItem implements IBaseItem {
             }
         } // oMap
     } // constructor
-    public get base_prefix():string {
+    public get base_prefix(): string {
         return null;
     }
-    public set base_prefix(s:string){
+    public set base_prefix(s: string) {
 
     }
-    public get start_key():any{
+    public get start_key(): any {
         return (this.base_prefix !== null) ? this.base_prefix + '-' : null;
     }
-    public set start_key(s:any) {
+    public set start_key(s: any) {
 
     }
-    public get end_key():any{
+    public get end_key(): any {
         return (this.start_key !== null) ? this.start_key + '\uffff' : null;
     }
-    public get index_name():string {
+    public get index_name(): string {
         return (this.collection_name !== null) ?
             this.collection_name + '/by_id' : null;
     }
-    public set index_name(s:string){
+    public set index_name(s: string) {
 
     }
-    public create_id() :string {
+    public create_id(): string {
         let n = Math.floor(Math.random() * 10000.0);
         let sn = '' + n;
         while (sn.length < 4) {
@@ -73,7 +73,7 @@ export class BaseItem implements IBaseItem {
         return (this.base_prefix !== null) ?
             this.base_prefix + '-' + s : s;
     } // create_id
-    public check_date(d:Date) : Date{
+    public check_date(d: Date): Date {
         let dRet = null;
         if ((d !== undefined) && (d !== null)) {
             let t = Date.parse(d.toString());
@@ -83,22 +83,31 @@ export class BaseItem implements IBaseItem {
         }
         return dRet;
     } // check_date
-    public get type():string {
+    public check_number(s: any): number {
+        let dRet: number = null;
+        if ((s !== undefined) && (s !== null)) {
+            try {
+                dRet = parseFloat(s.toString());
+            } catch (e) { }
+        }
+        return dRet;
+    }
+    public get type(): string {
         return null;
     }
-    public set type(s:string){
+    public set type(s: string) {
 
     }
-    public get collection_name() :string{
+    public get collection_name(): string {
         return null;
     }
-    public set collection_name(s:string){
-        
+    public set collection_name(s: string) {
+
     }
-    public is_storeable():boolean{
+    public is_storeable(): boolean {
         return (this.type !== null) && (this.collection_name !== null);
     }
-    public to_map(oMap:any) : void {
+    public to_map(oMap: any): void {
         if ((this.id !== undefined) && (this.id !== null)) {
             oMap._id = this.id;
         } else {
@@ -123,21 +132,21 @@ export class BaseItem implements IBaseItem {
             oMap.avatardocid = this.avatardocid;
         }
     }
-    public get text() : string {
+    public get text(): string {
         return this.toString();
     }
-    public get has_url():boolean {
+    public get has_url(): boolean {
         return (this.url !== null);
     }
-    public set has_url(b:boolean){
+    public set has_url(b: boolean) {
 
     }
-    public toString():string {
+    public toString(): string {
         let oMap = {};
         this.to_map(oMap);
         return JSON.stringify(oMap);
     } // toString
-   public sort_func(p1:BaseItem, p2:BaseItem): number{
+    public sort_func(p1: IBaseItem, p2: IBaseItem): number {
         let vRet = -1;
         if ((p1 !== undefined) && (p2 !== undefined) && (p1 !== null) && (p2 !==
             null)) {

@@ -175,25 +175,14 @@ export class PouchDatabase implements IDatabaseManager {
       });
     });
   }//get_items_array	
-  public get_items(item: IBaseItem, startKey?: any,
-    skip?: number, limit?: number, bDesc?: boolean): Promise<IBaseItem[]> {
+  public get_items(item: IBaseItem, startKey?: any): Promise<IBaseItem[]> {
     let options: PouchGetOptions = { include_docs: true };
     if ((startKey !== undefined) && (startKey !== null)) {
       options.startkey = startKey;
     } else {
       options.startkey = item.start_key;
     }
-    options.endkey = startKey + '\uffff';
-    if ((skip !== undefined) && (skip !== null) && (skip > 0)) {
-      options.skip = skip;
-    }
-    if ((limit !== undefined) && (limit !== null) &&
-      (limit > 0)) {
-      options.limit = limit;
-    }
-    if ((bDesc !== undefined) && (bDesc !== null)) {
-      options.descending = bDesc;
-    }
+    options.endkey = item.end_key;
     let generator = this.generator;
     return this.db.then((xdb) => {
       return xdb.allDocs(options).then((rr) => {
@@ -212,17 +201,19 @@ export class PouchDatabase implements IDatabaseManager {
             }// r
           }// data
         }// rr
+        if (oRet.length > 1) {
+          let x = oRet[0];
+          let func = x.sort_func;
+          oRet.sort(func);
+        }
         return oRet;
       });
     });
   }// get_items
-  public get_all_items(item: IBaseItem, bDesc?: boolean): Promise<IBaseItem[]> {
+  public get_all_items(item: IBaseItem): Promise<IBaseItem[]> {
     let options: PouchGetOptions = {
       include_docs: true, startkey: item.start_key, endkey: item.end_key
     };
-    if ((bDesc !== undefined) && (bDesc !== null)) {
-      options.descending = bDesc;
-    }
     let generator = this.generator;
     return this.db.then((xdb) => {
       return xdb.allDocs(options).then((rr) => {
@@ -241,6 +232,11 @@ export class PouchDatabase implements IDatabaseManager {
             }// r
           }// data
         }// rr
+        if (oRet.length > 1) {
+          let x = oRet[0];
+          let func = x.sort_func;
+          oRet.sort(func);
+        }
         return oRet;
       });
     });

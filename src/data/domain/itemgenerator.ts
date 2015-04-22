@@ -9,6 +9,7 @@ import {Groupe} from './groupe';
 import {Unite} from './unite';
 import {Annee} from './annee';
 import {Semestre} from './semestre';
+import {Matiere} from './matiere';
 //
 export class ItemGenerator implements IItemGenerator {
   constructor() { }
@@ -32,6 +33,8 @@ export class ItemGenerator implements IItemGenerator {
       return new Groupe(oMap);
     } else if (t == 'semestre') {
       return new Semestre(oMap);
+    } else if (t == 'matiere') {
+      return new Matiere(oMap);
     }
     return null;
 		}// create_item
