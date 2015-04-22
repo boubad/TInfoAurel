@@ -33,7 +33,8 @@ export class IntervalItem extends DepSigleNameItem implements IIntervalItem {
     }
     public create_id() : string {
          let d = (this.startDate !== null) ? this.startDate : new Date();
-         let ss = d.toISOString().substr(0, 10);
+         let dd = new Date(Date.parse(d.toString()));
+         let ss = dd.toISOString().substr(0,10);
          let s = this.base_prefix;
         if ((s !== null) && (this.departementid !== null)){
             s = s + '-' + this.departementid + '-' + ss;
@@ -41,8 +42,15 @@ export class IntervalItem extends DepSigleNameItem implements IIntervalItem {
         return s;
     } // create_id
     public  is_storeable() :boolean {
-        return super.is_storeable() && (this.startDate !== null) &&
-        (this.endDate !== null) && (this.endDate.getTime() >= this.startDate.getTime());
+        if ((!super.is_storeable()) || (this.startDate === null) || (this.endDate === null)){
+            return false;
+        }
+        var t1 = Date.parse(this.startDate.toString());
+        var t2 = Date.parse(this.endDate.toString());
+        if (isNaN(t1) || isNaN(t2)){
+            return false;
+        }
+        return (t1 <= t2);
     }
     public to_map(oMap:any) : void {
         super.to_map(oMap);

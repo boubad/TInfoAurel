@@ -19,6 +19,7 @@ export class PagedViewModel extends BaseViewModel {
 	protected itemsPerPage:number;
 	protected skip:number;
 	protected hasAvatars:boolean;
+  protected isDescending:boolean;
 	//
 	public elements:IBaseItem[];
 	//
@@ -36,7 +37,8 @@ export class PagedViewModel extends BaseViewModel {
 		this.first_key = null;
 		this.elements = [];
 		this.skip = 0;
-    	this.hasAvatars = false;
+    this.hasAvatars = false;
+    this.isDescending = false;
 	}// constructor
 	public activate() : any {
     this.update_title();
@@ -75,6 +77,7 @@ public cancel_add(): void {
 		this.add_mode = false;
 	}// cancel_add
 protected change_current() : any {
+    this.add_mode = false;
 		let ep = this.current_element;
 		if (ep === null){
 			this.current_item = this.create_item();
@@ -166,11 +169,13 @@ public remove() : any {
 		var self = this;
 		return this.dataService.maintains_item(item).then((r)=>{
 			if (item.rev !== null){
+        self.add_mode = false;
 				self.refresh();
 			} else {
 				self.refreshAll();
 			}
 		},(err)=>{
+      self.add_mode = false;
 			self.set_error(err);
 		});
 	}// save
@@ -188,7 +193,7 @@ public remove() : any {
     if (startKey === null){
       startKey = this.create_start_key();
     }
-    let descending = null;
+    let descending = this.isDescending;
     let bAttach = null;
     let model = this.modelItem;
     this.clear_error();

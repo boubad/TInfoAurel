@@ -78,7 +78,7 @@ export class BaseItem implements IBaseItem {
         if ((d !== undefined) && (d !== null)) {
             let t = Date.parse(d.toString());
             if (!isNaN(t)) {
-                dRet = d;
+                dRet = new Date(t);
             }
         }
         return dRet;
