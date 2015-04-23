@@ -13,6 +13,18 @@
 					<a href="#" click.delegate="disconnect()">Déconnecter</a>
 				</div>
 			</div>
+			<div class="row">
+        		<div class="col-md-2 col-sm-2 col-xs-2">
+            		 <a href="#avatar" class="thumbnail">
+                		<img style="width: 130px; height: 90px;" src="images/profil.jpg"/>
+            		</a>
+        		</div>
+        		<div class="col-md-2 col-sm-2 col-xs-2">
+            		 <a href="#admin-router" class="thumbnail">
+                		<img style="width: 130px; height: 90px;" src="images/administration.png"/>
+            		</a>
+        		</div>
+    		</div>
 		</div>
 		<div if.bind="isNotConnected">
 			<h3 show.bind = "hasErrorMessage" class="text-danger">${errorMessage}<h3>

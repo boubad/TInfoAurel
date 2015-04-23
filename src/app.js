@@ -13,7 +13,7 @@ export class App {
       config.title = 'InfoApp';
       config.map([
         { route: ['','home'],  moduleId: './viewmodels/login',      nav: true, title:'Accueil' },
-        { route: 'avatar',  moduleId: './viewmodels/avatar-model', nav: true, title:'Avatar' },
+        { route: 'avatar',  moduleId: './viewmodels/avatar-model', nav: true, title:'Profil' },
         { route: 'admin-router',  moduleId: './viewmodels/admin/admin-router', nav: true, title:'Administration' }
       ]);
     });

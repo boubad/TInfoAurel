@@ -1,7 +1,7 @@
 import { BaseViewModel } from './modelbase';
 import { MaintainsDatabase } from '../services/pouchdb/maintainsdatabase';
 //
-export class LoginClass extends BaseViewModel {
+export class LoginViewModel extends BaseViewModel {
     //
     constructor() {
         super();
