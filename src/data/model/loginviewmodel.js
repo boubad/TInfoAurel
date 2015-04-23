@@ -1,25 +1,23 @@
 import { BaseViewModel } from './modelbase';
 import { MaintainsDatabase } from '../services/pouchdb/maintainsdatabase';
-//
 export class LoginViewModel extends BaseViewModel {
-    //
     constructor() {
         super();
         this.username = null;
         this.password = null;
         this.title = 'Connexion';
-    } // constructor
+    }
     activate() {
         return this.dataService.check_admin().then((x) => {
             let db = new MaintainsDatabase();
             return db.check_schema();
         });
-    } // activate
+    }
     get canConnect() {
         return (this.username !== null) && (this.password !== null) &&
             (this.username.trim().length > 0) && (this.username.trim().length < 32) &&
             (this.password.trim().length > 0);
-    } // canConnect
+    }
     get canNotConnect() {
         return (!this.canConnect);
     }
@@ -48,7 +46,7 @@ export class LoginViewModel extends BaseViewModel {
                                 userinfo.photoUrl = xurl;
                                 self.username = null;
                                 self.password = null;
-                            } // data
+                            }
                         });
                     }
                 }
@@ -56,6 +54,5 @@ export class LoginViewModel extends BaseViewModel {
         }, (err) => {
             self.set_error(err);
         });
-    } // connect        
+    }
 }
- // class LoginClass

@@ -1,15 +1,13 @@
 import { DepSigleNameModel } from './depsiglenamemodel';
 import { Unite } from '../../domain/unite';
 import { Matiere } from '../../domain/matiere';
-//
 export class MatiereViewModel extends DepSigleNameModel {
-    //
     constructor() {
         super(new Matiere());
         this._unite = null;
         this.unites = [];
         this.base_title = 'Matières';
-    } // constructor
+    }
     departement_changed() {
         let id = this.departementid;
         this.unites = [];
@@ -23,7 +21,7 @@ export class MatiereViewModel extends DepSigleNameModel {
         this.dataService.get_all_items(item).then((aa) => {
             self.unites = ((aa !== undefined) && (aa !== null)) ? aa : [];
         });
-    } // departement_changed    
+    }
     post_change_item() {
         let id = (this.current_item !== null) ? this.current_item.id : null;
         this.userInfo.matiereid = id;
@@ -48,7 +46,7 @@ export class MatiereViewModel extends DepSigleNameModel {
             s = s + ' ' + p.text;
         }
         this.title = s;
-    } // update_title
+    }
     get uniteid() {
         return this.userInfo.uniteid;
     }
@@ -64,7 +62,7 @@ export class MatiereViewModel extends DepSigleNameModel {
             departementid: this.departementid, uniteid: this.uniteid
         });
         return p;
-    } // create_item
+    }
     get canAdd() {
         return (!this.add_mode) && (this.departementid !== null) && (this.uniteid !== null);
     }
@@ -111,4 +109,3 @@ export class MatiereViewModel extends DepSigleNameModel {
         }
     }
 }
- // class DepSigleNameModel

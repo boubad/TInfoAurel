@@ -9,5 +9,5 @@ bower_components
 *.*-workspace
 /src/data/domain/**/*.js
 /src/data/services/**/*.js
+/src/data/model/**/*.js
 appconfig.js
-

@@ -1,11 +1,9 @@
 import { DepSigleNameModel } from './depsiglenamemodel';
-//
 export class IntervalViewModel extends DepSigleNameModel {
-    //
     constructor(model) {
         super(model);
         this.isDescending = true;
-    } // constructor
+    }
     get startDate() {
         let x = this.current_item;
         let d = ((x !== undefined) && (x !== null)) ? x.startDate : null;
@@ -29,4 +27,3 @@ export class IntervalViewModel extends DepSigleNameModel {
         }
     }
 }
- // class IntervalViewModel

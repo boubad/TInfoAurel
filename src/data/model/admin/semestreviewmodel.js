@@ -1,15 +1,13 @@
 import { IntervalViewModel } from './intervalviewmodel';
 import { Semestre } from '../../domain/semestre';
 import { Annee } from '../../domain/annee';
-//
 export class SemestreViewModel extends IntervalViewModel {
-    //
     constructor() {
         super(new Semestre());
         this._annee = null;
         this.annees = [];
         this.base_title = 'Semestres';
-    } // constructor
+    }
     departement_changed() {
         let id = this.departementid;
         this.annees = [];
@@ -23,7 +21,7 @@ export class SemestreViewModel extends IntervalViewModel {
         this.dataService.get_all_items(item).then((aa) => {
             self.annees = ((aa !== undefined) && (aa !== null)) ? aa : [];
         });
-    } // departement_changed    
+    }
     post_change_item() {
         let id = (this.current_item !== null) ? this.current_item.id : null;
         this.userInfo.semestreid = id;
@@ -48,7 +46,7 @@ export class SemestreViewModel extends IntervalViewModel {
             s = s + ' ' + p.text;
         }
         this.title = s;
-    } // update_title
+    }
     get anneeid() {
         return this.userInfo.anneeid;
     }
@@ -64,7 +62,7 @@ export class SemestreViewModel extends IntervalViewModel {
             departementid: this.departementid, anneeid: this.anneeid
         });
         return p;
-    } // create_item
+    }
     get canAdd() {
         return (!this.add_mode) && (this.departementid !== null) && (this.anneeid !== null);
     }
@@ -108,4 +106,3 @@ export class SemestreViewModel extends IntervalViewModel {
         return ((s1 !== null) && (s2 !== null)) ? s1 + ' / ' + s2 : null;
     }
 }
- // class SemestreMdoelClass

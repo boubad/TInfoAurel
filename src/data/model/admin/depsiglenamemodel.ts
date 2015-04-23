@@ -53,10 +53,10 @@ export class DepSigleNameModel extends SigleNameModel {
             }// activate
        protected departement_changed() : void {
 
-       }     
+       }
        public get departement_elem():IBaseItem {
            return this._depelem;
-       }     
+       }
        public set departement_elem(s:IBaseItem){
            this._depelem = (s !== undefined) ? s : null;
            let id = (this._depelem !== null) ? this._depelem.id : null;

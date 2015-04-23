@@ -1,14 +1,12 @@
 import { SigleNameModel } from './siglenamemodel';
 import { Departement } from '../../domain/departement';
-//
 export class DepSigleNameModel extends SigleNameModel {
-    //
     constructor(model) {
         super(model);
         this._depelem = null;
         this.departements = [];
         this.base_title = null;
-    } // constructor
+    }
     activate() {
         let depid = this.userInfo.departementid;
         this.modelItem.departementid = depid;
@@ -46,7 +44,7 @@ export class DepSigleNameModel extends SigleNameModel {
                 });
             }
         }
-    } // activate
+    }
     departement_changed() {
     }
     get departement_elem() {
@@ -69,7 +67,7 @@ export class DepSigleNameModel extends SigleNameModel {
             s = s + ' ' + p.text;
         }
         this.title = s;
-    } // update_title
+    }
     get departementid() {
         return this.userInfo.departementid;
     }
@@ -82,11 +80,10 @@ export class DepSigleNameModel extends SigleNameModel {
         let model = this.modelItem;
         let p = this.generator.create_item({ type: model.type, departementid: this.departementid });
         return p;
-    } // create_item
+    }
     get canAdd() {
         return (!this.add_mode) && (this.departementid !== null);
     }
     set canAdd(s) {
     }
 }
- // class DepSigleNameModel

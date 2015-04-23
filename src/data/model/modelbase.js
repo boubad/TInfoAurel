@@ -1,16 +1,14 @@
 import { DataService } from '../services/dataservice';
 import { ItemGenerator } from '../domain/itemgenerator';
 import { UserInfo } from './userinfo';
-//
 export class BaseViewModel {
-    //
     constructor() {
         this._userinfo = null;
         this._dataService = null;
         this._gen = null;
         this.infoMessage = null;
         this.errorMessage = null;
-    } // constructor
+    }
     string_to_date(s) {
         let dRet = null;
         if ((s !== undefined) && (s !== null)) {
@@ -70,15 +68,15 @@ export class BaseViewModel {
             this._userinfo = new UserInfo();
         }
         return this._userinfo;
-    } // userInfo
+    }
     get dataService() {
         if (this._dataService === null) {
             this._dataService = new DataService();
         }
         return this._dataService;
-    } // dataService
+    }
     update_title() {
-    } // update_title
+    }
     get hasErrorMessage() {
         return (this.errorMessage !== null) && (this.errorMessage.length > 0);
     }
@@ -111,11 +109,11 @@ export class BaseViewModel {
         else {
             this.errorMessage = 'Erreur inconnue...';
         }
-    } // set_error
+    }
     get isConnected() {
         let x = this.userInfo;
         return x.isConnected;
-    } // isConnected
+    }
     set isConnected(s) {
     }
     get isNotConnected() {
@@ -127,7 +125,7 @@ export class BaseViewModel {
         if (this.confirm("Voulez-vous vraiment quitter?")) {
             this.userInfo.person = null;
         }
-    } // disconnect
+    }
     get fullname() {
         return this.userInfo.fullname;
     }
@@ -164,13 +162,12 @@ export class BaseViewModel {
                 });
             }
         });
-    } // retrieve_one_avatar
+    }
     retrieve_avatars(elems) {
         let pp = [];
         for (let elem of elems) {
             pp.push(this.retrieve_one_avatar(elem));
         }
         return Promise.all(pp);
-    } // retrieve_avatars
+    }
 }
- // class BaseViewModel
