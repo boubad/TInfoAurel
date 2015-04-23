@@ -50,7 +50,7 @@ export class MatiereViewModel extends DepSigleNameModel {
         this.title = s;
     } // update_title
     get uniteid() {
-        return this.userInfo.anneeid;
+        return this.userInfo.uniteid;
     }
     get hasUnite() {
         return (this.departementid !== null) && (this.uniteid !== null);

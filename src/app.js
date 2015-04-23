@@ -3,7 +3,7 @@ import {Router} from 'aurelia-router';
 import 'bootstrap';
 import 'bootstrap/css/bootstrap.css!';
 //
-PouchDB.debug.enable('*');
+//PouchDB.debug.enable('*');
 //
 @inject(Router)
 export class App {
@@ -13,6 +13,7 @@ export class App {
       config.title = 'InfoApp';
       config.map([
         { route: ['','home'],  moduleId: './viewmodels/login',      nav: true, title:'Accueil' },
+        { route: 'avatar',  moduleId: './viewmodels/avatar-model', nav: true, title:'Avatar' },
         { route: 'admin-router',  moduleId: './viewmodels/admin/admin-router', nav: true, title:'Administration' }
       ]);
     });

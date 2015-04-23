@@ -175,14 +175,18 @@ export class PouchDatabase implements IDatabaseManager {
       });
     });
   }//get_items_array	
-  public get_items(item: IBaseItem, startKey?: any): Promise<IBaseItem[]> {
+  public get_items(item: IBaseItem, startKey?: any,endKey?:any): Promise<IBaseItem[]> {
     let options: PouchGetOptions = { include_docs: true };
     if ((startKey !== undefined) && (startKey !== null)) {
       options.startkey = startKey;
     } else {
       options.startkey = item.start_key;
     }
-    options.endkey = item.end_key;
+    if ((endKey !== undefined) && (endKey !== null)){
+      options.endkey = endKey;
+    } else {
+        options.endkey = item.end_key;   
+    }
     let generator = this.generator;
     return this.db.then((xdb) => {
       return xdb.allDocs(options).then((rr) => {
@@ -241,6 +245,20 @@ export class PouchDatabase implements IDatabaseManager {
       });
     });
   }// get_all_items
+  public get_ids(startKey:string,endKey: any) : Promise<string[]> {
+    let options: PouchGetOptions = {
+      startkey: startKey, endkey: endKey};
+    return this.db.then((xdb) => { 
+      return xdb.allDocs(options).then((rr) => { 
+        let oRet: string[] = [];
+         for (let r of rr.rows){
+           let id = r.id;
+           oRet.push(id);
+           }// r
+        return oRet;
+        });
+      });
+    }//get_ids
   public find_elements(viewName: string, startKey?: any,
     skip?: number, limit?: number, bDesc?: boolean): Promise<IElementDesc[]> {
     let options: PouchQueryOptions = { include_docs: true };

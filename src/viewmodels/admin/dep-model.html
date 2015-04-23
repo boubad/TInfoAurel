@@ -8,7 +8,7 @@
 						${fullname}
 				</div>
 				<div class="col-md-1 col-sm-1 col-xs-1">
-					<img show.bind="hasPhoto" src.bind="photoUrl" heigth="48"></img>
+					<img show.bind="hasPhoto" src.bind="photoUrl" height="48"></img>
 				</div>
 				<div class="col-md-1 col-sm-1 col-xs-1">
 					<a href="#" click.delegate="disconnect()">Déconnecter</a>
@@ -19,13 +19,23 @@
 		<h3 show.bind = "hasInfoMessage" class="text-success">${infoMessage}</h3>
 		<div class="row">
 			<div class="col-md-4 col-sm-4 col-xs-4" if.bind="hasElements">
+				<ul class="pagination" if.bind="hasPages">
+				<li>
+					<a href="#" click.delegate="firstPage()" show.bind="canPrevPage">Début</a>
+				</li>
+				<li>
+					<a href="#" click.delegate="prevPage()" show.bind="canPrevPage">Préc.</a>
+				</li>
+				<li>
+					<a href="#" click.delegate="nextPage()" show.bind="canNextPage">Suivant</a>
+				</li>
+				<li>
+					<a href="#" click.delegate="nextPage()" show.bind="lastPage">Fin</a>
+				</li>
+			</ul>
 			<select value.bind="current_element" size.bind="itemsPerPage">
 				<option repeat.for="elem of elements" model.bind="elem">${elem.text}</option>
 			</select>
-			<div class="btn-group" show.bind="hasPages">
-				<button type="button" show.bind="canPrevPage" click.delegate="prevPage()" class="btn btn-primary">Pg. précédente</button>
-				<button type="button" show.bind="canNextPage" click.delegate="nextPage()" class="btn btn-primary">Pg. suivante</button>
-			</div>
 		</div>
 		<div class="col-md-4 col-sm-4 col-xs-4">
 			<div>

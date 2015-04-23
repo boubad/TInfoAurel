@@ -1,0 +1,20 @@
+<template>
+	<h2>Avatar</h2>
+	<div if.bind="isConnected">
+		<h3 show.bind = "hasErrorMessage" class="text-danger">${errorMessage}</h3>
+		<div if.bind="hasOldUrl">
+			<img src.bind="oldUrl" height="128"></img>
+			<button type="button" show.bind="canRemove" class="btn btn-primary" click.delegate="remove()">Supprimer</button>
+		</div>
+		<form role="form">
+			<div class="form-group">
+				<label class="form-label" for="fileToUpload">Fichier image</label>
+				<input type="file" id="fileToUpload" accept="image/png, image/jpeg" change.delegate="fileChanged($event)"></input>
+			</div>
+		</form>
+		<div show.bind="hasUrl">
+			<img src.bind="url" height="128"></img>
+			<button type="button" show.bind="canSave" class="btn btn-primary" click.delegate="save()">Enregistrer</button>
+		</div>
+	</div>
+</template>

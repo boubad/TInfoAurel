@@ -13,6 +13,7 @@ export class MatiereViewModel extends DepSigleNameModel  {
     super(new Matiere());
     this._unite = null;
     this.unites = [];
+    this.base_title = 'Matières';
   }// constructor
   protected departement_changed(): void {
     let id = this.departementid;
@@ -54,7 +55,7 @@ export class MatiereViewModel extends DepSigleNameModel  {
     this.title = s;
   } // update_title
   public get uniteid() : string {
-    return this.userInfo.anneeid;
+    return this.userInfo.uniteid;
   }
   public get hasUnite() : boolean {
     return (this.departementid !== null) && (this.uniteid !== null);

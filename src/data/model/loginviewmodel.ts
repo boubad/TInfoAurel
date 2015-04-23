@@ -1,32 +1,34 @@
-//login.js
+//loginviewmodel.js
 //
-import {inject} from 'aurelia-framework';
-import {Validation} from 'aurelia-validation';
-import {BaseViewModel} from '../data/model/modelbase';
+import {BaseViewModel} from './modelbase';
+import {MaintainsDatabase} from '../services/pouchdb/maintainsdatabase';
 //
-@inject(Validation)
-export class LoginClass extends BaseViewModel {
-	constructor(validation) {
+export class LoginViewModel extends BaseViewModel {
+    //
+    public username: string;
+    public password: string;
+    //
+    constructor() {
         super();
         this.username = null;
         this.password = null;
         this.title = 'Connexion';
-        this.validation = validation.on(this)
-        .ensure('username').isNotEmpty()
-        .ensure('password').isNotEmpty();
     }// constructor
-    activate() {
-    	return this.dataService.check_admin();
+    public activate(): any {
+        return this.dataService.check_admin().then((x) => {
+            let db = new MaintainsDatabase();
+            return db.check_schema();
+        });
     }// activate
-    get canConnect() {
+    public get canConnect(): boolean {
         return (this.username !== null) && (this.password !== null) &&
             (this.username.trim().length > 0) && (this.username.trim().length < 32) &&
             (this.password.trim().length > 0);
     }// canConnect
-    get canNotConnect() {
+    public get canNotConnect(): boolean {
         return (!this.canConnect);
     }
-    connect() {
+    public connect(): any {
         let suser = (this.username !== null) ? this.username.trim().toLowerCase() : null;
         let spass = this.password;
         let service = this.dataService;
@@ -58,4 +60,4 @@ export class LoginClass extends BaseViewModel {
                 self.set_error(err);
             });
     }// connect        
-	}// class LoginClass
+}// class LoginClass

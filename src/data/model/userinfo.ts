@@ -127,6 +127,12 @@ export class UserInfo extends SessionObjectStore {
   public set password(s:string){
     super.store_value('password',s);
   }
+  public get avatarid():string {
+    return super.get_value('avatarid');
+  }
+  public set avatarid(s:string){
+    super.store_value('avatarid', s);
+  }
   //
   public get person() : IPerson {
     if (this._person !== null){
@@ -148,6 +154,7 @@ export class UserInfo extends SessionObjectStore {
     let p = (pPers !== undefined) ? pPers : null;
     super.store_value('person',null);
     this.photoUrl = null;
+    this.avatarid = null;
     this._person = null;
     this.personid = null;
     this.password = null;
@@ -180,6 +187,7 @@ export class UserInfo extends SessionObjectStore {
       this.phone = p.phone;
       this.password = p.password;
       this.description = p.description;
+      this.avatarid = p.avatarid;
   }
 }
 public get isConnected(){

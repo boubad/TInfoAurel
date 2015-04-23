@@ -1,28 +1,25 @@
-//login.js
+import { BaseViewModel } from './modelbase';
+import { MaintainsDatabase } from '../services/pouchdb/maintainsdatabase';
 //
-import {inject} from 'aurelia-framework';
-import {Validation} from 'aurelia-validation';
-import {BaseViewModel} from '../data/model/modelbase';
-//
-@inject(Validation)
 export class LoginClass extends BaseViewModel {
-	constructor(validation) {
+    //
+    constructor() {
         super();
         this.username = null;
         this.password = null;
         this.title = 'Connexion';
-        this.validation = validation.on(this)
-        .ensure('username').isNotEmpty()
-        .ensure('password').isNotEmpty();
-    }// constructor
+    } // constructor
     activate() {
-    	return this.dataService.check_admin();
-    }// activate
+        return this.dataService.check_admin().then((x) => {
+            let db = new MaintainsDatabase();
+            return db.check_schema();
+        });
+    } // activate
     get canConnect() {
         return (this.username !== null) && (this.password !== null) &&
             (this.username.trim().length > 0) && (this.username.trim().length < 32) &&
             (this.password.trim().length > 0);
-    }// canConnect
+    } // canConnect
     get canNotConnect() {
         return (!this.canConnect);
     }
@@ -35,10 +32,12 @@ export class LoginClass extends BaseViewModel {
         service.find_person_by_username(suser).then((pPers) => {
             if (pPers === null) {
                 self.errorMessage = 'Utilisateur inconnu';
-            } else {
+            }
+            else {
                 if (!pPers.check_password(spass)) {
                     self.errorMessage = 'Utilisateur inconnu';
-                } else {
+                }
+                else {
                     userinfo.person = pPers;
                     let id = pPers.id;
                     let vid = pPers.avatarid;
@@ -49,13 +48,14 @@ export class LoginClass extends BaseViewModel {
                                 userinfo.photoUrl = xurl;
                                 self.username = null;
                                 self.password = null;
-                            }// data
+                            } // data
                         });
                     }
                 }
             }
         }, (err) => {
-                self.set_error(err);
-            });
-    }// connect        
-	}// class LoginClass
+            self.set_error(err);
+        });
+    } // connect        
+}
+ // class LoginClass

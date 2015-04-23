@@ -41,6 +41,19 @@ export interface IBaseItem {
   mat_module?: string;
   coefficient?: number;
   ecs?: number;
+  //
+  dossier?: string;
+  sexe?: string;
+  birthDate?: Date;
+  ville?: string;
+  etablissement?: string;
+  serieBac?: string;
+  optionBac?: string;
+  mentionBac?: string;
+  etudesSuperieures?: string;
+  //
+  isMale?: boolean;
+  isFeminin?: boolean;
 }// interface IBaseItem
 export interface IPerson extends IBaseItem {
   username: string;
@@ -66,6 +79,20 @@ export interface IPerson extends IBaseItem {
   is_super: boolean;
   is_admin: boolean;
 } // interface IPerson
+export interface IEtudiantPerson extends IPerson {
+  dossier: string;
+  sexe: string;
+  birthDate: Date;
+  ville: string;
+  etablissement: string;
+  serieBac: string;
+  optionBac: string;
+  mentionBac: string;
+  etudesSuperieures: string;
+  //
+  isMale: boolean;
+  isFeminin: boolean;
+}
 export interface ISigleNameItem extends IBaseItem {
   sigle: string;
   name: string;
@@ -134,5 +161,6 @@ export interface IDatabaseManager {
   attachmentData: Blob, attachmentType: string) => Promise<any>;
   remove_attachment: (docid: string, attachmentId: string) => Promise<any>;
   get_all_items: (item: IBaseItem) => Promise<IBaseItem[]>;
-  get_items: (item: IBaseItem, startKey?: any) => Promise<IBaseItem[]>;
+  get_items: (item: IBaseItem, startKey?: any, endKey?: any) => Promise<IBaseItem[]>;
+  get_ids: (startkey:string,endKey: any) => Promise<string[]>;
 }// IDatabaseManager

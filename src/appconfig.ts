@@ -9,7 +9,7 @@ export function configure(aurelia:Aurelia) {
     .standardConfiguration()
     .developmentLogging()
     .plugin('./resources/index')
-    .plugin('aurelia-validation');
+    .plugin('aurelia-validation',(config)=>{config.useLocale('fr-FR')});
  //   
   aurelia.start().then(a => a.setRoot());
 }

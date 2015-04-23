@@ -9,15 +9,14 @@ export class PagedViewModel extends BaseViewModel {
         this.old_elem = null;
         this._current = this.generator.create_item({ type: model.type });
         this._current_element = null;
-        this.next_key = null;
-        this.prev_key = null;
-        this.start_key = null;
         this.itemsPerPage = 16;
-        this.first_key = null;
         this.elements = [];
-        this.skip = 0;
         this.hasAvatars = false;
         this.isDescending = false;
+        //
+        this._all_ids = [];
+        this.pagesCount = 0;
+        this.currentPage = 0;
     } // constructor
     activate() {
         this.update_title();
@@ -165,15 +164,33 @@ export class PagedViewModel extends BaseViewModel {
                 elem.url = null;
             }
         } // elem
-        let startKey = this.start_key;
-        if (startKey === null) {
-            startKey = this.create_start_key();
+        let startKey = null;
+        let endKey = null;
+        let nbItems = this._all_ids.length;
+        let istart = this.currentPage * this.itemsPerPage;
+        if (istart < 0) {
+            istart = 0;
+        }
+        if ((istart >= 0) && (istart < nbItems)) {
+            startKey = this._all_ids[istart];
+        }
+        let iend = istart + this.itemsPerPage - 1;
+        if (iend >= nbItems) {
+            iend = nbItems - 1;
+        }
+        if ((iend >= 0) && (iend < nbItems)) {
+            endKey = this._all_ids[iend];
+        }
+        if ((startKey === null) || (endKey === null)) {
+            this.elements = [];
+            this.current_element = null;
+            return true;
         }
         let model = this.modelItem;
         this.clear_error();
         let oldid = (this.current_item !== null) ? this.current_item.id : null;
         var self = this;
-        return this.dataService.get_items(model, startKey).then((rr) => {
+        return this.dataService.get_items(model, startKey, endKey).then((rr) => {
             if (self.hasAvatars) {
                 return self.retrieve_avatars(rr);
             }
@@ -206,40 +223,69 @@ export class PagedViewModel extends BaseViewModel {
         });
     } // refresh
     refreshAll() {
-        this.skip = 0;
-        this.prev_key = null;
-        this.start_key = null;
-        this.next_key = null;
-        return this.refresh();
-    }
-    nextPage() {
-        if (this.next_key !== null) {
-            this.skip = 1;
-            this.start_key = this.next_key;
-            return this.refresh();
-        }
-    } // nextPage
-    prevPage() {
-        if (this.prev_key !== null) {
-            this.skip = 0;
-            this.start_key = this.prev_key;
-            this.refresh();
-        }
-    } // prevPage
-    get hasPages() {
-        return (this.next_key !== null) || (this.prev_key !== null);
-    }
-    set hasPages(b) {
+        this._all_ids = [];
+        this.pagesCount = 0;
+        this.currentPage = 0;
+        let model = this.modelItem;
+        let startKey = model.start_key;
+        let endKey = model.end_key;
+        let nc = this.itemsPerPage;
+        let self = this;
+        return this.dataService.get_ids(startKey, endKey).then((ids) => {
+            if ((ids !== undefined) && (ids !== null)) {
+                self._all_ids = ids;
+                let nt = ids.length;
+                let np = Math.floor(nt / nc);
+                if ((np * nc) < nt) {
+                    ++np;
+                }
+                self.pagesCount = np;
+            }
+            return self.refresh();
+        });
     }
     get canPrevPage() {
-        return (this.prev_key !== null);
+        return (this.currentPage > 0);
     }
     set canPrevPage(b) {
     }
     get canNextPage() {
-        return (this.next_key !== null);
+        let n = this.pagesCount - 1;
+        return (this.currentPage >= 0) && (this.currentPage < n);
     }
     set canNextPage(b) {
+    }
+    nextPage() {
+        let n = this.pagesCount - 1;
+        if (this.currentPage < n) {
+            this.currentPage = this.currentPage + 1;
+            return this.refresh();
+        }
+        return true;
+    } // nextPage
+    prevPage() {
+        if (this.currentPage > 0) {
+            this.currentPage = this.currentPage + 1;
+            return this.refresh();
+        }
+        return true;
+    } // prevPage
+    firstPage() {
+        this.currentPage = 0;
+        return this.refresh();
+    }
+    lastPage() {
+        let n = this.pagesCount - 1;
+        if (n >= 0) {
+            this.currentPage = n;
+            return this.refresh();
+        }
+        return true;
+    }
+    get hasPages() {
+        return (this.pagesCount > 1);
+    }
+    set hasPages(b) {
     }
 }
  // class ItemBase
