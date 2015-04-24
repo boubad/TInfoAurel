@@ -54,6 +54,13 @@ export interface IBaseItem {
   //
   isMale?: boolean;
   isFeminin?: boolean;
+  //
+  username?: string;
+  firstname?: string;
+  lastname?: string;
+  email?: string;
+  phone?: string;
+  reset_password?: () => void;
 }// interface IBaseItem
 export interface IPerson extends IBaseItem {
   username: string;
@@ -102,6 +109,20 @@ export interface IDepartement extends ISigleNameItem {
 }// interface IDepartement
 export interface IDepSigleNameItem extends ISigleNameItem {
   departementid: string;
+}
+export interface IDepartementChildItem extends IBaseItem{
+    departementid: string;
+}
+export interface IDepartementPerson extends IDepartementChildItem {
+    personid: string;
+    firstname: string;
+    lastname: string;
+}
+export interface IEnseignant extends IDepartementPerson{
+  
+}
+export interface IEtudiant extends IDepartementPerson{
+  
 }
 export interface IGroupe extends IDepSigleNameItem {
 

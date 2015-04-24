@@ -1,6 +1,6 @@
 // pagedviewmodel.ts
 //
-import {IBaseItem, IElementDesc, IItemGenerator} from '../../../infodata.d';
+import {IBaseItem, IItemGenerator} from '../../../infodata.d';
 //
 import {BaseViewModel} from '../modelbase';
 
@@ -14,7 +14,6 @@ export class PagedViewModel extends BaseViewModel {
   protected _current_element: IBaseItem;
   protected itemsPerPage: number;
   protected hasAvatars: boolean;
-  protected isDescending: boolean;
   //
   protected _all_ids: string[];
   protected pagesCount: number;
@@ -32,7 +31,6 @@ export class PagedViewModel extends BaseViewModel {
     this.itemsPerPage = 16;
     this.elements = [];
     this.hasAvatars = false;
-    this.isDescending = false;
     //
     this._all_ids = [];
     this.pagesCount = 0;
@@ -79,18 +77,21 @@ export class PagedViewModel extends BaseViewModel {
     let ep = this.current_element;
     if (ep === null) {
       this.current_item = this.create_item();
-      return true;
+      return this.current_item;
     }
     let id = ((ep.id !== undefined) && (ep.id !== null)) ? ep.id : null;
     if (id === null) {
       this.current_item = this.create_item();
-      return true;
+      return this.current_item;
     }
     var self = this;
     return this.dataService.find_item_by_id(id, true).then((r) => {
-      self.current_item = ((r !== undefined) && (r !== null)) ? r : this.create_item();;
+      self.current_item = ((r !== undefined) && (r !== null)) ? r :
+       this.create_item();
+       return self.current_item;
     }, (err) => {
-        self.current_item = this.create_item();;
+        self.current_item = this.create_item();
+        return self.current_item;
       });
   }// change_current
   protected post_change_item(): any {

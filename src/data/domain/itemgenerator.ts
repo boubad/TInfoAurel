@@ -11,6 +11,8 @@ import {Annee} from './annee';
 import {Semestre} from './semestre';
 import {Matiere} from './matiere';
 import {EtudiantPerson} from './etudperson';
+import {Etudiant} from './etudiant';
+import {Enseignant} from './enseignant';
 //
 export class ItemGenerator implements IItemGenerator {
   constructor() { }
@@ -38,6 +40,10 @@ export class ItemGenerator implements IItemGenerator {
       return new Matiere(oMap);
     } else if (t == 'etudperson'){
       return new EtudiantPerson(oMap);
+    } else if (t == 'etudiant'){
+      return new Etudiant(oMap);
+    } else if (t == 'prof'){
+      return new Enseignant(oMap);
     }
     return null;
 		}// create_item
