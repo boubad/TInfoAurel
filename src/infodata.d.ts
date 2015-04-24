@@ -61,6 +61,7 @@ export interface IBaseItem {
   email?: string;
   phone?: string;
   reset_password?: () => void;
+  roles?: string[];
 }// interface IBaseItem
 export interface IPerson extends IBaseItem {
   username: string;

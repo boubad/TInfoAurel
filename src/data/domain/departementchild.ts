@@ -23,7 +23,7 @@ implements IDepartementChildItem {
         return s;
     } // create_id
     public get start_key():any{
-         return this.base_prefix + '-' + this.departementid;
+        return (this.departementid !== null) ? this.base_prefix + '-' + this.departementid : this.base_prefix;
     }
     public set start_key(s:any) {
     }

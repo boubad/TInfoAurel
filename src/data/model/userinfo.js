@@ -127,6 +127,18 @@ export class UserInfo extends SessionObjectStore {
     set avatarid(s) {
         super.store_value('avatarid', s);
     }
+    get enseignantid() {
+        return super.get_value("enseignantid");
+    }
+    set enseignantid(s) {
+        super.store_value("enseignantid", s);
+    }
+    get etudiantid() {
+        return super.get_value("etudiantid");
+    }
+    set etudiantid(s) {
+        super.store_value("etudiantid", s);
+    }
     //
     get person() {
         if (this._person !== null) {
@@ -167,6 +179,8 @@ export class UserInfo extends SessionObjectStore {
         this.email = null;
         this.phone = null;
         this.description = null;
+        this.enseignantid = null;
+        this.etudiantid = null;
         if ((p !== null) && (p.id !== null)) {
             let oMap = {};
             p.to_map(oMap);
@@ -183,6 +197,12 @@ export class UserInfo extends SessionObjectStore {
             this.password = p.password;
             this.description = p.description;
             this.avatarid = p.avatarid;
+            if (p.has_role('prof')) {
+                this.enseignantid = docid;
+            }
+            if (p.has_role('etud')) {
+                this.etudiantid = docid;
+            }
         }
     }
     get isConnected() {

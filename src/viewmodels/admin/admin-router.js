@@ -18,7 +18,7 @@ export class AdminRouterClass {
         { route: 'etudiants',  moduleId: NOT_IMPLEMENTED, nav: true, title:'Etudiants' },
         { route: 'semestre',  moduleId: './semestre-model', nav: true, title:'Semestres' },
         { route: 'annees',  moduleId: './annee-model', nav: true, title:'Années' },
-        { route: 'enseignants',  moduleId: NOT_IMPLEMENTED, nav: true, title:'Enseignants' },
+        { route: 'enseignants',  moduleId: './prof-model', nav: true, title:'Enseignants' },
         { route: 'groupes',  moduleId: './groupe-model', nav: true, title:'Groupes' },
         { route: 'matieres',  moduleId: './matiere-model', nav: true, title:'Matières' },
         { route: 'unites',  moduleId: './unite-model', nav: true, title:'Unités' },

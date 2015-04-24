@@ -7,15 +7,16 @@ export class PagedViewModel extends BaseViewModel {
         this.modelItem = model;
         this.add_mode = false;
         this.old_elem = null;
-        this._current = this.generator.create_item({ type: model.type });
-        this._current_element = null;
+        this._current = null;
         this.itemsPerPage = 16;
         this.elements = [];
         this.hasAvatars = false;
+        this.hasAttachments = false;
+        this._pagesize = 16;
         //
         this._all_ids = [];
         this.pagesCount = 0;
-        this.currentPage = 0;
+        this._currentPage = 0;
     } // constructor
     activate() {
         this.update_title();
@@ -24,6 +25,39 @@ export class PagedViewModel extends BaseViewModel {
         }
         return true;
     } // activate
+    get itemsPerPage() {
+        if ((this._pagesize === undefined) || (this._pagesize === null)) {
+            this._pagesize = 16;
+        }
+        if (this._pagesize < 1) {
+            this._pagesize = 1;
+        }
+        return this._pagesize;
+    }
+    set itemsPerPage(s) {
+        if ((s !== undefined) && (s !== null) && (s > 0)) {
+            let old = this._pagesize;
+            if (old != s) {
+                this._pagesize = s;
+                this.refreshAll();
+            }
+        }
+    }
+    get currentPage() {
+        if ((this._currentPage === undefined) || (this._currentPage === null)) {
+            this._currentPage = 0;
+        }
+        return this._currentPage;
+    }
+    set currentPage(s) {
+        if ((s !== undefined) && (s !== null) && (s >= 0) && (s < this.pagesCount)) {
+            let old = this._currentPage;
+            if (old != s) {
+                this._currentPage = s;
+                this.refresh();
+            }
+        }
+    }
     get current_item() {
         if ((this._current === undefined) || (this._current === null)) {
             this._current = this.create_item();
@@ -45,46 +79,31 @@ export class PagedViewModel extends BaseViewModel {
         return p;
     } // create_item
     addNew() {
-        this.old_elem = this.current_element;
-        this.current_element = null;
-        this.change_current();
+        this.old_elem = this.current_item;
+        this.current_item = null;
         this.add_mode = true;
     } // addNew
     cancel_add() {
-        this.current_element = this.old_elem;
+        this.current_item = this.old_elem;
         this.add_mode = false;
     } // cancel_add
-    change_current() {
-        this.add_mode = false;
-        let ep = this.current_element;
-        if (ep === null) {
-            this.current_item = this.create_item();
-            return this.current_item;
-        }
-        let id = ((ep.id !== undefined) && (ep.id !== null)) ? ep.id : null;
-        if (id === null) {
-            this.current_item = this.create_item();
-            return this.current_item;
-        }
-        var self = this;
-        return this.dataService.find_item_by_id(id, true).then((r) => {
-            self.current_item = ((r !== undefined) && (r !== null)) ? r :
-                this.create_item();
-            return self.current_item;
-        }, (err) => {
-            self.current_item = this.create_item();
-            return self.current_item;
-        });
-    } // change_current
     post_change_item() {
         return true;
     } // post_change_item
     get current_element() {
-        return this._current_element;
+        if ((this._current === undefined) || (this._current === null)) {
+            this._current = this.create_item();
+        }
+        return this._current;
     }
     set current_element(s) {
-        this._current_element = ((s !== undefined) && (s !== null)) ? s : null;
-        this.change_current();
+        if ((s !== undefined) && (s !== null)) {
+            this._current = s;
+        }
+        else {
+            this._current = this.create_item();
+        }
+        this.post_change_item();
     }
     create_start_key() {
         return this.modelItem.start_key;
@@ -102,15 +121,13 @@ export class PagedViewModel extends BaseViewModel {
     get canCancel() {
         return this.add_mode;
     }
-    set canCancel(s) {
-    }
+    set canCancel(s) { }
     get canRemove() {
-        let x = this.current_element;
+        let x = this.current_item;
         return ((x !== null) && (x.id !== undefined) && (x.rev !== undefined) &&
             (x.id !== null) && (x.rev !== null));
     }
-    set canRemove(s) {
-    }
+    set canRemove(s) { }
     remove() {
         let item = this.current_item;
         if (item === null) {
@@ -132,8 +149,7 @@ export class PagedViewModel extends BaseViewModel {
         let x = this.current_item;
         return (x !== null) && (x.is_storeable !== undefined) && (x.is_storeable() == true);
     }
-    set canSave(s) {
-    }
+    set canSave(s) { }
     save() {
         let item = this.current_item;
         if (item === null) {
@@ -146,14 +162,15 @@ export class PagedViewModel extends BaseViewModel {
         return this.dataService.maintains_item(item).then((r) => {
             if (item.rev !== null) {
                 self.add_mode = false;
-                self.refresh();
+                return self.refresh();
             }
             else {
-                self.refreshAll();
+                return self.refreshAll();
             }
         }, (err) => {
             self.add_mode = false;
             self.set_error(err);
+            return false;
         });
     } // save
     refresh() {
@@ -168,9 +185,6 @@ export class PagedViewModel extends BaseViewModel {
         let endKey = null;
         let nbItems = this._all_ids.length;
         let istart = this.currentPage * this.itemsPerPage;
-        if (istart < 0) {
-            istart = 0;
-        }
         if ((istart >= 0) && (istart < nbItems)) {
             startKey = this._all_ids[istart];
         }
@@ -183,7 +197,7 @@ export class PagedViewModel extends BaseViewModel {
         }
         if ((startKey === null) || (endKey === null)) {
             this.elements = [];
-            this.current_element = null;
+            this.current_item = null;
             return true;
         }
         let model = this.modelItem;
@@ -220,12 +234,13 @@ export class PagedViewModel extends BaseViewModel {
                 self.elements = [];
                 self.addNew();
             }
+            return true;
         });
     } // refresh
     refreshAll() {
         this._all_ids = [];
         this.pagesCount = 0;
-        this.currentPage = 0;
+        this._currentPage = 0;
         let model = this.modelItem;
         let startKey = model.start_key;
         let endKey = model.end_key;
@@ -247,45 +262,48 @@ export class PagedViewModel extends BaseViewModel {
     get canPrevPage() {
         return (this.currentPage > 0);
     }
-    set canPrevPage(b) {
-    }
+    set canPrevPage(b) { }
     get canNextPage() {
         let n = this.pagesCount - 1;
         return (this.currentPage >= 0) && (this.currentPage < n);
     }
-    set canNextPage(b) {
-    }
+    set canNextPage(b) { }
     nextPage() {
         let n = this.pagesCount - 1;
         if (this.currentPage < n) {
             this.currentPage = this.currentPage + 1;
-            return this.refresh();
         }
         return true;
     } // nextPage
     prevPage() {
         if (this.currentPage > 0) {
             this.currentPage = this.currentPage + 1;
-            return this.refresh();
         }
         return true;
     } // prevPage
     firstPage() {
         this.currentPage = 0;
-        return this.refresh();
     }
     lastPage() {
         let n = this.pagesCount - 1;
         if (n >= 0) {
             this.currentPage = n;
-            return this.refresh();
         }
         return true;
     }
     get hasPages() {
         return (this.pagesCount > 1);
     }
-    set hasPages(b) {
+    set hasPages(b) { }
+    get description() {
+        let x = this.current_item;
+        return ((x !== undefined) && (x !== null)) ? x.description : null;
+    }
+    set description(s) {
+        let x = this.current_item;
+        if ((x !== undefined) && (x !== null)) {
+            x.description = s;
+        }
     }
 }
  // class ItemBase

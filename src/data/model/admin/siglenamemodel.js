@@ -1,4 +1,5 @@
 import { PagedViewModel } from './pagedviewmodel';
+//
 export class SigleNameModel extends PagedViewModel {
     constructor(model) {
         super(model);
@@ -23,14 +24,5 @@ export class SigleNameModel extends PagedViewModel {
             x.name = s;
         }
     }
-    get description() {
-        let x = this.current_item;
-        return ((x !== undefined) && (x !== null)) ? x.description : null;
-    }
-    set description(s) {
-        let x = this.current_item;
-        if ((x !== undefined) && (x !== null)) {
-            x.description = s;
-        }
-    }
 }
+ // class SigleNameBase

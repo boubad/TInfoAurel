@@ -20,6 +20,9 @@ export class MatiereViewModel extends DepSigleNameModel {
         let item = new Unite({ departementid: this.departementid });
         this.dataService.get_all_items(item).then((aa) => {
             self.unites = ((aa !== undefined) && (aa !== null)) ? aa : [];
+            if (self.unites.length > 0) {
+                self._unite = self.unites[0];
+            }
         });
     }
     post_change_item() {
@@ -48,7 +51,8 @@ export class MatiereViewModel extends DepSigleNameModel {
         this.title = s;
     }
     get uniteid() {
-        return this.userInfo.uniteid;
+        let x = this.unite_elem;
+        return (x !== null) ? x.id : null;
     }
     get hasUnite() {
         return (this.departementid !== null) && (this.uniteid !== null);
@@ -56,11 +60,9 @@ export class MatiereViewModel extends DepSigleNameModel {
     set hasUnite(b) {
     }
     create_item() {
-        let model = this.modelItem;
-        let p = this.generator.create_item({
-            type: model.type,
-            departementid: this.departementid, uniteid: this.uniteid
-        });
+        let p = super.create_item();
+        p.departementid = this.departementid;
+        p.uniteid = this.uniteid;
         return p;
     }
     get canAdd() {

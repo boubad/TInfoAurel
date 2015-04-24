@@ -1,126 +1,83 @@
 // personviewmodel.ts
 //
-import {IBaseItem, IPerson} from '../../../infodata.d';
+import {IBaseItem, IPerson,IDepartementPerson} from '../../../infodata.d';
 //
-import {PagedViewModel} from './pagedviewmodel';
+import {DepartementChildModel} from './departementchildmodel';
 import {Departement} from '../../domain/departement';
 import {Person} from '../../domain/person';
 //
-export class PersonViewModel extends PagedViewModel {
+export class PersonViewModel extends DepartementChildModel {
     //
-    private _depelem: IBaseItem;
-    public departements: IBaseItem[];
-    public base_title: string;
     protected modelPerson: IBaseItem;
-    protected currentPerson: IBaseItem;
+    protected _currentPerson: IBaseItem;
+    protected currentUrl: string;
     //
-    constructor(model: IBaseItem, personModel?: IPerson) {
+    constructor(model: IDepartementPerson, personModel?: IPerson) {
         super(model);
         this.modelPerson = ((personModel !== undefined) && (personModel !== null)) ?
             personModel : new Person();
-        this._depelem = null;
-        this.departements = [];
-        this.base_title = null;
+        this._currentPerson = null;
+        this.currentUrl = null;
     }// constructor
-    public activate(): any {
-        let depid = this.userInfo.departementid;
-        this.modelItem.departementid = depid;
-        this.update_title();
-        if ((this.departements.length > 0)) {
-            return super.activate();
-        }
-        let userinfo = this.userInfo;
-        let pPers = userinfo.person;
-        if ((pPers === undefined) || (pPers === null)) {
-            this._depelem = null;
-            this.departements = [];
-            return true;
-        }
-        let name = this.userInfo.username;
-        let bSuper = ((name !== null) && (name == 'admin')) ? true : false;
-        let service = this.dataService;
-        let self = this;
-        let dep = new Departement();
-        if (bSuper) {
-            return service.get_all_items(dep).then((rr) => {
-                self.departements = ((rr !== undefined) && (rr !== null)) ? rr : [];
-            });
-        } else {
-            let ids = ((pPers.departementids !== undefined) &&
-                (pPers.departementids !== null) &&
-                (pPers.departementids.length > 0)) ? pPers.departementids : [];
-            if (ids.length < 1) {
-                return super.activate();
-            } else {
-                return service.find_items_array(ids).then((rr) => {
-                    self.departements = ((rr !== undefined) && (rr !== null)) ? rr : [];
-                });
-            }
-        }
-    }// activate
-    public get departement_elem(): IBaseItem {
-        return this._depelem;
+    public get hasCurrentPhoto():boolean {
+        return (this.currentUrl !== null);
     }
-    public set departement_elem(s: IBaseItem) {
-        this._depelem = (s !== undefined) ? s : null;
-        let id = (this._depelem !== null) ? this._depelem.id : null;
-        this.modelItem.departementid = id;
-        this.userInfo.departementid = id;
-        this.current_item = this.create_item();
-        this.update_title();
-        this.refreshAll();
+    public set hasCurrentPhoto(s:boolean){}
+    public get currentPerson(): IBaseItem {
+        if (this._currentPerson === null) {
+            this._currentPerson = this.generator.create_item({ type: this.modelPerson.type });
+        }
+        return this._currentPerson;
+    }
+    public set currentPerson(s: IBaseItem) {
+        this._currentPerson = ((s !== undefined) && (s !== null)) ? s :
+            this.generator.create_item({ type: this.modelPerson.type });
     }
     public addNew(): void {
         super.addNew();
-        this.currentPerson =
-        this.generator.create_item({ type: this.modelPerson.type });
+        this.currentPerson = null;
     }// ad
     protected post_change_item(): any {
+        if (this.currentUrl !== null){
+            this.revokeUrl(this.currentUrl);
+        }
+        this.currentUrl = null;
         let p = this.current_item;
         if (p === null) {
-            this.currentPerson = this.generator.create_item({ type: this.modelPerson });
+            this.currentPerson = null;
             return false;
         }
         let pid = p.personid;
         if (pid === null) {
-            this.currentPerson = this.generator.create_item({ type: this.modelPerson });
+            this.currentPerson = null;
             return false;
         }
         let self = this;
-        this.dataService.find_item_by_id(pid).then((pp) => {
-            self.currentPerson = ((pp !== undefined) && (pp !== null)) ? pp :
-                self.generator.create_item({ type: self.modelPerson });
+        let service = this.dataService;
+        return service.find_item_by_id(pid).then((pp) => {
+            self.currentPerson = pp;
+            if ((pp !== undefined) && (pp !== null)){
+                let id = pp.id;
+                let vid = pp.avatarid;
+                if ((id !== null) && (vid !== null)){
+                    service.find_attachment(id, vid).then((blob) => { 
+                        let xurl = self.createUrl(blob);
+                        self.currentUrl = xurl;
+                        });
+                }
+                }// pp
         });
-        return true;
     }// post_change_item
-    protected update_title(): void {
-        let s = (this.base_title !== null) ? this.base_title : '';
-        let p = this.departement_elem;
-        if ((p !== null) && (p.text !== null)) {
-            s = s + ' ' + p.text;
-        }
-        this.title = s;
-    } // update_title
-    public get departementid(): string {
-        return this.userInfo.departementid;
-    }
-    public get hasDepartement(): boolean {
-        return (this.departementid !== null);
-    }
-    public set hasDepartement(b: boolean) {
-
+    public get personid(): string {
+        let x = this.currentPerson;
+        return (x !== null) ? x.id : null;
     }
     protected create_item(): IBaseItem {
-        let model = this.modelItem;
-        let p = this.generator.create_item({ type: model.type, departementid: this.departementid });
+        let p = super.create_item();
+        this._currentPerson = this.generator.create_item({ type: this.modelPerson.type });
+        p.departementid = this.departementid;
         return p;
     }// create_item
-    public get canAdd(): boolean {
-        return (!this.add_mode) && (this.departementid !== null);
-    }
-    public set canAdd(s: boolean) {
-
-    }
     public get canResetPassword(): boolean {
         let p = this.currentPerson;
         return (p !== undefined) && (p !== null) &&
@@ -192,19 +149,6 @@ export class PersonViewModel extends PagedViewModel {
             p.phone = s;
         }
     }
-    public get description(): string {
-        let p = this.currentPerson;
-        if ((p !== undefined) && (p !== null)) {
-            return p.description;
-        }
-        return null;
-    }
-    public set description(s: string) {
-        let p = this.currentPerson;
-        if ((p !== undefined) && (p !== null)) {
-            p.description = s;
-        }
-    }
     public get canSave(): boolean {
         let x = this.currentPerson;
         return (this.departementid !== null) &&
@@ -231,6 +175,7 @@ export class PersonViewModel extends PagedViewModel {
             item.departementid = depid;
             item.firstname = r.firstname;
             item.lastname = r.lastname;
+            item.avatardocid = r.id;
             item.avatarid = r.avatarid;
             return service.maintains_item(item);
         }).then((x) => {
@@ -243,7 +188,7 @@ export class PersonViewModel extends PagedViewModel {
             self.set_error(err);
         })
     }// save
-     public reset_password(): any {
+    public reset_password(): any {
         let pPers = this.currentPerson;
         if (pPers === null) {
             return false;

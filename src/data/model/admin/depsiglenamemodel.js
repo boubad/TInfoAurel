@@ -1,89 +1,26 @@
-import { SigleNameModel } from './siglenamemodel';
-import { Departement } from '../../domain/departement';
-export class DepSigleNameModel extends SigleNameModel {
+import { DepartementChildModel } from './departementchildmodel';
+export class DepSigleNameModel extends DepartementChildModel {
     constructor(model) {
         super(model);
-        this._depelem = null;
-        this.departements = [];
-        this.base_title = null;
     }
-    activate() {
-        let depid = this.userInfo.departementid;
-        this.modelItem.departementid = depid;
-        this.update_title();
-        if ((this.departements.length > 0)) {
-            return super.activate();
-        }
-        let userinfo = this.userInfo;
-        let pPers = userinfo.person;
-        if ((pPers === undefined) || (pPers === null)) {
-            this._depelem = null;
-            this.departements = [];
-            return true;
-        }
-        let name = this.userInfo.username;
-        let bSuper = ((name !== null) && (name == 'admin')) ? true : false;
-        let service = this.dataService;
-        let self = this;
-        let dep = new Departement();
-        if (bSuper) {
-            return service.get_all_items(dep).then((rr) => {
-                self.departements = ((rr !== undefined) && (rr !== null)) ? rr : [];
-            });
-        }
-        else {
-            let ids = ((pPers.departementids !== undefined) &&
-                (pPers.departementids !== null) &&
-                (pPers.departementids.length > 0)) ? pPers.departementids : [];
-            if (ids.length < 1) {
-                return super.activate();
-            }
-            else {
-                return service.find_items_array(ids).then((rr) => {
-                    self.departements = ((rr !== undefined) && (rr !== null)) ? rr : [];
-                });
-            }
+    get sigle() {
+        let x = this.current_item;
+        return ((x !== undefined) && (x !== null)) ? x.sigle : null;
+    }
+    set sigle(s) {
+        let x = this.current_item;
+        if ((x !== undefined) && (x !== null)) {
+            x.sigle = s;
         }
     }
-    departement_changed() {
+    get name() {
+        let x = this.current_item;
+        return ((x !== undefined) && (x !== null)) ? x.name : null;
     }
-    get departement_elem() {
-        return this._depelem;
-    }
-    set departement_elem(s) {
-        this._depelem = (s !== undefined) ? s : null;
-        let id = (this._depelem !== null) ? this._depelem.id : null;
-        this.modelItem.departementid = id;
-        this.userInfo.departementid = id;
-        this.current_item = this.create_item();
-        this.departement_changed();
-        this.update_title();
-        this.refreshAll();
-    }
-    update_title() {
-        let s = (this.base_title !== null) ? this.base_title : '';
-        let p = this.departement_elem;
-        if ((p !== null) && (p.text !== null)) {
-            s = s + ' ' + p.text;
+    set name(s) {
+        let x = this.current_item;
+        if ((x !== undefined) && (x !== null)) {
+            x.name = s;
         }
-        this.title = s;
-    }
-    get departementid() {
-        return this.userInfo.departementid;
-    }
-    get hasDepartement() {
-        return (this.departementid !== null);
-    }
-    set hasDepartement(b) {
-    }
-    create_item() {
-        let model = this.modelItem;
-        let p = this.generator.create_item({ type: model.type, departementid: this.departementid });
-        return p;
-    }
-    get canAdd() {
-        return (!this.add_mode) && (this.departementid !== null);
-    }
-    set canAdd(s) {
     }
 }

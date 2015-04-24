@@ -133,6 +133,18 @@ export class UserInfo extends SessionObjectStore {
   public set avatarid(s:string){
     super.store_value('avatarid', s);
   }
+  public get enseignantid():string {
+    return super.get_value("enseignantid");
+  }
+  public set enseignantid(s:string){
+    super.store_value("enseignantid", s);
+  }
+  public get etudiantid():string {
+    return super.get_value("etudiantid");
+  }
+  public set etudiantid(s:string){
+    super.store_value("etudiantid", s);
+  }
   //
   public get person() : IPerson {
     if (this._person !== null){
@@ -172,6 +184,8 @@ export class UserInfo extends SessionObjectStore {
     this.email = null;
     this.phone = null;
     this.description = null;
+    this.enseignantid = null;
+    this.etudiantid = null;
     if ((p !== null) && (p.id !== null)) {
        let oMap  = {};
        p.to_map(oMap);
@@ -188,6 +202,12 @@ export class UserInfo extends SessionObjectStore {
       this.password = p.password;
       this.description = p.description;
       this.avatarid = p.avatarid;
+      if (p.has_role('prof')){
+        this.enseignantid = docid;
+      }
+      if (p.has_role('etud')){
+        this.etudiantid = docid;
+      }
   }
 }
 public get isConnected(){
