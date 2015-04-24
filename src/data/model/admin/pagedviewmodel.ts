@@ -37,6 +37,9 @@ export class PagedViewModel extends BaseViewModel {
     this.pagesCount = 0;
     this._currentPage = 0;
   }// constructor
+  public canActivate():boolean {
+    return this.isSuper || this.isAdmin;
+  }
   public activate(): any {
     this.update_title();
     if (this.elements.length < 1) {

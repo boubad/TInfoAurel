@@ -60,8 +60,15 @@ export interface IBaseItem {
   lastname?: string;
   email?: string;
   phone?: string;
+  //
   reset_password?: () => void;
   roles?: string[];
+  departementids?: string[];
+  anneeids?: string[];
+  semestreids?: string[];
+  uniteids?: string[];
+  matiereids?: string[];
+  groupeids?: string[];
 }// interface IBaseItem
 export interface IPerson extends IBaseItem {
   username: string;

@@ -113,6 +113,9 @@ export class ProfilViewModel extends BaseViewModel {
             this.confirmPassword = null;
         }
     }
+    public canActivate(): boolean {
+        return this.isConnected;
+    }
     public activate(): any {
         this.reset_data();
         this.fill_data();

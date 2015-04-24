@@ -298,7 +298,7 @@ export class Person extends BaseItem implements IPerson {
   public has_role(r: string): boolean {
   	let bRet = false;
   	if ((r !== undefined) && (r !== null) && (this._roles !== undefined) &&
-  		(this._roles !== null) && (this._annees.length > 0)){
+  		(this._roles !== null) && (this._roles.length > 0)){
   		let ss = r.trim().toLowerCase();
   		let n = this._roles.length;
   		for (let i = 0; i < n; ++i){

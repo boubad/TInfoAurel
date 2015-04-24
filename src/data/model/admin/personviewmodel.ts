@@ -25,13 +25,13 @@ export class PersonViewModel extends DepartementChildModel {
     public set hasCurrentPhoto(s:boolean){}
     public get currentPerson(): IBaseItem {
         if (this._currentPerson === null) {
-            this._currentPerson = this.generator.create_item({ type: this.modelPerson.type });
+            this._currentPerson = this.create_person();
         }
         return this._currentPerson;
     }
     public set currentPerson(s: IBaseItem) {
         this._currentPerson = ((s !== undefined) && (s !== null)) ? s :
-            this.generator.create_item({ type: this.modelPerson.type });
+            this.create_person();
     }
     public addNew(): void {
         super.addNew();
@@ -72,9 +72,12 @@ export class PersonViewModel extends DepartementChildModel {
         let x = this.currentPerson;
         return (x !== null) ? x.id : null;
     }
+    protected create_person(): IBaseItem {
+        return new Person();
+    }
     protected create_item(): IBaseItem {
         let p = super.create_item();
-        this._currentPerson = this.generator.create_item({ type: this.modelPerson.type });
+        this._currentPerson = this.create_person();
         p.departementid = this.departementid;
         return p;
     }// create_item
@@ -169,6 +172,11 @@ export class PersonViewModel extends DepartementChildModel {
         let self = this;
         let service = this.dataService;
         let bOld = (item.rev !== null);
+        if (!bOld){
+            pPers.reset_password();
+        }
+        let rx = pPers.departementids;
+        pPers.departementids = this.array_add(rx, depid);
         this.clear_error();
         return service.maintains_item(pPers).then((r) => {
             item.personid = r.id;

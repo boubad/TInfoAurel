@@ -31,7 +31,7 @@
 				<button type="button" click.delegate="refreshAll()" class="btn btn-primary">Rafraîchir</button>
 			</div>
 			<div class="row">
-				<div class="col-md-4 col-sm-4 col-xs-4" if.bind="hasElements">
+				<div class="col-md-2 col-sm-2 col-xs-2" if.bind="hasElements">
 					<div class="form-group">
 						<select value.bind="current_element" size="16">
 							<option repeat.for="elem of elements" model.bind="elem">${elem.text}</option>
@@ -54,7 +54,7 @@
 						</ul>
 					</div>
 				</div>
-				<div class="col-md-4 col-sm-4 col-xs-4">
+				<div class="col-md-3 col-sm-3 col-xs-3">
 					<div if.bind="hasCurrentPhoto">
 						<img src.bind="currentUrl" height="128"></img>
 					</div>
@@ -92,8 +92,44 @@
                       	<button type="button" show.bind="canRemove" click.delegate="remove()" class="btn btn-primary">Supprimer</button>
                 	</div>
 				</div>
-				<div class="col-md-4 col-sm-4 col-xs-4">
-
+				<div class="col-md-3 col-sm-3 col-xs-3">
+					<div class="form-group">
+						<label class="form-label">Sexe</label>
+						<label class="radio-inline"><input type="radio" name="optsexe" value.bind="sexe">masculin</label>
+						<label class="radio-inline"><input type="radio" name="optsexe" value.bind="sexe">féminin</label>
+					</div>
+					<div class="form-group">
+						<label class="form-label" for="birthDate">Date de naissance</label>
+						<input class="form-control" type="date" id="birthDate" value.bind="birthDate"></input>
+					</div>
+					<div class="form-group">
+						<label class="form-label" for="dossier">Dossier</label>
+						<input class="form-control" type="text" id="dossier" value.bind="dossier" placeholder="Dossier"></input>
+					</div>
+					<div class="form-group">
+						<label class="form-label" for="etablissement">Etablissement</label>
+						<input class="form-control" type="text" id="etablissement" value.bind="etablissement" placeholder="Etablissement"></input>
+					</div>
+					<div class="form-group">
+						<label class="form-label" for="ville">Ville</label>
+						<input class="form-control" type="text" id="ville" value.bind="ville" placeholder="Ville"></input>
+					</div>
+					<div class="form-group">
+						<label class="form-label" for="seriebac">Série bac</label>
+						<input class="form-control" type="text" id="seriebac" value.bind="serieBac" placeholder="Série bac"></input>
+					</div>
+					<div class="form-group">
+						<label class="form-label" for="optionbac">Option bac</label>
+						<input class="form-control" type="text" id="optionbac" value.bind="optionBac" placeholder="Option bac"></input>
+					</div>
+					<div class="form-group">
+						<label class="form-label" for="mentionbac">Mention bac</label>
+						<input class="form-control" type="text" id="mentionbac" value.bind="mentionBac" placeholder="Mention bac"></input>
+					</div>
+					<div class="form-group">
+						<label class="form-label" for="sup">Etudes supérieures</label>
+						<input class="form-control" type="text" id="sup" value.bind="etudesSuperieures" placeholder="Etudes supérieures"></input>
+					</div>
 				</div>
 			</div>
 		</form>

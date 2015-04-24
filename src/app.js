@@ -17,5 +17,5 @@ export class App {
         { route: 'admin-router',  moduleId: './viewmodels/admin/admin-router', nav: true, title:'Administration' }
       ]);
     });
-  }
+  }// constructor
 }

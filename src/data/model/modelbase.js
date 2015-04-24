@@ -1,3 +1,4 @@
+import { Redirect } from 'aurelia-router';
 import { DataService } from '../services/dataservice';
 import { ItemGenerator } from '../domain/itemgenerator';
 import { UserInfo } from './userinfo';
@@ -56,7 +57,10 @@ export class BaseViewModel {
     }
     revokeUrl(s) {
         if ((s !== undefined) && (s !== null)) {
-            window.revokeObjectURL(s);
+            try {
+                window.URL.revokeObjectURL(s);
+            }
+            catch (e) { }
         }
     }
     get generator() {
@@ -126,7 +130,9 @@ export class BaseViewModel {
     disconnect() {
         if (this.confirm("Voulez-vous vraiment quitter?")) {
             this.userInfo.person = null;
+            return new Redirect('#home');
         }
+        return false;
     } // disconnect
     get fullname() {
         return this.userInfo.fullname;
@@ -139,6 +145,42 @@ export class BaseViewModel {
     }
     set hasPhoto(s) {
     }
+    get isSuper() {
+        let bRet = false;
+        let x = this.userInfo;
+        if ((x !== undefined) && (x !== null)) {
+            let p = x.person;
+            if ((p !== undefined) && (p !== null)) {
+                bRet = p.is_super;
+            }
+        }
+        return bRet;
+    }
+    set isSuper(b) { }
+    get isAdmin() {
+        let bRet = false;
+        let x = this.userInfo;
+        if ((x !== undefined) && (x !== null)) {
+            let p = x.person;
+            if ((p !== undefined) && (p !== null)) {
+                bRet = p.is_super || p.is_admin;
+            }
+        }
+        return bRet;
+    }
+    set isAdmin(b) { }
+    get isProf() {
+        let bRet = false;
+        let x = this.userInfo;
+        if ((x !== undefined) && (x !== null)) {
+            let p = x.person;
+            if ((p !== undefined) && (p !== null)) {
+                bRet = p.has_role('prof');
+            }
+        }
+        return bRet;
+    }
+    set isProf(b) { }
     retrieve_one_avatar(item) {
         let service = this.dataService;
         let self = this;
@@ -172,5 +214,28 @@ export class BaseViewModel {
         }
         return Promise.all(pp);
     } // retrieve_avatars
+    array_add(cont, val) {
+        let cRet = [];
+        if ((cont === undefined) || (cont === null)) {
+            if ((val !== undefined) && (val !== null)) {
+                cRet.push(val);
+            }
+            return cRet;
+        }
+        if ((val === null) || (val === null)) {
+            return cont;
+        }
+        let bFound = false;
+        for (let s of cont) {
+            if (s == val) {
+                bFound = true;
+            }
+            cRet.push(s);
+        }
+        if (!bFound) {
+            cRet.push(val);
+        }
+        return cRet;
+    } // _array_add
 }
  // class BaseViewModel

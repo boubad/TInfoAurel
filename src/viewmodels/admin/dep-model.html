@@ -2,7 +2,7 @@
 	<h2>${title}</h2>
 	<div class="container" if.bind="isConnected">
 		<div>
-			<div class="row">
+			<div class="row" if.bind="isAdmin">
 				<div class="col-md-4 col-sm-4 col-xs-4">&nbsp;</div>
 				<div class="col-md-2 col-sm-2 col-xs-2">
 						${fullname}
@@ -14,7 +14,7 @@
 		</div>
 		<h3 show.bind = "hasErrorMessage" class="text-danger">${errorMessage}</h3>
 		<h3 show.bind = "hasInfoMessage" class="text-success">${infoMessage}</h3>
-		<div class="row">
+		<div class="row" if.bind="isAdmin">
 			<div class="col-md-4 col-sm-4 col-xs-4" if.bind="hasElements">
 				<ul class="pagination" if.bind="hasPages">
 				<li>
@@ -27,7 +27,7 @@
 					<a href="#" click.delegate="nextPage()" show.bind="canNextPage">Suivant</a>
 				</li>
 				<li>
-					<a href="#" click.delegate="nextPage()" show.bind="lastPage">Fin</a>
+					<a href="#" click.delegate="lastPage()" show.bind="canNextPage">Fin</a>
 				</li>
 			</ul>
 			<select value.bind="current_element" size.bind="itemsPerPage">

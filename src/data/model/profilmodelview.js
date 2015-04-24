@@ -1,5 +1,7 @@
 import { BaseViewModel } from './modelbase';
+//
 export class ProfilViewModel extends BaseViewModel {
+    //
     constructor() {
         super();
         this.title = 'Avatar';
@@ -9,12 +11,15 @@ export class ProfilViewModel extends BaseViewModel {
         this.hasUrl = false;
         this.filename = null;
         this.filetype = null;
+        //
         this.avatarid = null;
         this.oldUrl = null;
         this.hasOldUrl = false;
+        //
         this.profilMode = true;
         this.passwordMode = false;
         this.avatarMode = false;
+        //
         this.firstname = null;
         this.lastname = null;
         this.email = null;
@@ -22,7 +27,7 @@ export class ProfilViewModel extends BaseViewModel {
         this.description = null;
         this.newPassword = null;
         this.confirmPassword = null;
-    }
+    } // constructor
     set_profil() {
         this.profilMode = true;
         this.passwordMode = false;
@@ -66,6 +71,7 @@ export class ProfilViewModel extends BaseViewModel {
             this.hasUrl = false;
             this.filename = null;
             this.filetype = null;
+            //
             this.avatarid = null;
             this.oldUrl = null;
             this.hasOldUrl = false;
@@ -77,6 +83,9 @@ export class ProfilViewModel extends BaseViewModel {
             this.newPassword = null;
             this.confirmPassword = null;
         }
+    }
+    canActivate() {
+        return this.isConnected;
     }
     activate() {
         this.reset_data();
@@ -120,7 +129,7 @@ export class ProfilViewModel extends BaseViewModel {
         }, (err) => {
             self.set_error(err);
         });
-    }
+    } // saveData
     get url() {
         return this._url;
     }
@@ -154,8 +163,8 @@ export class ProfilViewModel extends BaseViewModel {
                 self.filetype = file.type;
             };
             fr.readAsArrayBuffer(file);
-        }
-    }
+        } // files
+    } // fileChanged
     remove() {
         if (this.confirm('Voulez-vous vraiment supprimer cet avatar?')) {
             let self = this;
@@ -194,5 +203,6 @@ export class ProfilViewModel extends BaseViewModel {
             self.reset_data();
             return service.maintains_item(pPers);
         });
-    }
+    } // save
 }
+ // class AvatarModelClass

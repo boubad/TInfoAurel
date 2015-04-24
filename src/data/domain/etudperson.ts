@@ -4,27 +4,27 @@ import {IEtudiantPerson} from '../../infodata.d';
 import {Person} from './person';
 //
 export class EtudiantPerson extends Person implements IEtudiantPerson {
-  public dossier: string;
-  public sexe: string;
+  private _dossier: string;
+  private _sexe: string;
   private _date: Date;
-  public ville: string;
-  public etablissement: string;
-  public serieBac: string;
-  public optionBac: string;
-  public mentionBac: string;
-  public etudesSuperieures: string;
+  private _ville: string;
+  private _etablissement: string;
+  private _seriebac: string;
+  private _optionbac: string;
+  private _mentionbac: string;
+  private _sup: string;
   //
   constructor(oMap?: any) {
     super(oMap);
-    this.dossier = null;
-    this.sexe = null;
+    this._dossier = null;
+    this._sexe = null;
     this._date = null;
-    this.ville = null;
-    this.etablissement = null;
-    this.serieBac = null;
-    this.optionBac = null;
-    this.mentionBac = null;
-    this.etudesSuperieures = null;
+    this._ville = null;
+    this._etablissement = null;
+    this._seriebac = null;
+    this._optionbac = null;
+    this._mentionbac = null;
+    this._sup = null;
     this.roles = ['etud'];
     if ((oMap !== undefined) && (oMap !== null)) {
       if (oMap.dossier !== undefined) {
@@ -69,23 +69,84 @@ export class EtudiantPerson extends Person implements IEtudiantPerson {
   public set birthDate(s: Date) {
     this._date = this.check_date(s);
   }
-
+  //
+  public get dossier(): string {
+    return this._dossier;
+  }
+  public set dossier(s: string) {
+    this._dossier = ((s !== undefined) &&
+      (s !== null) && (s.trim().length > 0)) ? s.trim().toLowerCase() : null;
+  }
+  public get sexe(): string {
+    return this._sexe;
+  }
+  public set sexe(s) {
+    this._sexe = ((s !== undefined) &&
+      (s !== null) && (s.trim().length > 0)) ? s.trim().toLowerCase() : null;
+  }
   //
   public get isMale(): boolean {
     return ((this.sexe !== null) && (this.sexe == 'masculin'));
   }
   public set isMale(b: boolean) {
     if ((b !== undefined) && (b !== null)) {
-      this.sexe = (b == true) ? 'masculin' : 'feminin';
+      this.sexe = (b == true) ? 'masculin' : 'féminin';
     }
   }
   public get isFeminin(): boolean {
-    return ((this.sexe !== null) && (this.sexe == 'feminin'));
+    return ((this.sexe !== null) && (this.sexe == 'féminin'));
   }
   public set isFeminin(b: boolean) {
     if ((b !== undefined) && (b !== null)) {
-      this.sexe = (b == true) ? 'feminin' : 'masculin';
+      this.sexe = (b == true) ? 'féminin' : 'masculin';
     }
+  }
+  //
+  public get ville(): string {
+    return this._ville;
+  }
+  public set ville(s: string) {
+    this._ville = ((s !== undefined) &&
+      (s !== null) && (s.trim().length > 0)) ? s.trim() : null;
+  }
+  //
+  public get etablissement(): string {
+    return this._etablissement;
+  }
+  public set etablissement(s: string) {
+    this._etablissement = ((s !== undefined) &&
+      (s !== null) && (s.trim().length > 0)) ? s.trim() : null;
+  }
+  //
+  public get serieBac(): string {
+    return this._seriebac;
+  }
+  public set serieBac(s: string) {
+    this._seriebac = ((s !== undefined) &&
+      (s !== null) && (s.trim().length > 0)) ? s.trim().toLowerCase() : null;
+  }
+  //
+  public get optionBac(): string {
+    return this._optionbac;
+  }
+  public set optionBac(s: string) {
+    this._optionbac = ((s !== undefined) &&
+      (s != null) && (s.trim().length > 0)) ? s.trim().toLowerCase() : null;
+  }
+  public get mentionBac(): string {
+    return this._mentionbac;
+  }
+  public set mentionBac(s: string) {
+    this._mentionbac = ((s !== undefined) &&
+      (s !== null) && (s.trim().length > 0)) ? s.trim().toLowerCase() : null;
+  }
+  //
+  public get etudesSuperieures(): string {
+    return this._sup;
+  }
+  public set etudesSuperieures(s: string) {
+    this._sup = ((s !== undefined) &&
+      (s !== null) && (s.trim().length > 0)) ? s.trim().toLowerCase() : null;
   }
   public to_map(oMap: any): void {
     super.to_map(oMap);

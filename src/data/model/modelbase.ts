@@ -1,5 +1,7 @@
 //modelbase.ts
 //
+import {Router,Redirect} from 'aurelia-router';
+//
 import {IBaseItem,
 IItemGenerator, IElementDesc, IPerson, IDatabaseManager} from '../../infodata.d';
 import {DataService} from '../services/dataservice';
@@ -38,16 +40,16 @@ export class BaseViewModel {
     }
     return dRet;
   }
-  protected date_to_string(d:Date) : string {
-    let sRet:string = null;
-    if ((d !== undefined) && (d !== null)){
+  protected date_to_string(d: Date): string {
+    let sRet: string = null;
+    if ((d !== undefined) && (d !== null)) {
       try {
-          let t = Date.parse(d.toString());
-          if (!isNaN(t)){
-            let dd = new Date(t);
-            sRet = dd.toISOString().substr(0,10);
-          }
-        }catch(e){}
+        let t = Date.parse(d.toString());
+        if (!isNaN(t)) {
+          let dd = new Date(t);
+          sRet = dd.toISOString().substr(0, 10);
+        }
+      } catch (e) { }
     }
     return sRet;
   }
@@ -67,7 +69,9 @@ export class BaseViewModel {
   }
   protected revokeUrl(s: string): void {
     if ((s !== undefined) && (s !== null)) {
-      window.revokeObjectURL(s);
+      try {
+          window.URL.revokeObjectURL(s);
+        }catch(e){}
     }
   }
   public get generator(): IItemGenerator {
@@ -134,10 +138,12 @@ export class BaseViewModel {
   public set isNotConnected(s: boolean) {
 
   }
-  public disconnect(): void {
+  public disconnect(): any {
     if (this.confirm("Voulez-vous vraiment quitter?")) {
-      this.userInfo.person = null;
+       this.userInfo.person = null;
+       return new Redirect('#home');
     }
+    return false;
   }// disconnect
   public get fullname(): string {
     return this.userInfo.fullname;
@@ -151,6 +157,42 @@ export class BaseViewModel {
   public set hasPhoto(s: boolean) {
 
   }
+  public get isSuper():boolean {
+    let bRet = false;
+    let x = this.userInfo;
+    if ((x !== undefined) && (x !== null)){
+      let p = x.person;
+      if ((p !== undefined) && (p !== null)){
+        bRet = p.is_super;
+      }
+    }
+    return bRet;
+  }
+  public set isSuper(b:boolean){}
+  public get isAdmin():boolean {
+    let bRet = false;
+    let x = this.userInfo;
+    if ((x !== undefined) && (x !== null)){
+      let p = x.person;
+      if ((p !== undefined) && (p !== null)){
+        bRet = p.is_super || p.is_admin;
+      }
+    }
+    return bRet;
+  }
+  public set isAdmin(b:boolean){}
+  public get isProf():boolean {
+    let bRet = false;
+    let x = this.userInfo;
+    if ((x !== undefined) && (x !== null)){
+      let p = x.person;
+      if ((p !== undefined) && (p !== null)){
+        bRet = p.has_role('prof');
+      }
+    }
+    return bRet;
+  }
+  public set isProf(b:boolean){}
   protected retrieve_one_avatar(item: IBaseItem): Promise<IBaseItem> {
     let service = this.dataService;
     let self = this;
@@ -182,4 +224,27 @@ export class BaseViewModel {
     }
     return Promise.all(pp);
   }// retrieve_avatars
+  protected array_add(cont: string[], val: string): string[] {
+    let cRet: string[] = [];
+    if ((cont === undefined) || (cont === null)) {
+      if ((val !== undefined) && (val !== null)) {
+        cRet.push(val);
+      }
+      return cRet;
+    }
+    if ((val === null) || (val === null)) {
+      return cont;
+    }
+    let bFound = false;
+    for (let s of cont) {
+      if (s == val) {
+        bFound = true;
+      }
+      cRet.push(s);
+    }
+    if (!bFound) {
+      cRet.push(val);
+    }
+    return cRet;
+  }// _array_add
 }// class BaseViewModel

@@ -1,4 +1,7 @@
 //etudviewmodel.ts²
+//
+import {IBaseItem} from '../../../infodata.d';
+//
 import {PersonViewModel} from './personviewmodel';
 import {EtudiantPerson} from '../../domain/etudperson';
 import {Etudiant} from '../../domain/etudiant';
@@ -7,6 +10,15 @@ import {Etudiant} from '../../domain/etudiant';
 export class EtudiantViewModel extends PersonViewModel {
     constructor() {
         super(new Etudiant(), new EtudiantPerson());
+    }
+    protected create_person(): IBaseItem {
+        return new EtudiantPerson();
+    }
+    post_change_item() {
+        super.post_change_item();
+        let id = (this.current_item !== null) ? this.current_item.id : null;
+        this.userInfo.etudiantid = id;
+        return true;
     }
     public get dossier(): string {
         let p = this.currentPerson;

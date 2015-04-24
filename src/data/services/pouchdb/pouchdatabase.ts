@@ -6,6 +6,7 @@
 import {IBaseItem, IPerson, IItemGenerator, IDatabaseManager, IElementDesc} from '../../../infodata.d';
 import {MyCrypto} from '../../domain/mycrypto';
 import {Person} from '../../domain/person';
+import {EtudiantPerson} from '../../domain/etudperson';
 import {ElementDesc} from '../../domain/elementdesc';
 import {ItemGenerator} from '../../domain/itemgenerator';
 //
@@ -127,17 +128,11 @@ export class PouchDatabase implements IDatabaseManager {
     return this.db.then((dx) => {
       return dx.get(id);
 				}).then((pOld) => {
-					 if ((pOld !== undefined) && (pOld !== null)) {
-        if (pOld.type === undefined) {
-          pOld.type = 'person';
-        }
-        if ((pOld.roles === undefined) || (pOld.roles === null)) {
-          pOld.roles = ['super', 'admin'];
-        } else if ((pOld.roles !== null) && (pOld.roles.length < 1)) {
-          pOld.roles = ['super', 'admin'];
-        }
-					 }
-					 return new Person(pOld);
+      if (pOld.type == 'etudperson') {
+        return new EtudiantPerson(pOld);
+      } else {
+        return new Person(pOld);
+      }
     }, (err) => {
         if (err.status == 404) {
           return null;
@@ -175,17 +170,17 @@ export class PouchDatabase implements IDatabaseManager {
       });
     });
   }//get_items_array	
-  public get_items(item: IBaseItem, startKey?: any,endKey?:any): Promise<IBaseItem[]> {
+  public get_items(item: IBaseItem, startKey?: any, endKey?: any): Promise<IBaseItem[]> {
     let options: PouchGetOptions = { include_docs: true };
     if ((startKey !== undefined) && (startKey !== null)) {
       options.startkey = startKey;
     } else {
       options.startkey = item.start_key;
     }
-    if ((endKey !== undefined) && (endKey !== null)){
+    if ((endKey !== undefined) && (endKey !== null)) {
       options.endkey = endKey;
     } else {
-        options.endkey = item.end_key;   
+      options.endkey = item.end_key;
     }
     let generator = this.generator;
     return this.db.then((xdb) => {
@@ -245,20 +240,21 @@ export class PouchDatabase implements IDatabaseManager {
       });
     });
   }// get_all_items
-  public get_ids(startKey:string,endKey: any) : Promise<string[]> {
+  public get_ids(startKey: string, endKey: any): Promise<string[]> {
     let options: PouchGetOptions = {
-      startkey: startKey, endkey: endKey};
-    return this.db.then((xdb) => { 
-      return xdb.allDocs(options).then((rr) => { 
+      startkey: startKey, endkey: endKey
+    };
+    return this.db.then((xdb) => {
+      return xdb.allDocs(options).then((rr) => {
         let oRet: string[] = [];
-         for (let r of rr.rows){
-           let id = r.id;
-           oRet.push(id);
-           }// r
+        for (let r of rr.rows) {
+          let id = r.id;
+          oRet.push(id);
+        }// r
         return oRet;
-        });
       });
-    }//get_ids
+    });
+  }//get_ids
   public find_elements(viewName: string, startKey?: any,
     skip?: number, limit?: number, bDesc?: boolean): Promise<IElementDesc[]> {
     let options: PouchQueryOptions = { include_docs: true };
