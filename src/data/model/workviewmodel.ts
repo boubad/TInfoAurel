@@ -154,7 +154,7 @@ export class WorkViewModel extends BaseViewModel {
                 });
             }
         }
-    }// fill_departements     
+    }// fill_departements
     //
     protected post_change_annee(): any {
         this.semestres = [];
