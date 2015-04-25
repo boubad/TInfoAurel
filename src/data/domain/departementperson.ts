@@ -1,6 +1,6 @@
 //departementperson.ts
 //
-import {IDepartementPerson} from '../../infodata.d';
+import {IPerson, IDepartementPerson} from '../../infodata.d';
 import {DepartementChildItem} from './departementchild';
 //
 export class DepartementPerson extends DepartementChildItem
@@ -51,11 +51,24 @@ export class DepartementPerson extends DepartementChildItem
         }
         return s;
     } // create_id
+    public update_person(pPers: IPerson): void {
+        if ((pPers !== undefined) && (pPers !== null)) {
+            this.personid = pPers.id;
+            this.firstname = pPers.firstname;
+            this.lastname = pPers.lastname;
+            this.avatarid = pPers.avatarid;
+            if (this.departementid !== null) {
+                let cont = pPers.departementids;
+                this.add_id_to_array(cont, this.departementid);
+                pPers.departementids = ((cont !== undefined) && (cont !== null)) ? cont : [];
+            }
+        }// pPers
+    }// update_person
     public is_storeable(): boolean {
         return super.is_storeable() && (this.personid !== null) &&
             (this.lastname !== null) && (this.firstname !== null);
     }
-    public toString():string {
+    public toString(): string {
         return this.fullname;
     }
     public to_map(oMap: any): void {

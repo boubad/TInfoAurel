@@ -24,6 +24,7 @@ export interface IBaseItem {
   to_map: (oMap: any) => void;
   toString: () => string;
   sort_func: (p1: IBaseItem, p2: IBaseItem) => number;
+  add_id_to_array : (cont: string[], id: string) => void;
   //
   sigle?: string;
   name?: string;
@@ -154,6 +155,26 @@ export interface IAnnee extends IIntervalItem {
 }
 export interface ISemestre extends IIntervalItem {
   anneeid: string;
+}
+export interface IWorkItem extends IDepartementPerson {
+  anneeid:string;
+  semestreid:string;
+  groupeid:string;
+  date:Date;
+  status:string;
+  genre:string;
+}
+export interface IAffectationItem extends IWorkItem {
+  startDate:Date;
+  endDate:Date;
+}
+export interface IProfAffectationItem extends IAffectationItem {
+  enseignantid:string;
+  uniteid:string;
+  matiereid:string;
+}
+export interface IEtudAffectationItem extends IAffectationItem {
+  etudiantid:string;
 }
 export interface IItemGenerator {
   create_item: (oMap?: any) => IBaseItem;

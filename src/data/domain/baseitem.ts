@@ -166,4 +166,19 @@ export class BaseItem implements IBaseItem {
         }
         return vRet;
     } // sort_func
+    public add_id_to_array(cont: string[], id: string): void {
+        if ((cont !== undefined) && (cont !== null) && (cont.length > 0) &&
+            (id !== undefined) && (id !== null)) {
+            let bFound = false;
+            for (let x of cont) {
+                if (x == id) {
+                    bFound = true;
+                    break;
+                }
+            }
+            if (!bFound) {
+                cont.push(id);
+            }
+        }
+    }// add_id_to_array
 } // class BaseItem

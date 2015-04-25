@@ -1,5 +1,4 @@
 import { PagedViewModel } from './pagedviewmodel';
-//
 export class SigleNameModel extends PagedViewModel {
     constructor(model) {
         super(model);
@@ -25,4 +24,3 @@ export class SigleNameModel extends PagedViewModel {
         }
     }
 }
- // class SigleNameBase
