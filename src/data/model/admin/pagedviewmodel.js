@@ -1,5 +1,7 @@
 import { BaseViewModel } from '../modelbase';
+//
 export class PagedViewModel extends BaseViewModel {
+    //
     constructor(model) {
         super();
         this.modelItem = model;
@@ -11,10 +13,11 @@ export class PagedViewModel extends BaseViewModel {
         this.hasAvatars = false;
         this.hasAttachments = false;
         this._pagesize = 16;
+        //
         this._all_ids = [];
         this.pagesCount = 0;
         this._currentPage = 0;
-    }
+    } // constructor
     canActivate() {
         return this.isSuper || this.isAdmin;
     }
@@ -24,7 +27,7 @@ export class PagedViewModel extends BaseViewModel {
             return this.refreshAll();
         }
         return true;
-    }
+    } // activate
     get itemsPerPage() {
         if ((this._pagesize === undefined) || (this._pagesize === null)) {
             this._pagesize = 16;
@@ -77,19 +80,19 @@ export class PagedViewModel extends BaseViewModel {
         let model = this.modelItem;
         let p = this.generator.create_item({ type: model.type });
         return p;
-    }
+    } // create_item
     addNew() {
         this.old_elem = this.current_item;
         this.current_item = null;
         this.add_mode = true;
-    }
+    } // addNew
     cancel_add() {
         this.current_item = this.old_elem;
         this.add_mode = false;
-    }
+    } // cancel_add
     post_change_item() {
         return true;
-    }
+    } // post_change_item
     get current_element() {
         if ((this._current === undefined) || (this._current === null)) {
             this._current = this.create_item();
@@ -144,7 +147,7 @@ export class PagedViewModel extends BaseViewModel {
                 self.set_error(err);
             });
         }
-    }
+    } // remove
     get canSave() {
         let x = this.current_item;
         return (x !== null) && (x.is_storeable !== undefined) && (x.is_storeable() == true);
@@ -172,7 +175,7 @@ export class PagedViewModel extends BaseViewModel {
             self.set_error(err);
             return false;
         });
-    }
+    } // save
     refresh() {
         for (let elem of this.elements) {
             let x = elem.url;
@@ -180,7 +183,7 @@ export class PagedViewModel extends BaseViewModel {
                 this.revokeUrl(x);
                 elem.url = null;
             }
-        }
+        } // elem
         let startKey = null;
         let endKey = null;
         let nbItems = this._all_ids.length;
@@ -223,8 +226,8 @@ export class PagedViewModel extends BaseViewModel {
                             pSel = x;
                             break;
                         }
-                    }
-                }
+                    } // i
+                } // old
                 self.current_element = pSel;
                 if (dd.length < 1) {
                     self.addNew();
@@ -236,7 +239,7 @@ export class PagedViewModel extends BaseViewModel {
             }
             return true;
         });
-    }
+    } // refresh
     refreshAll() {
         this._all_ids = [];
         this.pagesCount = 0;
@@ -274,13 +277,13 @@ export class PagedViewModel extends BaseViewModel {
             this.currentPage = this.currentPage + 1;
         }
         return true;
-    }
+    } // nextPage
     prevPage() {
         if (this.currentPage > 0) {
             this.currentPage = this.currentPage + 1;
         }
         return true;
-    }
+    } // prevPage
     firstPage() {
         this.currentPage = 0;
     }
@@ -306,3 +309,4 @@ export class PagedViewModel extends BaseViewModel {
         }
     }
 }
+ // class ItemBase

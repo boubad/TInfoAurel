@@ -1,8 +1,10 @@
 import { DepartementChildModel } from './departementchildmodel';
+//
 export class DepSigleNameModel extends DepartementChildModel {
+    //
     constructor(model) {
         super(model);
-    }
+    } // constructor
     get sigle() {
         let x = this.current_item;
         return ((x !== undefined) && (x !== null)) ? x.sigle : null;
@@ -24,3 +26,4 @@ export class DepSigleNameModel extends DepartementChildModel {
         }
     }
 }
+ // class DepSigleNameModel

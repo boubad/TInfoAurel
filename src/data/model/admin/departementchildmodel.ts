@@ -15,22 +15,43 @@ export class DepartementChildModel extends PagedViewModel {
     this.departements = [];
     this.base_title = null;
   }// constructor
+   protected sync_departements(): void {
+        let userinfo = this.userInfo;
+        let pSel: IBaseItem = null;
+        let id = userinfo.departementid;
+        let cont = this.departements;
+        if (cont.length > 0) {
+            if (id !== null) {
+                for (let px of cont) {
+                    if (px.id == id) {
+                        pSel = px;
+                        break;
+                    }
+                }// px
+            }// id
+            if (pSel === null) {
+                pSel = cont[0];
+            }
+        }// cont
+        this.departement_elem  = pSel;
+    }// sync_departements
   public activate(): any {
-    let depid = this.userInfo.departementid;
-    this.modelItem.departementid = depid;
-    this.update_title();
-    if ((this.departements.length > 0)) {
-      return super.activate();
-    }
     let userinfo = this.userInfo;
     let pPers = userinfo.person;
-    if ((pPers === undefined) || (pPers === null)) {
-      this._depelem = null;
+    if ((pPers === undefined)|| (pPers === null)){
       this.departements = [];
-      return true;
+      this.departement_elem = null;
+      return new Promise((resolve,reject)=>{
+        resolve(true);
+        });
     }
-    let name = this.userInfo.username;
-    let bSuper = ((name !== null) && (name == 'admin')) ? true : false;
+    if ((this.departements.length > 0)) {
+      this.sync_departements();
+      return new Promise((resolve,reject)=>{
+        resolve(true);
+        });
+    }
+    let bSuper = pPers.is_super;
     let service = this.dataService;
     let self = this;
     let dep = new Departement();
@@ -38,7 +59,7 @@ export class DepartementChildModel extends PagedViewModel {
       return service.get_all_items(dep).then((rr) => {
         self.departements = ((rr !== undefined) && (rr !== null)) ? rr : [];
         if (self.departements.length > 0){
-            self._depelem = self.departements[0];
+            self.departement_elem = self.departements[0];
           }
       });
     } else {
@@ -46,18 +67,22 @@ export class DepartementChildModel extends PagedViewModel {
         (pPers.departementids !== null) &&
         (pPers.departementids.length > 0)) ? pPers.departementids : [];
       if (ids.length < 1) {
-        return super.activate();
+        return new Promise((resolve,reject)=>{
+        resolve(true);
+        });
       } else {
         return service.find_items_array(ids).then((rr) => {
           self.departements = ((rr !== undefined) && (rr !== null)) ? rr : [];
           if (self.departements.length > 0){
-            self._depelem = self.departements[0];
+            self.departement_elem = self.departements[0];
           }
         });
       }
     }
   }// activate
-  protected departement_changed(): void { }
+  protected departement_changed(): void {
+    this.update_title();
+   }
   public get departement_elem(): IBaseItem {
     return this._depelem;
   }
@@ -68,7 +93,6 @@ export class DepartementChildModel extends PagedViewModel {
     this.userInfo.departementid = id;
     this.current_item = this.create_item();
     this.departement_changed();
-    this.update_title();
     this.refreshAll();
   }
   protected update_title(): void {
@@ -80,7 +104,8 @@ export class DepartementChildModel extends PagedViewModel {
     this.title = s;
   } // update_title
   public get departementid(): string {
-    return (this._depelem !== null) ? this._depelem.id : null;
+    return (this.departement_elem !== null) ?
+     this.departement_elem.id : null;
   }
   public get hasDepartement(): boolean {
     return (this.departementid !== null);
