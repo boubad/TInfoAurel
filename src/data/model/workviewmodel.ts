@@ -59,6 +59,127 @@ export class WorkViewModel extends BaseViewModel {
         return true;
     }// activate
     //
+    protected sync_departements(): void {
+        let userinfo = this.userInfo;
+        let pSel: IBaseItem = null;
+        let id = userinfo.departementid;
+        let cont = this.departements;
+        if (cont.length > 0) {
+            if (id !== null) {
+                for (let px of cont) {
+                    if (px.id == id) {
+                        pSel = px;
+                        break;
+                    }
+                }// px
+            }// id
+            if (pSel === null) {
+                pSel = cont[0];
+            }
+        }// cont
+        this.departement = pSel;
+    }// sync_departements
+    protected sync_annees(): void {
+        let userinfo = this.userInfo;
+        let pSel: IBaseItem = null;
+        let id = userinfo.anneeid;
+        let cont = this.annees;
+        if (cont.length > 0) {
+            if (id !== null) {
+                for (let px of cont) {
+                    if (px.id == id) {
+                        pSel = px;
+                        break;
+                    }
+                }// px
+            }// id
+            if (pSel === null) {
+                pSel = cont[0];
+            }
+        }// cont
+        this.annee = pSel;
+    }// sync_annees
+    protected sync_semestres(): void {
+        let userinfo = this.userInfo;
+        let pSel: IBaseItem = null;
+        let id = userinfo.semestreid;
+        let cont = this.semestres;
+        if (cont.length > 0) {
+            if (id !== null) {
+                for (let px of cont) {
+                    if (px.id == id) {
+                        pSel = px;
+                        break;
+                    }
+                }// px
+            }// id
+            if (pSel === null) {
+                pSel = cont[0];
+            }
+        }// cont
+        this.semestre = pSel;
+    }// sync_semestres
+    protected sync_unites(): void {
+        let userinfo = this.userInfo;
+        let pSel: IBaseItem = null;
+        let id = userinfo.uniteid;
+        let cont = this.unites;
+        if (cont.length > 0) {
+            if (id !== null) {
+                for (let px of cont) {
+                    if (px.id == id) {
+                        pSel = px;
+                        break;
+                    }
+                }// px
+            }// id
+            if (pSel === null) {
+                pSel = cont[0];
+            }
+        }// cont
+        this.unite = pSel;
+    }// sync_unites
+    protected sync_matieres(): void {
+        let userinfo = this.userInfo;
+        let pSel: IBaseItem = null;
+        let id = userinfo.matiereid;
+        let cont = this.matieres;
+        if (cont.length > 0) {
+            if (id !== null) {
+                for (let px of cont) {
+                    if (px.id == id) {
+                        pSel = px;
+                        break;
+                    }
+                }// px
+            }// id
+            if (pSel === null) {
+                pSel = cont[0];
+            }
+        }// cont
+        this.matiere = pSel;
+    }// sync_matieres
+    protected sync_groupes(): void {
+        let userinfo = this.userInfo;
+        let pSel: IBaseItem = null;
+        let id = userinfo.departementid;
+        let cont = this.groupes;
+        if (cont.length > 0) {
+            if (id !== null) {
+                for (let px of cont) {
+                    if (px.id == id) {
+                        pSel = px;
+                        break;
+                    }
+                }// px
+            }// id
+            if (pSel === null) {
+                pSel = cont[0];
+            }
+        }// cont
+        this.groupe = pSel;
+    }// sync_groupes
+    //
     protected fill_departements(): any {
         this.departements = [];
         this.annees = [];
@@ -89,13 +210,12 @@ export class WorkViewModel extends BaseViewModel {
         let bSuper = this.isSuper;
         let service = this.dataService;
         let self = this;
+        let depid = userinfo.departementid;
         let dep = new Departement();
         if (bSuper) {
             return service.get_all_items(dep).then((rr) => {
                 self.departements = ((rr !== undefined) && (rr !== null)) ? rr : [];
-                if (self.departements.length > 0) {
-                    self.departement = self.departements[0];
-                }
+                self.sync_departements();
             });
         } else {
             let ids = ((pPers.departementids !== undefined) &&
@@ -148,43 +268,14 @@ export class WorkViewModel extends BaseViewModel {
                     }
                 }).then((gg) => {
                     self._groupes = gg;
-                    if (self.departements.length > 0) {
-                        self.departement = self.departements[0];
-                    }
+                    self.sync_departements();
                 });
             }
         }
     }// fill_departements
     //
     protected post_change_annee(): any {
-        this.semestres = [];
-        this.semestre = null;
-        let id = this.anneeid;
-        if (id === null) {
-            return true;
-        }
-        if (this.isSuper) {
-            let self = this;
-            let m = new Semestre({ departementid: this.departementid, uniteid: this.anneeid });
-            return this.dataService.get_all_items(m).then((mm) => {
-                self.semestres = mm;
-                if (self.semestres.length > 0) {
-                    self.semestre = self.semestres[0];
-                }
-            });
-        } else {
-            if ((this._semestres !== undefined) && (this._semestres !== null)) {
-                for (let m of this._semestres) {
-                    if (m.anneeid == id) {
-                        this.semestres.push(m);
-                    }
-                }
-            }
-            if (this.semestres.length > 0) {
-                this.semestre = this.semestres[0];
-            }
-            return true;
-        }
+        
     }
     protected post_change_groupe(): any {
 
@@ -196,102 +287,9 @@ export class WorkViewModel extends BaseViewModel {
 
     }
     protected post_change_unite(): any {
-        this._matieres = [];
-        this.matiere = null;
-        let id = this.uniteid;
-        if (id === null) {
-            return true;
-        }
-        if (this.isSuper) {
-            let self = this;
-            let m = new Matiere({ departementid: this.departementid, uniteid: this.uniteid });
-            return this.dataService.get_all_items(m).then((mm) => {
-                self.matieres = mm;
-                if (self.matieres.length > 0) {
-                    self.matiere = self.matieres[0];
-                }
-            });
-        } else {
-            if ((this._matieres !== undefined) && (this._matieres !== null)) {
-                for (let m of this._matieres) {
-                    if (m.uniteid == id) {
-                        this.matieres.push(m);
-                    }
-                }
-            }
-            if (this.matieres.length > 0) {
-                this.matiere = this.matieres[0];
-            }
-            return true;
-        }
+
     }
     protected post_change_departement(): any {
-        this.unites = [];
-        this.groupes = [];
-        this.annees = [];
-        this.unite = null;
-        this.groupe = null;
-        this.annee = null;
-        let depid = this.departementid;
-        if (depid === null) {
-            return true;
-        }
-        let self = this;
-        let service = this.dataService;
-        if (this.isSuper) {
-            let m1 = new Annee({ departementid: depid });
-            return service.get_items(m1).then((aa) => {
-                self.annees = aa;
-                let m2 = new Unite({ departementid: depid });
-                return service.get_items(m2);
-            }).then((uu) => {
-                self.unites = uu;
-                let m3 = new Groupe({ departementid: depid });
-                return service.get_items(m3);
-            }).then((gg) => {
-                self.groupes = gg;
-                if (self.annees.length > 0) {
-                    self.annee = self.annees[0];
-                }
-                if (self.unites.length > 0) {
-                    self.unite = self.unites[0];
-                }
-                if (self.groupes.length > 0) {
-                    self.groupe = self.groupes[0];
-                }
-            });
-        } else {
-            if ((this._annees !== undefined) && (this._annees !== null)) {
-                for (let m of this._annees) {
-                    if (m.departementid == depid) {
-                        this.annees.push(m);
-                    }
-                }
-            }
-            if (this.annees.length > 0) {
-                this.annee = this.annees[0];
-            }
-            if ((this._unites !== undefined) && (this._unites !== null)) {
-                for (let m of this._unites) {
-                    if (m.departementid == depid) {
-                        this.unites.push(m);
-                    }
-                }
-            }
-            if (this.unites.length > 0) {
-                this.unite = this.unites[0];
-            }
-            if ((this._groupes !== undefined) && (this._groupes !== null)) {
-                for (let m of this._groupes) {
-                    if (m.departementid == depid) {
-                        this.groupes.push(m);
-                    }
-                }
-            }
-            if (this.groupes.length > 0) {
-                this.groupe = this.groupes[0];
-            }
-        }
     }// post_change_departement
     //
     public get departement(): IBaseItem {
@@ -302,7 +300,64 @@ export class WorkViewModel extends BaseViewModel {
     }
     public set departement(s: IBaseItem) {
         this._dep = (s !== undefined) ? s : null;
-        this.post_change_departement();
+        this.unites = [];
+        this.groupes = [];
+        this.annees = [];
+        this.semestres = [];
+        this.matieres = [];
+        let depid = (this._dep !== null) ? this._dep.id : null;
+        if (depid === null) {
+            this.post_change_departement();
+            this.sync_annees();
+            this.sync_unites();
+            this.sync_groupes();
+            return;
+        }
+        let self = this;
+        let service = this.dataService;
+        if (this.isSuper) {
+            let m1 = new Annee({ departementid: depid });
+            service.get_items(m1).then((aa) => {
+                self.annees = aa;
+                let m2 = new Unite({ departementid: depid });
+                return service.get_items(m2);
+            }).then((uu) => {
+                self.unites = uu;
+                let m3 = new Groupe({ departementid: depid });
+                return service.get_items(m3);
+            }).then((gg) => {
+                self.groupes = gg;
+                self.sync_annees();
+                self.sync_unites();
+                self.sync_groupes();
+            });
+        } else {
+            if ((this._annees !== undefined) && (this._annees !== null)) {
+                for (let m of this._annees) {
+                    if (m.departementid == depid) {
+                        this.annees.push(m);
+                    }
+                }
+            }
+            if ((this._unites !== undefined) && (this._unites !== null)) {
+                for (let m of this._unites) {
+                    if (m.departementid == depid) {
+                        this.unites.push(m);
+                    }
+                }
+            }
+            if ((this._groupes !== undefined) && (this._groupes !== null)) {
+                for (let m of this._groupes) {
+                    if (m.departementid == depid) {
+                        this.groupes.push(m);
+                    }
+                }
+            }
+            this.post_change_departement();
+            this.sync_annees();
+            this.sync_unites();
+            this.sync_groupes();
+        }
     }
     public get hasDepartements(): boolean {
         return ((this.departements !== null) && (this.departements !== null) &&
@@ -325,7 +380,31 @@ export class WorkViewModel extends BaseViewModel {
     }
     public set unite(s: IBaseItem) {
         this._unite = (s !== undefined) ? s : null;
-        this.post_change_unite();
+        this.matieres = [];
+        let id = this.uniteid;
+        if (id === null) {
+            this.post_change_unite();
+            this.sync_matieres();
+            return;
+        }
+        if (this.isSuper) {
+            let self = this;
+            let m = new Matiere({ departementid: this.departementid, uniteid: id });
+            this.dataService.get_all_items(m).then((mm) => {
+                self.matieres = mm;
+                self.sync_matieres();
+            });
+        } else {
+            if ((this._matieres !== undefined) && (this._matieres !== null)) {
+                for (let m of this._matieres) {
+                    if (m.uniteid == id) {
+                        this.matieres.push(m);
+                    }
+                }
+            }
+            this.post_change_unite();
+            this.sync_matieres();
+        }
     }
     public get hasUnites(): boolean {
         return ((this.unites !== null) && (this.unites !== null) &&
@@ -343,7 +422,31 @@ export class WorkViewModel extends BaseViewModel {
     }
     public set annee(s: IBaseItem) {
         this._annee = (s !== undefined) ? s : null;
-        this.post_change_annee();
+        this.semestres = [];
+        let id = this.anneeid;
+        if (id === null) {
+            this.post_change_annee();
+            this.sync_semestres();
+            return;
+        }
+        if (this.isSuper) {
+            let self = this;
+            let m = new Semestre({ departementid: this.departementid, uniteid: this.anneeid });
+            this.dataService.get_all_items(m).then((mm) => {
+                self.semestres = mm;
+                self.sync_semestres();
+            });
+        } else {
+            if ((this._semestres !== undefined) && (this._semestres !== null)) {
+                for (let m of this._semestres) {
+                    if (m.anneeid == id) {
+                        this.semestres.push(m);
+                    }
+                }
+            }
+            this.post_change_annee();
+            this.sync_semestres();
+        }
     }
     public get hasAnnee(): boolean {
         return ((this.annees !== null) && (this.annees !== null) &&

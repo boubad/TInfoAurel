@@ -44,7 +44,6 @@ export class ProfAffectationViewModel extends WorkViewModel {
         this._startDate = this.string_to_date(s);
     }
     protected post_change_departement(): any {
-        super.post_change_departement();
         this.enseignants = [];
         this.current_enseignants = [];
         let id = this.departementid;
@@ -77,11 +76,9 @@ export class ProfAffectationViewModel extends WorkViewModel {
         });
     }// refreshAffecttaion
     protected post_change_groupe(): any {
-        super.post_change_groupe();
         return this.refresh_affectations();
     }
     protected post_change_semestre(): any {
-        super.post_change_semestre();
         this._startDate = null;
         this._endDate = null;
         this._minDate = null;
@@ -96,7 +93,6 @@ export class ProfAffectationViewModel extends WorkViewModel {
         return this.refresh_affectations();
     }
     protected post_change_matiere(): any {
-        super.post_change_matiere();
         return this.refresh_affectations();
     }
     public get canSave(): boolean {
@@ -117,6 +113,15 @@ export class ProfAffectationViewModel extends WorkViewModel {
         }
         return (t1 <= t2);
     }// canSave
+    public get canProcess(): boolean {
+        return (this.enseignants !== undefined) &&
+            (this.enseignants !== null) &&
+            (this.enseignants.length > 0) &&
+            (this.departementid !== null) && (this.anneeid !== null) &&
+            (this.uniteid !== null) && (this.matiereid !== null) &&
+            (this.groupeid !== null);
+    }// canProcess
+    public set canProcess(s:boolean){}
     public set canSave(s: boolean) { }
     public get cannotSave(): boolean {
         return (!this.canSave);

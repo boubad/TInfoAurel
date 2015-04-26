@@ -53,7 +53,25 @@ export class Matiere extends DepSigleNameItem implements IMatiere {
     public set collection_name(s:string){
 
     }
-    
+    public create_id() : string {
+        let s = this.base_prefix;
+        if ((s !== null) && (this.uniteid !== null)){
+            s = s + '-' + this.uniteid;
+        }
+        if ((s !== null) && (this.sigle !== null)){
+            s = s + '-' + this.sigle.toUpperCase();
+        }
+        return s;
+    } // create_id
+    public get start_key():any{
+         let s = this.base_prefix;
+        if ((s !== null) && (this.uniteid !== null)){
+            s = s + '-' + this.uniteid;
+        }
+        return s;
+    }
+    public set start_key(s:any) {
+    }
     public get ecs(): number {
         return this._ecs;
     }

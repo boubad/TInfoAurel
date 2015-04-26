@@ -4,8 +4,8 @@ import {IDepSigleNameItem} from '../../infodata.d';
 import {SigleNameItem} from './siglenameitem';
 //
 export class DepSigleNameItem extends SigleNameItem implements IDepSigleNameItem {
-    public departementid:string;
-    constructor(oMap?:any) {
+    public departementid: string;
+    constructor(oMap?: any) {
         super(oMap);
         this.departementid = null;
         if ((oMap !== undefined) && (oMap !== null)) {
@@ -14,25 +14,29 @@ export class DepSigleNameItem extends SigleNameItem implements IDepSigleNameItem
             }
         } // oMap
     } // constructor
-    public create_id() : string {
+    public create_id(): string {
         let s = this.base_prefix;
-        if ((s !== null) && (this.departementid !== null)){
+        if ((s !== null) && (this.departementid !== null)) {
             s = s + '-' + this.departementid;
         }
-        if ((s !== null) && (this.sigle !== null)){
+        if ((s !== null) && (this.sigle !== null)) {
             s = s + '-' + this.sigle.toUpperCase();
         }
         return s;
     } // create_id
-    public get start_key():any{
-         return this.base_prefix + '-' + this.departementid;
+    public get start_key(): any {
+        let s = this.base_prefix;
+        if ((s !== null) && (this.departementid !== null)) {
+            s = s + '-' + this.departementid;
+        }
+        return s;
     }
-    public set start_key(s:any) {
+    public set start_key(s: any) {
     }
-    public  is_storeable() :boolean {
+    public is_storeable(): boolean {
         return super.is_storeable() && (this.departementid !== null);
     }
-    public to_map(oMap:any) : void {
+    public to_map(oMap: any): void {
         super.to_map(oMap);
         oMap.departementid = this.departementid;
     } // toInsertMap

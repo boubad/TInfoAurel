@@ -25,4 +25,5 @@ export class Unite extends DepSigleNameItem implements IUnite {
     public set base_prefix(s:string){
         
     } 
+    
 } // class Unite

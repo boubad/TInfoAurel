@@ -17,7 +17,7 @@ export class AdminRouter {
       config.map([
         { route: ['','home'],  moduleId: HOME_ID,      nav: true, title:'Accueil' },
         { route: 'affetuds',  moduleId: NOT_IMPLEMENTED, nav: true, title:'Affectation étudiants' },
-        { route: 'affprofs',  moduleId: NOT_IMPLEMENTED, nav: true, title:'Affectations enseignants' },
+        { route: 'affprofs',  moduleId: './affprof-model', nav: true, title:'Affectations enseignants' },
         { route: 'etudiants',  moduleId: './etud-model', nav: true, title:'Etudiants' },
         { route: 'semestre',  moduleId: './semestre-model', nav: true, title:'Semestres' },
         { route: 'annees',  moduleId: './annee-model', nav: true, title:'Années' },
