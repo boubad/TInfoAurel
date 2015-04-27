@@ -1,38 +1,28 @@
-//profaffecttaionviewmodel.ts
+//etudaffecttaionviewmodel.ts
 //
 import {IDepartementPerson,IAffectationItem} from '../../../infodata.d';
 //
 import {AffectationViewModel} from './affectationmodel';
-import {Enseignant} from '../../domain/enseignant';
-import {ProfAffectation} from '../../domain/profaffectation';
+import {Etudiant} from '../../domain/etudiant';
+import {EtudAffectation} from '../../domain/etudaffectation';
 //
-export class ProfAffectationViewModel extends AffectationViewModel {
+export class EtudAffectationViewModel extends AffectationViewModel {
     //
     constructor() {
-        super(new ProfAffectation(),new Enseignant());
+        super(new EtudAffectation(),new Etudiant());
     }// constructor
-    protected is_storeable(): boolean {
-        return super.is_storeable() && (this.uniteid !== null) &&
-            (this.matiereid !== null);
-        }// is_storeable
-    protected  is_process(): boolean {
-        return super.is_process() && (this.uniteid !== null) && (this.matiereid !== null);
-    }// canProcess
     protected refresh_affectations(): any {
         this.affectations = [];
         this.current_affectation = null;
         let semid = this.semestreid;
-        let matid = this.matiereid;
         let grpid = this.groupeid;
-        if ((semid === null) || (matid === null) || (grpid === null)) {
+        if ((semid === null) || (grpid === null)) {
             return true;
         }
-        let model = new ProfAffectation({
+        let model = new EtudAffectation({
             departementid: this.departementid,
-            anneeid: this.anneeid, 
+            anneeid: this.anneeid,
             semestreid: semid,
-            uniteid: this.uniteid,
-            matiereid: matid,
             groupeid: grpid
             });
         let self = this;
@@ -41,18 +31,16 @@ export class ProfAffectationViewModel extends AffectationViewModel {
         });
     }// refreshAffecttaion
     protected create_affectation(prof: IDepartementPerson) : IAffectationItem {
-        return new ProfAffectation({
+        return new EtudAffectation({
             departementid: this.departementid,
             anneeid: this.anneeid,
             semestreid: this.semestreid,
-            uniteid: this.uniteid,
-            matiereid: this.matiereid,
             groupeid: this.groupeid,
-            enseignantid: prof.id,
+            etudiantid: prof.id,
             genre: this.genre,
             starDate: this._startDate,
             endDate:this._endDate,
             personid: prof.personid
             });
     }// create_affectation
-}// class ProfAffectationViewModel
+}// class EtudAffectationViewModel

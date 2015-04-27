@@ -42,15 +42,14 @@ export class PersonViewModel extends DepartementChildModel {
             this.revokeUrl(this.currentUrl);
         }
         this.currentUrl = null;
+        this.currentPerson = null;
         let p = this.current_item;
         if (p === null) {
-            this.currentPerson = null;
-            return false;
+            return Promise.resolve(true);
         }
         let pid = p.personid;
         if (pid === null) {
-            this.currentPerson = null;
-            return false;
+            return Promise.resolve(true);
         }
         let self = this;
         let service = this.dataService;
@@ -214,5 +213,4 @@ export class PersonViewModel extends DepartementChildModel {
                 self.set_error(err);
             });
     }// reset_password
-
 }// PersonViewModel

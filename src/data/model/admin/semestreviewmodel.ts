@@ -16,50 +16,53 @@ export class SemestreViewModel extends IntervalViewModel {
     this.annees = [];
     this.base_title = 'Semestres';
   }// constructor
-  protected departement_changed(): void {
-    let id = this.departementid;
-    this.annees = [];
-    this._annee = null;
-    this.userInfo.anneeid = null;
-    if (id === null) {
-      return;
-    }
-    let self = this;
-    let item = new Annee({ departementid: this.departementid });
-    this.dataService.get_all_items(item).then((aa) => {
-      self.annees = ((aa !== undefined) && (aa !== null)) ? aa : [];
-      if (self.annees.length > 0) {
-        self._annee = self.annees[0];
-      }
-    });
+  protected fill_annees(): any {
+        let depid = this.departementid;
+        if (depid === null){
+          this.annees = [];
+          this.annee = null;
+          return Promise.resolve(true);
+        } 
+        let model = new Annee({departementid:depid});
+        let self = this;
+        return this.dataService.get_all_items(model).then((rr)=>{
+          self.annees = ((rr !== undefined) && (rr !== null)) ? rr : [];
+          self.annee = (self.annees.length > 0) ? self.annees[0] : null;
+          });
+    }// fill_unites
+    protected post_change_departement(): any {
+    this.modelItem.departementid = this.departementid;
+    return this.fill_annees();
   }// departement_changed    
   protected post_change_item(): any {
     let id = (this.current_item !== null) ? this.current_item.id : null;
     this.userInfo.semestreid = id;
     return true;
   }
-  public get annee_elem(): IBaseItem {
+  public get annee(): IBaseItem {
+    if (this._annee === null){
+      this._annee = new Annee({departementid:this.departementid});
+    }
     return this._annee;
   }
-  public set annee_elem(s: IBaseItem) {
-    this._annee = (s !== undefined) ? s : null;
-    let id = (this._annee !== null) ? this._annee.id : null;
+  public set annee(s: IBaseItem) {
+    this._annee = ((s !== undefined) && (s !== null)) ? s : new Annee({departementid:this.departementid});
+    let id = this._annee.id;
     this.modelItem.anneeid = id;
     this.userInfo.anneeid = id;
     this.current_item = this.create_item();
-    this.update_title();
     this.refreshAll();
   }
   protected update_title(): void {
     let s = (this.base_title !== null) ? this.base_title : '';
-    let p = this.annee_elem;
+    let p = this.annee;
     if ((p !== null) && (p.text !== null)) {
       s = s + ' ' + p.text;
     }
     this.title = s;
   } // update_title
   public get anneeid(): string {
-    let x = this.annee_elem;
+    let x = this.annee;
     return (x !== null) ? x.id : null;
   }
   public get hasAnnee(): boolean {
@@ -67,9 +70,7 @@ export class SemestreViewModel extends IntervalViewModel {
   }
   public set hasAnnee(b: boolean) { }
   protected create_item(): IBaseItem {
-    let p = super.create_item();
-    p.departementid = this.departementid;
-    p.anneeid = this.anneeid;
+    let p = new Semestre({departementid:this.departementid,anneeid:this.anneeid});
     return p;
   }// create_item
   public get canAdd(): boolean {
@@ -79,10 +80,10 @@ export class SemestreViewModel extends IntervalViewModel {
 
   }
   public get parentStartDate(): Date {
-    return (this.annee_elem !== null) ? this.annee_elem.startDate : null;
+    return (this.annee !== null) ? this.annee.startDate : null;
   }
   public get parentEndDate(): Date {
-    return (this.annee_elem !== null) ? this.annee_elem.endDate : null;
+    return (this.annee !== null) ? this.annee.endDate : null;
   }
   public get canSave(): boolean {
     let x = this.current_item;

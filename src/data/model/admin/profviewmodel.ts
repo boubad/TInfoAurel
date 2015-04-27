@@ -15,9 +15,11 @@ export class EnseignantViewModel extends PersonViewModel{
         return p;
     }// create_item
     protected post_change_item() : any{
-        super.post_change_item();
-        let id  = (this.current_item !== null) ? this.current_item.id : null;
-        this.userInfo.uniteid = id;
-        return true;
+        let self = this;
+        return super.post_change_item().then((r)=>{
+            let id  = (self.current_item !== null) ? self.current_item.id : null;
+            self.userInfo.enseignantid = id;
+            return true;
+            });
     }
 }

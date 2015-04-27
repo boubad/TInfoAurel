@@ -1,28 +1,22 @@
-//departementchildmodel.ts
-import {IBaseItem, IDepartementChildItem} from '../../../infodata.d';
+//depviewmodel.ts
 //
-import {PagedViewModel} from './pagedviewmodel';
-import {Departement} from '../../domain/departement';
+import {IBaseItem} from '../../infodata.d';
+import {Departement} from '../domain/departement';
+import {BaseViewModel} from './modelbase';
 //
-export class DepartementChildModel extends PagedViewModel {
-  private _departement: IBaseItem;
-  public departements: IBaseItem[];
-  public base_title: string;
-  //
-  constructor(model: IDepartementChildItem) {
-    super(model);
-    this._departement = null;
-    this.departements = [];
-    this.base_title = null;
-  }// constructor
-  protected post_change_departement(): any {
-        return this.refreshAll();
+export class DepViewModel extends BaseViewModel {
+    //
+    protected _departement: IBaseItem;
+    public departements: IBaseItem[];
+    //
+    constructor() {
+        super();
+        this.departements = [];
+        this._departement = null;
+    }// constructor
+    protected post_change_departement(): any {
+        return Promise.resolve(true);
     }// post_change_departement
-    protected create_item(): IBaseItem {
-        let p = super.create_item();
-        p.departementid = this.departementid;
-        return p;
-  }// create_item
     //
     public get departement(): IBaseItem {
         if (this._departement === null) {
@@ -32,12 +26,7 @@ export class DepartementChildModel extends PagedViewModel {
     }
     public set departement(s: IBaseItem) {
         this._departement = ((s !== undefined) && (s !== null)) ? s : new Departement();
-        this.userInfo.departementid = this._departement.id;
-        this.modelItem.departementid = this._departement.id;
-        let x = this.current_item;
-        if (x !== null){
-            x.departementid = this._departement.id;
-        }
+        this.userInfo.departementid = this.departementid;
         this.post_change_departement();
     }
     public get hasDepartements(): boolean {
@@ -62,12 +51,12 @@ export class DepartementChildModel extends PagedViewModel {
                 return true;
                 });
         }// activate
-    protected fill_departements(): any {
+    protected fill_departements(): Promise<IBaseItem[]> {
         let userinfo = this.userInfo;
         let pPers = userinfo.person;
         if ((pPers === undefined) || (pPers === null)) {
             this.departements = [];
-            return Promise.resolve(true);
+            return Promise.resolve([]);
         }
         let bSuper = pPers.is_super;
         let service = this.dataService;
@@ -76,33 +65,20 @@ export class DepartementChildModel extends PagedViewModel {
             let model = new Departement();
             return service.get_all_items(model).then((rr) => {
                 self.departements = ((rr !== undefined) && (rr !== null)) ? rr : [];
-                return true;
+                return [];
             });
         } else {
             let ids = ((pPers.departementids !== undefined) &&
                 (pPers.departementids !== null) &&
                 (pPers.departementids.length > 0)) ? pPers.departementids : [];
             if (ids.length < 1) {
-                return Promise.resolve(true);
+                return Promise.resolve([]);
             } else {
                 return service.find_items_array(ids).then((rr) => {
                     self.departements = ((rr !== undefined) && (rr !== null)) ? rr : [];
-                    return true;
+                    return [];
                 });
             }
         }
     }// fill_departements
-  protected update_title(): void {
-    let s = (this.base_title !== null) ? this.base_title : '';
-    let p = this.departement;
-    if ((p !== null) && (p.text !== null)) {
-      s = s + ' ' + p.text;
-    }
-    this.title = s;
-  } // update_title
-  public get canAdd(): boolean {
-    return (!this.add_mode) && (this.departementid !== null);
-  }
-  public set canAdd(s: boolean) {
-  }
-}// class DepSigleNameModel
+}// class BaseViewModel

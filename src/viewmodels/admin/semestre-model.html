@@ -19,7 +19,7 @@
 			<div class="col-md-4 col-sm-4 col-xs-4">
 				<div class="form-group">
 					<label class="form-label" for="departements">Département</label>
-					<select id="departements" value.bind="departement_elem">
+					<select id="departements" value.bind="departement">
 						<option>Département...</option>
 				<option repeat.for="depelem of departements" model.bind="depelem">${depelem.text}</option>
 			</select>
@@ -28,7 +28,7 @@
 			<div class="col-md-4 col-sm-4 col-xs-4">
 				<div class="form-group">
 					<label class="form-label" for="annees">Année</label>
-					<select id="annees" value.bind="annee_elem">
+					<select id="annees" value.bind="annee">
 						<option>Année...</option>
 				<option repeat.for="anelem of annees" model.bind="anelem">${anelem.text}</option>
 			</select>
@@ -42,7 +42,7 @@
 				<h3>${anneeStatus}</h3>
 			</div>
 		</div>
-		<div class="row" if.bind="hasAnnee">
+		<div class="row">
 			<div class="col-md-4 col-sm-4 col-xs-4" if.bind="hasElements">
 			<select value.bind="current_element" size.bind="itemsPerPage">
 				<option repeat.for="elem of elements" model.bind="elem">${elem.text}</option>

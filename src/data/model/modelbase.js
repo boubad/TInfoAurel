@@ -2,16 +2,34 @@ import { Redirect } from 'aurelia-router';
 import { DataService } from '../services/dataservice';
 import { ItemGenerator } from '../domain/itemgenerator';
 import { UserInfo } from './userinfo';
-//
 export class BaseViewModel {
-    //
     constructor() {
         this._userinfo = null;
         this._dataService = null;
         this._gen = null;
         this.infoMessage = null;
         this.errorMessage = null;
-    } // constructor
+    }
+    activate(params, queryString, routeConfig) {
+        return Promise.resolve(true);
+    }
+    sync_array(cont, id) {
+        let pSel = null;
+        if ((cont !== undefined) && (cont !== null) && (cont.length > 0)) {
+            if ((id !== undefined) && (id !== null)) {
+                for (let x of cont) {
+                    if ((x !== null) && (x.id !== undefined) && (x.id == id)) {
+                        pSel = x;
+                        break;
+                    }
+                }
+            }
+            if (pSel === null) {
+                pSel = cont[0];
+            }
+        }
+        return pSel;
+    }
     string_to_date(s) {
         let dRet = null;
         if ((s !== undefined) && (s !== null)) {
@@ -39,6 +57,22 @@ export class BaseViewModel {
             catch (e) { }
         }
         return sRet;
+    }
+    number_to_string(n) {
+        return ((n !== undefined) && (n !== null)) ? n.toString() : null;
+    }
+    string_to_number(s) {
+        let dRet = null;
+        if ((s !== undefined) && (s !== null)) {
+            try {
+                let x = parseFloat(s);
+                if (!isNaN(x)) {
+                    dRet = x;
+                }
+            }
+            catch (e) { }
+        }
+        return dRet;
     }
     confirm(message) {
         return window.confirm(message);
@@ -74,15 +108,15 @@ export class BaseViewModel {
             this._userinfo = new UserInfo();
         }
         return this._userinfo;
-    } // userInfo
+    }
     get dataService() {
         if (this._dataService === null) {
             this._dataService = new DataService();
         }
         return this._dataService;
-    } // dataService
+    }
     update_title() {
-    } // update_title
+    }
     get hasErrorMessage() {
         return (this.errorMessage !== null) && (this.errorMessage.length > 0);
     }
@@ -115,11 +149,11 @@ export class BaseViewModel {
         else {
             this.errorMessage = 'Erreur inconnue...';
         }
-    } // set_error
+    }
     get isConnected() {
         let x = this.userInfo;
         return x.isConnected;
-    } // isConnected
+    }
     set isConnected(s) {
     }
     get isNotConnected() {
@@ -133,7 +167,7 @@ export class BaseViewModel {
             return new Redirect('#home');
         }
         return false;
-    } // disconnect
+    }
     get fullname() {
         return this.userInfo.fullname;
     }
@@ -206,14 +240,14 @@ export class BaseViewModel {
                 });
             }
         });
-    } // retrieve_one_avatar
+    }
     retrieve_avatars(elems) {
         let pp = [];
         for (let elem of elems) {
             pp.push(this.retrieve_one_avatar(elem));
         }
         return Promise.all(pp);
-    } // retrieve_avatars
+    }
     array_add(cont, val) {
         let cRet = [];
         if ((cont === undefined) || (cont === null)) {
@@ -236,6 +270,5 @@ export class BaseViewModel {
             cRet.push(val);
         }
         return cRet;
-    } // _array_add
+    }
 }
- // class BaseViewModel

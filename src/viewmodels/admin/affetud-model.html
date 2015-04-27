@@ -44,24 +44,6 @@
 			</div>
 			<div class="col-md-2 col-sm-2 col-xs-2">
 				<div class="form-group">
-					<label class="form-label" for="unites">Unité</label>
-					<select class="form-control" id="unites" value.bind="unite">
-						<option>Unité...</option>
-						<option repeat.for="unelem of unites" model.bind="unelem">${unelem.text}</option>
-					</select>
-				</div>
-			</div>
-			<div class="col-md-2 col-sm-2 col-xs-2">
-				<div class="form-group">
-					<label class="form-label" for="matieres">Matière</label>
-					<select id="matieres" value.bind="matiere">
-						<option>Matière...</option>
-						<option repeat.for="matelem of matieres" model.bind="matelem">${matelem.text}</option>
-					</select>
-				</div>
-			</div>
-			<div class="col-md-2 col-sm-2 col-xs-2">
-				<div class="form-group">
 					<label class="form-label" for="groupes">Groupe</label>
 					<select class="form-control" id="groupes" value.bind="groupe">
 						<option>Groupe...</option>
@@ -73,7 +55,7 @@
 		<div class="row">
 			<div class="col-md-4 col-sm-4 col-xs-4">
 				<div class="form-group">
-					<label class="form-label" for="persons">Enseignants</label>
+					<label class="form-label" for="persons">Etudiants</label>
 					<select class="from-control" id="persons" multiple value.bind="current_personElements" size="16">
 						<option repeat.for="pers of personElements" model.bind="pers">${pers.text}</option>
 					</select>

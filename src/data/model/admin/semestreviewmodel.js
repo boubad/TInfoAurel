@@ -8,50 +8,53 @@ export class SemestreViewModel extends IntervalViewModel {
         this.annees = [];
         this.base_title = 'Semestres';
     }
-    departement_changed() {
-        let id = this.departementid;
-        this.annees = [];
-        this._annee = null;
-        this.userInfo.anneeid = null;
-        if (id === null) {
-            return;
+    fill_annees() {
+        let depid = this.departementid;
+        if (depid === null) {
+            this.annees = [];
+            this.annee = null;
+            return Promise.resolve(true);
         }
+        let model = new Annee({ departementid: depid });
         let self = this;
-        let item = new Annee({ departementid: this.departementid });
-        this.dataService.get_all_items(item).then((aa) => {
-            self.annees = ((aa !== undefined) && (aa !== null)) ? aa : [];
-            if (self.annees.length > 0) {
-                self._annee = self.annees[0];
-            }
+        return this.dataService.get_all_items(model).then((rr) => {
+            self.annees = ((rr !== undefined) && (rr !== null)) ? rr : [];
+            self.annee = (self.annees.length > 0) ? self.annees[0] : null;
         });
+    }
+    post_change_departement() {
+        this.modelItem.departementid = this.departementid;
+        return this.fill_annees();
     }
     post_change_item() {
         let id = (this.current_item !== null) ? this.current_item.id : null;
         this.userInfo.semestreid = id;
         return true;
     }
-    get annee_elem() {
+    get annee() {
+        if (this._annee === null) {
+            this._annee = new Annee({ departementid: this.departementid });
+        }
         return this._annee;
     }
-    set annee_elem(s) {
-        this._annee = (s !== undefined) ? s : null;
-        let id = (this._annee !== null) ? this._annee.id : null;
+    set annee(s) {
+        this._annee = ((s !== undefined) && (s !== null)) ? s : new Annee({ departementid: this.departementid });
+        let id = this._annee.id;
         this.modelItem.anneeid = id;
         this.userInfo.anneeid = id;
         this.current_item = this.create_item();
-        this.update_title();
         this.refreshAll();
     }
     update_title() {
         let s = (this.base_title !== null) ? this.base_title : '';
-        let p = this.annee_elem;
+        let p = this.annee;
         if ((p !== null) && (p.text !== null)) {
             s = s + ' ' + p.text;
         }
         this.title = s;
     }
     get anneeid() {
-        let x = this.annee_elem;
+        let x = this.annee;
         return (x !== null) ? x.id : null;
     }
     get hasAnnee() {
@@ -59,9 +62,7 @@ export class SemestreViewModel extends IntervalViewModel {
     }
     set hasAnnee(b) { }
     create_item() {
-        let p = super.create_item();
-        p.departementid = this.departementid;
-        p.anneeid = this.anneeid;
+        let p = new Semestre({ departementid: this.departementid, anneeid: this.anneeid });
         return p;
     }
     get canAdd() {
@@ -70,10 +71,10 @@ export class SemestreViewModel extends IntervalViewModel {
     set canAdd(s) {
     }
     get parentStartDate() {
-        return (this.annee_elem !== null) ? this.annee_elem.startDate : null;
+        return (this.annee !== null) ? this.annee.startDate : null;
     }
     get parentEndDate() {
-        return (this.annee_elem !== null) ? this.annee_elem.endDate : null;
+        return (this.annee !== null) ? this.annee.endDate : null;
     }
     get canSave() {
         let x = this.current_item;

@@ -126,6 +126,7 @@ export interface IDepartementPerson extends IDepartementChildItem {
     personid: string;
     firstname: string;
     lastname: string;
+    update_person :(pPers: IPerson) => void ;
 }
 export interface IEnseignant extends IDepartementPerson{
   

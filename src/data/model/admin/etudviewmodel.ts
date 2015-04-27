@@ -14,11 +14,13 @@ export class EtudiantViewModel extends PersonViewModel {
     protected create_person(): IBaseItem {
         return new EtudiantPerson();
     }
-    post_change_item() {
-        super.post_change_item();
-        let id = (this.current_item !== null) ? this.current_item.id : null;
-        this.userInfo.etudiantid = id;
-        return true;
+    protected post_change_item() : any{
+        let self = this;
+        return super.post_change_item().then((r)=>{
+            let id  = (self.current_item !== null) ? self.current_item.id : null;
+            self.userInfo.etudiantid = id;
+            return true;
+            });
     }
     public get dossier(): string {
         let p = this.currentPerson;

@@ -19,7 +19,7 @@
 			<div class="col-md-4 col-sm-4 col-xs-4">
 				<div class="form-group">
 					<label class="form-label" for="departements">Département</label>
-					<select id="departements" value.bind="departement_elem">
+					<select id="departements" value.bind="departement">
 						<option>Département...</option>
 				<option repeat.for="depelem of departements" model.bind="depelem">${depelem.text}</option>
 			</select>
@@ -28,7 +28,7 @@
 			<div class="col-md-4 col-sm-4 col-xs-4">
 				<div class="form-group">
 					<label class="form-label" for="unites">Unité</label>
-					<select id="unités" value.bind="unite_elem">
+					<select id="unités" value.bind="unite">
 						<option>Unité...</option>
 				<option repeat.for="unelem of unites" model.bind="unelem">${unelem.text}</option>
 			</select>

@@ -1,12 +1,10 @@
 import { Person } from '../domain/person';
 import { SessionObjectStore } from './sessionstore';
-//
 export class UserInfo extends SessionObjectStore {
-    //
     constructor() {
         super();
         this._person = null;
-    } // constructor
+    }
     get username() {
         return super.get_value('username');
     }
@@ -139,7 +137,6 @@ export class UserInfo extends SessionObjectStore {
     set etudiantid(s) {
         super.store_value("etudiantid", s);
     }
-    //
     get person() {
         if (this._person !== null) {
             return this._person;
@@ -208,6 +205,5 @@ export class UserInfo extends SessionObjectStore {
     get isConnected() {
         let p = this.person;
         return ((p !== undefined) && (p !== null) && (p.id !== undefined) && (p.id !== null));
-    } // isConnected
+    }
 }
- // class UserInfo

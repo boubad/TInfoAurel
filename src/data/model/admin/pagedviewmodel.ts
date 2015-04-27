@@ -37,15 +37,18 @@ export class PagedViewModel extends BaseViewModel {
     this.pagesCount = 0;
     this._currentPage = 0;
   }// constructor
-  public canActivate():boolean {
+  public canActivate(): any {
     return this.isSuper || this.isAdmin;
   }
-  public activate(): any {
-    this.update_title();
-    if (this.elements.length < 1) {
-      return this.refreshAll();
-    }
-    return true;
+  public activate(params?:any,queryString?:any,routeConfig?:any) : any {
+    let self = this;
+    return super.activate(params,queryString,routeConfig).then((r)=>{
+        if (self.elements.length < 1){
+          return self.refreshAll();
+        } else {
+          return true;
+        }
+      });
   }// activate
   public get itemsPerPage() : number{
     if ((this._pagesize === undefined) || (this._pagesize === null)){
@@ -92,6 +95,7 @@ export class PagedViewModel extends BaseViewModel {
     } else {
       this._current = this.create_item();
     }
+    this.add_mode = false;
     this.post_change_item();
   }
   protected create_item(): IBaseItem {
@@ -225,15 +229,17 @@ export class PagedViewModel extends BaseViewModel {
     let oldid = (this.current_item !== null) ? this.current_item.id : null;
     var self = this;
     return this.dataService.get_items(model, startKey,endKey).then((rr) => {
+      self.add_mode = false;
       if (self.hasAvatars) {
       		return self.retrieve_avatars(rr);
       } else {
       		return rr;
       }
     }).then((dd) => {
+      let pSel = null;
+      self.elements = [];
       if ((dd !== undefined) && (dd !== null)) {
-        self.elements = dd;
-        let pSel = null;
+          self.elements = dd;
         if (oldid !== null) {
           let n = dd.length;
           for (let i = 0; i < n; ++i) {
@@ -244,12 +250,9 @@ export class PagedViewModel extends BaseViewModel {
             }
           }// i
         }// old
-        self.current_element = pSel;
-        if (dd.length < 1) {
-           self.addNew();
-        }
-      } else {
-        self.elements = [];
+      } 
+      self.current_element = pSel;
+      if (self.elements.length < 1){
         self.addNew();
       }
       return true;
@@ -274,6 +277,7 @@ export class PagedViewModel extends BaseViewModel {
         }
         self.pagesCount = np;
       }
+      self.update_title();
       return self.refresh();
       });
   }
