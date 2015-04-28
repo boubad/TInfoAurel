@@ -1,5 +1,6 @@
-import { Person } from '../domain/person';
 import { SessionObjectStore } from './sessionstore';
+import { ItemGenerator } from '../domain/itemgenerator';
+let gen = new ItemGenerator();
 export class UserInfo extends SessionObjectStore {
     constructor() {
         super();
@@ -147,7 +148,7 @@ export class UserInfo extends SessionObjectStore {
         }
         try {
             let oMap = JSON.parse(sval);
-            this._person = new Person(oMap);
+            this._person = gen.create_item(oMap);
         }
         catch (e) {
             console.log('UserInfo get person error: ' + JSON.stringify(e));

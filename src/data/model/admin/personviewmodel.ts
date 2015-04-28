@@ -168,6 +168,9 @@ export class PersonViewModel extends DepartementChildModel {
         if (!pPers.is_storeable()) {
             return false;
         }
+        if (pPers.id === null){
+            pPers.id = pPers.create_id();
+        }
         let self = this;
         let service = this.dataService;
         let bOld = (item.rev !== null);
@@ -177,15 +180,12 @@ export class PersonViewModel extends DepartementChildModel {
         let rx = pPers.departementids;
         pPers.departementids = this.array_add(rx, depid);
         this.clear_error();
-        return service.maintains_item(pPers).then((r) => {
-            item.personid = r.id;
-            item.departementid = depid;
-            item.firstname = r.firstname;
-            item.lastname = r.lastname;
-            item.avatardocid = r.id;
-            item.avatarid = r.avatarid;
+        return service.maintains_item(pPers).then((r:IPerson) => {
+            item.update_person(r);
+            return service.maintains_item(r);
+        }).then((rx)=>{
             return service.maintains_item(item);
-        }).then((x) => {
+            }).then((x) => {
             if (bOld) {
                 self.refresh();
             } else {

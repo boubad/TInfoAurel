@@ -1,6 +1,6 @@
 //etudiant.ts
 //
-import {IEtudiant} from '../../infodata.d';
+import {IPerson, IEtudiant} from '../../infodata.d';
 import {DepartementPerson} from './departementperson';
 //
 export class Etudiant extends DepartementPerson implements IEtudiant {
@@ -24,4 +24,15 @@ export class Etudiant extends DepartementPerson implements IEtudiant {
     public set base_prefix(s: string) {
 
     }
+    public update_person(pPers: IPerson): void {
+        if ((pPers !== undefined) && (pPers !== null)) {
+            super.update_person(pPers);
+            if (this.id === null){
+                this.id = this.create_id();
+            }
+            let cont = pPers.etudiantids;
+            this.add_id_to_array(cont, this.id);
+            pPers.etudiantids = ((cont !== undefined) && (cont !== null)) ? cont : [];
+        }// pPers
+    }// update_person
 }// class Etudiant
