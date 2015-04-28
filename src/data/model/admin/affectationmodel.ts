@@ -32,6 +32,7 @@ export class AffectationViewModel extends WorkViewModel {
     }// constructor
     public get startDate(): string {
         return this.date_to_string(this._startDate);
+        
     }
     public set startDate(s: string) {
         this._startDate = this.string_to_date(s);
@@ -78,7 +79,7 @@ export class AffectationViewModel extends WorkViewModel {
             anneeid: this.anneeid, 
             semestreid: semid,
             matiereid: matid,
-             groupeid: grpid
+            groupeid: grpid
             });
         let self = this;
         return this.dataService.get_all_items(model).then((aa) => {
