@@ -21,6 +21,10 @@ export class Person extends BaseItem implements IPerson {
   private _matieres: string[];
   private _unites: string[];
   private _groupes: string[];
+  public enseignantids:string[];
+  public etudiantids:string[];
+  public affectationids:string[];
+  public eventids:string[];
   //
   constructor(oMap?: any) {
     super(oMap);
@@ -37,7 +41,23 @@ export class Person extends BaseItem implements IPerson {
     this._matieres = [];
     this._unites = [];
     this._groupes = [];
+    this.enseignantids = [];
+    this.etudiantids = [];
+    this.affectationids = [];
+    this.eventids = [];
     if ((oMap !== undefined) && (oMap !== null)) {
+      if ((oMap.enseignantids !== undefined) && (oMap.enseignantids !== null)){
+        this.enseignantids = oMap.enseignantids;
+      }
+      if ((oMap.etudiantids !== undefined) && (oMap.etudiantids !== null)){
+        this.etudiantids = oMap.etudiantids;
+      }
+      if ((oMap.affectationids !== undefined) && (oMap.affectationids !== null)){
+        this.affectationids = oMap.affectationids;
+      }
+      if ((oMap.eventids !== undefined) && (oMap.eventids !== null)){
+        this.eventids = oMap.eventids;
+      }
       if (oMap.username !== undefined) {
         this.username = oMap.username;
       }
@@ -286,6 +306,10 @@ export class Person extends BaseItem implements IPerson {
     oMap.anneeids = this.anneeids;
     oMap.semestreids = this.semestreids;
     oMap.groupeids = this.groupeids;
+    oMap.enseignantids = this.enseignantids;
+    oMap.etudiantids = this.etudiantids;
+    oMap.affectationids = this.affectationids;
+    oMap.eventids = this.eventids;
     
   } // to_insert_map
   public toString(): string {

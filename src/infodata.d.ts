@@ -52,7 +52,12 @@ export interface IBaseItem {
   optionBac?: string;
   mentionBac?: string;
   etudesSuperieures?: string;
+  fullname?:string;
+  password?:string;
   //
+  has_role?: (s:string) =>boolean;
+  is_super?:boolean;
+  is_admin?:boolean;
   isMale?: boolean;
   isFeminin?: boolean;
   //
@@ -63,6 +68,8 @@ export interface IBaseItem {
   phone?: string;
   //
   reset_password?: () => void;
+  change_password?: (s:string) => void;
+  update_person?: (pPers:any) => void;
   roles?: string[];
   departementids?: string[];
   anneeids?: string[];
@@ -87,6 +94,10 @@ export interface IPerson extends IBaseItem {
   uniteids: string[];
   matiereids: string[];
   groupeids: string[];
+  enseignantids:string[];
+  etudiantids:string[];
+  affectationids:string[];
+  eventids:string[];
   //
   reset_password: () => void;
   change_password: (ct: string) => void;

@@ -38,4 +38,15 @@ export class AffectationItem extends WorkItem
         oMap.startDate = this.startDate;
         oMap.endDate = this.endDate;
     } // toInsertMap
+    public update_person(pPers: IPerson): void {
+        if ((pPers !== undefined) && (pPers !== null)) {
+            super.update_person(pPers);
+            if (this.id === null){
+                this.id = this.create_id();
+            }
+            let cont = pPers.affectationids;
+            this.add_id_to_array(cont, this.id);
+            pPers.affectationids = ((cont !== undefined) && (cont !== null)) ? cont : [];
+        }// pPers
+    }// update_person
 }

@@ -1,13 +1,16 @@
 //userinfo.ts
 //
-import {IPerson} from '../../infodata.d';
+import {IBaseItem, IPerson} from '../../infodata.d';
 import {Person} from '../domain/person';
 import {SessionObjectStore} from './sessionstore';
+import {ItemGenerator} from '../domain/itemgenerator';
 //
 declare var window:any;
 //
+ let gen = new ItemGenerator();
+//
 export class UserInfo extends SessionObjectStore {
-  private _person:IPerson;
+  private _person:IBaseItem;
   //
   constructor() {
     super();
@@ -146,7 +149,7 @@ export class UserInfo extends SessionObjectStore {
     super.store_value("etudiantid", s);
   }
   //
-  public get person() : IPerson {
+  public get person() : IBaseItem {
     if (this._person !== null){
       return this._person;
     }
@@ -156,13 +159,13 @@ export class UserInfo extends SessionObjectStore {
     }
     try {
          let oMap = JSON.parse(sval);
-         this._person = new Person(oMap);
+         this._person = gen.create_item(oMap);
     }catch(e){
         console.log('UserInfo get person error: ' + JSON.stringify(e));
     }
     return this._person;
   }
-  public set person(pPers:IPerson) {
+  public set person(pPers:IBaseItem) {
     let p = (pPers !== undefined) ? pPers : null;
     super.store_value('person',null);
     this.photoUrl = null;
