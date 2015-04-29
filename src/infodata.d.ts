@@ -8,6 +8,7 @@ export interface IBaseItem {
   avatardocid: string;
   description: string;
   url: string;
+  isSelected:boolean;
   //
   base_prefix: string;
   start_key: any;
@@ -37,6 +38,7 @@ export interface IBaseItem {
   uniteid?: string;
   matiereid?: string;
   semestreid?: string;
+  groupeid?:string;
   personid?: string;
   enseignantid?:string;
   etudiantid?:string;
@@ -260,4 +262,6 @@ export interface IDatabaseManager {
   get_items: (item: IBaseItem, startKey?: any, endKey?: any) => Promise<IBaseItem[]>;
   get_ids: (startkey:string,endKey: any) => Promise<string[]>;
   maintains_workitem: (item:IBaseItem) =>Promise<IBaseItem>;
+  check_groupeevent_notes: (grpeventid:string) => Promise<IBaseItem[]>;
+  get_groupeevent_evts : (grpeventid:string,bNote?:boolean) => Promise<IBaseItem[]>;
 }// IDatabaseManager

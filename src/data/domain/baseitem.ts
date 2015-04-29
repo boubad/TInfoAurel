@@ -11,6 +11,7 @@ export class BaseItem implements IBaseItem {
     public avatardocid: string;
     public description: string;
     public url: string;
+    private _selected;
     //
     constructor(oMap?: any) {
         this.id = null;
@@ -20,6 +21,7 @@ export class BaseItem implements IBaseItem {
         this.avatardocid = null;
         this.description = null;
         this.url = null;
+        this._selected = false;
         if ((oMap !== undefined) && (oMap !== null)) {
             if (oMap._id !== undefined) {
                 this.id = oMap._id;
@@ -41,6 +43,12 @@ export class BaseItem implements IBaseItem {
             }
         } // oMap
     } // constructor
+    public get isSelected():boolean{
+        return this._selected;
+    }
+    public set isSelected(s:boolean){
+        this._selected = ((s !== undefined) && (s !== null)) ? s : false;
+    }
     public get base_prefix(): string {
         return null;
     }

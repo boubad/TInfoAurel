@@ -6,6 +6,9 @@
 import {IBaseItem, IPerson, IItemGenerator, IDatabaseManager, IElementDesc} from '../../../infodata.d';
 import {MyCrypto} from '../../domain/mycrypto';
 import {Person} from '../../domain/person';
+import {EtudAffectation} from '../../domain/EtudAffectation';
+import {EtudEvent} from '../../domain/etudevent';
+import {GroupeEvent} from '../../domain/groupeevent';
 import {EtudiantPerson} from '../../domain/etudperson';
 import {ElementDesc} from '../../domain/elementdesc';
 import {ItemGenerator} from '../../domain/itemgenerator';
@@ -451,4 +454,88 @@ export class PouchDatabase implements IDatabaseManager {
          return self.maintains_item(item);
         });
     }// maintains_workitem
+    public get_groupeevent_evts(grpeventid:string,bNote?:boolean): Promise<IBaseItem[]>{
+       let model = new EtudEvent({groupeeventid:grpeventid});
+       let m = ((bNote !== undefined) && (bNote !== null)) ? bNote : false;
+       return this.get_all_items(model).then((aa)=>{
+        let pp:IBaseItem[] = ((aa !== undefined) && (aa !== null)) ? aa : [];
+        let oRet:IBaseItem[] = [];
+        for (let x of pp){
+           if (m){
+             if (x.genre == 'note'){
+               oRet.push(x);
+             }
+            } else if (x.genre != 'note'){
+              oRet.push(x);
+            }
+          }// x
+        return oRet;
+        });
+      }//get_groupeevent_evts
+    public check_groupeevent_notes(grpeventid:string): Promise<IBaseItem[]> {
+      let self = this;
+      let depid:string = null;
+      let anneeid:string = null;
+      let uniteid:string = null;
+      let semestreid:string = null;
+      let groupeid:string = null;
+      let eventDate:Date  = null;
+      let allevts:IBaseItem[] = [];
+      let xgenre:string = 'note';
+      return this.find_item_by_id(grpeventid).then((gvt)=>{
+        if ((gvt === undefined) || (gvt === null)){
+           throw  new Error('Unknown groupeevent.');
+          }
+          eventDate = gvt.eventDate;
+          return self.find_item_by_id(gvt.profaffectationid);
+        }).then((praff)=>{
+          if ((praff === undefined)|| (praff === null)){
+            throw  new Error('Unkown profaffectation');
+            }
+            groupeid = praff.groupeid;
+            semestreid = praff.semestreid;
+            anneeid = praff.anneeid;
+            depid = praff.departementid;
+            let model = new EtudAffectation({semestreid:semestreid,
+              groupeid:groupeid,anneeid:anneeid,
+              departementid:depid});
+            return self.get_all_items(model);
+          }).then((affs)=>{
+              let cont = ((affs !== undefined) && (affs !== null)) ?
+              affs  : [] ;
+              for (let xaf of affs){
+                  let x = new EtudEvent({
+                    departementid:depid,
+                    anneeid: anneeid,
+                    semestreid:semestreid,
+                    groupeid:groupeid,
+                    personid: xaf.personid,
+                    etudiantid: xaf.etudiantid,
+                    etudaffectationid: xaf.id,
+                    firstname: xaf.firstname,
+                    lastname: xaf.lastname,
+                    groupeeventid:grpeventid,
+                    eventDate: eventDate,
+                    genre: xgenre
+                    });
+                allevts.push(x);
+                }// xaff
+                return self.get_groupeevent_evts(grpeventid,true);
+          }).then((pp)=>{
+            for (let y of allevts){
+                let xid = y.etudaffectationid;
+                for (let z of pp){
+                    if ((z.genre == xgenre) && (z.etudaffectationid == xid)){
+                      y.id = z.id;
+                      y.rev = z.rev;
+                      y.status = z.status;
+                      y.note = z.note;
+                      y.attachments = z.attachments;
+                      break;
+                    }
+                  }// z
+              }// y
+            return allevts;
+          });
+      }//check_groupeevent_events
 }// class PouchDatabase
