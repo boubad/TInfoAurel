@@ -24,7 +24,11 @@ export interface IBaseItem {
   to_map: (oMap: any) => void;
   toString: () => string;
   sort_func: (p1: IBaseItem, p2: IBaseItem) => number;
+  has_role?: (s:string) =>boolean;
   add_id_to_array : (cont: string[], id: string) => void;
+  reset_password?: () => void;
+  change_password?: (s:string) => void;
+  update_person?: (pPers:any) => void;
   //
   sigle?: string;
   name?: string;
@@ -34,6 +38,11 @@ export interface IBaseItem {
   matiereid?: string;
   semestreid?: string;
   personid?: string;
+  enseignantid?:string;
+  etudiantid?:string;
+  profaffectationid?:string;
+  etudaffectationid?:string;
+  groupeeventid?:string;
   //
   startDate?: Date;
   endDate?: Date;
@@ -55,7 +64,6 @@ export interface IBaseItem {
   fullname?:string;
   password?:string;
   //
-  has_role?: (s:string) =>boolean;
   is_super?:boolean;
   is_admin?:boolean;
   isMale?: boolean;
@@ -67,9 +75,7 @@ export interface IBaseItem {
   email?: string;
   phone?: string;
   //
-  reset_password?: () => void;
-  change_password?: (s:string) => void;
-  update_person?: (pPers:any) => void;
+  
   roles?: string[];
   departementids?: string[];
   anneeids?: string[];
@@ -77,6 +83,17 @@ export interface IBaseItem {
   uniteids?: string[];
   matiereids?: string[];
   groupeids?: string[];
+  enseignantids?:string[];
+  etudiantids?:string[];
+  affectationids?:string[];
+  eventids?:string[];
+  //
+  location?:string;
+  eventDate?:Date;
+  startTime?:Date;
+  endTime?:Date;
+  status?:string;
+  note?:number;
 }// interface IBaseItem
 export interface IPerson extends IBaseItem {
   username: string;
@@ -172,7 +189,7 @@ export interface IWorkItem extends IDepartementPerson {
   anneeid:string;
   semestreid:string;
   groupeid:string;
-  date:Date;
+  eventDate:Date;
   status:string;
   genre:string;
 }
@@ -187,6 +204,23 @@ export interface IProfAffectationItem extends IAffectationItem {
 }
 export interface IEtudAffectationItem extends IAffectationItem {
   etudiantid:string;
+}
+export interface IGroupeEvent extends IWorkItem {
+  profaffectationid:string;
+  enseignantid:string;
+  uniteid:string;
+  matiereid:string;
+  name:string;
+  location:string;
+  startTime:Date;
+  endTime:Date;
+  coefficient?:number;
+}
+export interface IEtudEvent extends IWorkItem {
+  groupeeventid:string;
+  etudaffectationid:string;
+  etudiantid:string;
+  note:number;
 }
 export interface IItemGenerator {
   create_item: (oMap?: any) => IBaseItem;
@@ -225,4 +259,5 @@ export interface IDatabaseManager {
   get_all_items: (item: IBaseItem) => Promise<IBaseItem[]>;
   get_items: (item: IBaseItem, startKey?: any, endKey?: any) => Promise<IBaseItem[]>;
   get_ids: (startkey:string,endKey: any) => Promise<string[]>;
+  maintains_workitem: (item:IBaseItem) =>Promise<IBaseItem>;
 }// IDatabaseManager

@@ -52,11 +52,15 @@ export class DepartementPerson extends DepartementChildItem
         return s;
     } // create_id
     public update_person(pPers: IPerson): void {
+        if (this.id === null){
+            this.id = this.create_id();
+        }
         if ((pPers !== undefined) && (pPers !== null)) {
             this.personid = pPers.id;
             this.firstname = pPers.firstname;
             this.lastname = pPers.lastname;
             this.avatarid = pPers.avatarid;
+            this.avatardocid = pPers.id;
             if (this.departementid !== null) {
                 let cont = pPers.departementids;
                 this.add_id_to_array(cont, this.departementid);

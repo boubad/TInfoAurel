@@ -1,6 +1,6 @@
 //etudaffectation.ts
 //
-import {IEtudAffectationItem} from '../../infodata.d';
+import {IPerson, IEtudAffectationItem} from '../../infodata.d';
 import {AffectationItem} from './affectationitem';
 //
 export class EtudAffectation extends AffectationItem
@@ -30,19 +30,20 @@ export class EtudAffectation extends AffectationItem
 
     }
     public create_id(): string {
-        let s = this.base_prefix;
-        if ((s !== null) && (this.semestreid !== null)) {
-            s = s + '-' + this.semestreid;
+        let s = this.start_key;
+        if ((s !== null) && (this.lastname !== null)) {
+            s = s + '-' + this.lastname.toUpperCase();
         }
-        if ((s !== null) && (this.groupeid !== null)) {
-            s = s + '-' + this.groupeid;
+        if ((s !== null) && (this.firstname !== null)) {
+            s = s + '-' + this.firstname.toUpperCase();
         }
-        if ((s !== null) && (this.personid !== null)) {
-            s = s + '-' + this.personid;
+        let n = Math.floor(Math.random() * 10000.0);
+        let sn = '' + n;
+        while (sn.length < 4) {
+            sn = '0' + sn;
         }
-        if ((s !== null) && (this.startDate !== null)) {
-            let ss = this.startDate.toISOString().substr(0, 10);
-            s = s + '-' + ss;
+        if (s !== null)  {
+            s = s + '-' + sn;
         }
         return s;
     } // create_id
@@ -69,4 +70,14 @@ export class EtudAffectation extends AffectationItem
     public set collection_name(s: string) {
 
     }
+    public update_person(pPers: IPerson): void {
+        if ((pPers !== undefined) && (pPers !== null)) {
+            super.update_person(pPers);
+            if (this.etudiantid !== null) {
+                let cont = pPers.etudiantids;
+                this.add_id_to_array(cont, this.etudiantid);
+                pPers.etudiantids = ((cont !== undefined) && (cont !== null)) ? cont : [];
+            }
+        }// pPers
+    }// update_person
 }

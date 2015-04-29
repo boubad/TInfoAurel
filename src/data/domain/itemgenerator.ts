@@ -15,6 +15,8 @@ import {Etudiant} from './etudiant';
 import {Enseignant} from './enseignant';
 import {ProfAffectation} from './profaffectation';
 import {EtudAffectation} from './etudaffectation';
+import {GroupeEvent} from './groupeevent';
+import {EtudEvent} from './etudevent';
 //
 export class ItemGenerator implements IItemGenerator {
     constructor() { }
@@ -50,6 +52,10 @@ export class ItemGenerator implements IItemGenerator {
             return new ProfAffectation(oMap);
         } else if (t == 'etudaffectation') {
             return new EtudAffectation(oMap);
+        } else if (t == 'groupeevent'){
+            return new GroupeEvent(oMap);
+        } else if (t == 'etudevent'){
+            return new EtudEvent(oMap);
         }
         return null;
     }// create_item

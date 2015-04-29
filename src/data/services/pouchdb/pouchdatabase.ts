@@ -432,4 +432,23 @@ export class PouchDatabase implements IDatabaseManager {
       return xdb.removeAttachment(p._id, attachmentId, p._rev);
     });
   }// maintains_attachment
+  public maintains_workitem(item:IBaseItem) : Promise<IBaseItem>{
+    if ((item.personid === undefined) || (item.personid === null)){
+      return this.maintains_item(item);
+    } 
+    let pid = item.personid;
+    let self = this;
+    return this.find_item_by_id(pid).then((pPers)=>{
+      if (pPers === null){
+        throw new Error('unknown person.');
+      }
+      if (item.id === null){
+        item.id = item.create_id();
+      }
+      item.update_person(pPers);
+      return self.maintains_item(pPers);
+      }).then((x)=>{
+         return self.maintains_item(item);
+        });
+    }// maintains_workitem
 }// class PouchDatabase

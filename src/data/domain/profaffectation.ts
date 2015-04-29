@@ -39,6 +39,11 @@ export class ProfAffectation extends AffectationItem
                 this.add_id_to_array(cont, this.matiereid);
                 pPers.matiereids = ((cont !== undefined) && (cont !== null)) ? cont : [];
             }
+            if (this.enseignantid !== null) {
+                let cont = pPers.enseignantids;
+                this.add_id_to_array(cont, this.enseignantid);
+                pPers.enseignantids = ((cont !== undefined) && (cont !== null)) ? cont : [];
+            }
         }// pPers
     }// update_person
     public get start_key(): any {

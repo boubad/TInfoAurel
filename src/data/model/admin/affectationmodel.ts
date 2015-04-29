@@ -153,17 +153,8 @@ export class AffectationViewModel extends WorkViewModel {
         return null;
     }
     protected maintains_one_affectation(prof: any) : Promise<any> {
-        let service = this.dataService;
-        let self = this;
-        let xPers:IPerson = null;
-        return service.find_item_by_id(prof.personid).then((pPers:IPerson)=>{
-                let item:IAffectationItem = self.create_affectation(prof);
-                item.update_person(pPers);
-                xPers = pPers;
-                return service.maintains_item(item);
-            }).then((r)=>{
-                return service.maintains_item(xPers);
-                });
+        let item = this.create_affectation(prof);
+        return this.dataService.maintains_workitem(item);
         }// retrieve_affectation
     public save(): any {
         if (!this.canSave) {

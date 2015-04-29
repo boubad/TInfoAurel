@@ -30,8 +30,8 @@ export class WorkItem extends DepartementPerson
             if (oMap.groupeid !== undefined) {
                 this.groupeid = oMap.groupeid;
             }
-            if (oMap.date !== null) {
-                this.date = oMap.date;
+            if (oMap.eventDate !== undefined) {
+                this.eventDate= oMap.eventDate;
             }
             if (oMap.status !== undefined) {
                 this.status = oMap.status;
@@ -61,10 +61,10 @@ export class WorkItem extends DepartementPerson
             }
         }// pPers
     }// update_person
-    public get date(): Date {
+    public get eventDate(): Date {
         return this._date;
     }
-    public set date(d: Date) {
+    public set eventDate(d: Date) {
         this._date = this.check_date(d);
     }
     public get start_key(): any {
@@ -90,7 +90,7 @@ export class WorkItem extends DepartementPerson
         oMap.anneeid = this.anneeid;
         oMap.semestreid = this.semestreid;
         oMap.groupeid = this.groupeid;
-        oMap.date = this._date;
+        oMap.eventDate = this.eventDate;
         oMap.status = this.status;
         oMap.genre = this.genre;
     } // toInsertMap

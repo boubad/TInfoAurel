@@ -181,4 +181,7 @@ export class BaseItem implements IBaseItem {
             }
         }
     }// add_id_to_array
+    public update_person(s:any) : void{
+        // do nothing here
+    }
 } // class BaseItem

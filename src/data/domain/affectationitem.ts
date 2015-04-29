@@ -41,12 +41,34 @@ export class AffectationItem extends WorkItem
     public update_person(pPers: IPerson): void {
         if ((pPers !== undefined) && (pPers !== null)) {
             super.update_person(pPers);
-            if (this.id === null){
-                this.id = this.create_id();
-            }
             let cont = pPers.affectationids;
             this.add_id_to_array(cont, this.id);
             pPers.affectationids = ((cont !== undefined) && (cont !== null)) ? cont : [];
         }// pPers
     }// update_person
+     public sort_func(p1:IAffectationItem, p2:IAffectationItem): number {
+        var vRet = -1;
+        if ((p1 !== undefined) && (p2 !== undefined) && (p1 !== null) && (p2 !== null)) {
+            if ((p1.startDate !== undefined) && (p1.startDate !== null)) {
+                if ((p2.startDate !== undefined) && (p2.startDate !== null)) {
+                    var s1 = Date.parse(p1.startDate.toString());
+                    var s2 = Date.parse(p2.startDate.toString());
+                    if (s1 < s2){
+                      vRet = 1;
+                    } else if (s1 > s2){
+                      vRet = -1;
+                    } else {
+                      vRet = 0;
+                    }
+                } else {
+                    vRet = 1;
+                }
+            } else {
+                vRet = 1;
+            }
+        } else if ((p1 === undefined) || (p1 === null)) {
+            vRet = 1;
+        }
+        return vRet;
+    } // sort_func
 }
