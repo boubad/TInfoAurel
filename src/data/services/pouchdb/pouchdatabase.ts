@@ -20,30 +20,52 @@ declare var PouchDB: any;
 export class PouchDatabase implements IDatabaseManager {
 		private generator: IItemGenerator;
 		private _db: PouchDB;
-		public url: string;
+		public _url: string;
 		//
 		constructor(name?: string) {
 				this.generator = new ItemGenerator();
 				this._db = null;
-				this.url = ((name !== undefined) && (name !== null)) ? name : DATABASE_NAME;
+				this._url = ((name !== undefined) && (name !== null)) ? name : DATABASE_NAME;
   }// constructor
+  public get url():string {
+    return this._url;
+  }
+  public set url(name:string){
+    this._db = null;
+    this._url = ((name !== undefined) && (name !== null)) ? name : null;
+  }
 		protected get db(): Promise<PouchDB> {
     let self = this;
     return new Promise((resolve, reject) => {
-      if (self._db !== null) {
+      if (this.url === null){
+        reject( new Error('Null database uri'));
+      }
+      else if (self._db !== null) {
         resolve(self._db);
       } else {
         let xx = new PouchDB(self.url, (err, xdb) => {
           if ((err !== undefined) && (err !== null)) {
             reject(new Error(err.reason));
           } else {
-            self._db = xdb;
-            resolve(xdb);
+            if ((xdb !== undefined) && (xdb !== null)){
+              self._db = xdb;
+              resolve(xdb);  
+            } else {
+              reject(new Error("Undefined database handle."));
+            }
           }
         });
       }
 				});
   }// db
+  public isOnline():Promise<boolean>{
+    let self = this;
+    return this.db.then((xdb)=>{
+      return ((xdb !== undefined) && (xdb !== null));
+      },(err)=>{
+        return false;
+      });
+    }// isOnline
 		protected maintains_doc(doc: any): Promise<PouchUpdateResponse> {
     let xdb: PouchDB = null;
     return this.db.then((dx) => {
