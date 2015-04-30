@@ -1,9 +1,10 @@
 //profviewmodel.ts
 //
-import {IBaseItem, IPerson,IDepartementPerson,IAffectationItem} from '../../../infodata.d';
+import {IBaseItem, IPerson,IDepartementPerson,IEtudAffectationItem} from '../../../infodata.d';
 //
 import {GroupeEvent} from '../../domain/groupeevent';
 import {EtudEvent} from '../../domain/etudevent';
+import {EtudAffectation} from '../../domain/etudaffectation';
 import {WorkViewModel} from '../workviewmodel';
 //
 export class ProfBaseViewModel extends WorkViewModel {
@@ -21,6 +22,9 @@ export class ProfBaseViewModel extends WorkViewModel {
     public eventMode:boolean;
     public noteMode:boolean;
     public attachmentMode:boolean;
+    private _current_evt:EtudEvent;
+    public etudAffectations:IEtudAffectationItem[];
+    public currentEtudAffectations:IEtudAffectationItem[];
     //
     constructor() {
         super();
@@ -38,6 +42,9 @@ export class ProfBaseViewModel extends WorkViewModel {
         this.eventMode = false;
         this.noteMode = false;
         this.attachmentMode = false;
+        this._current_evt = null;
+        this.etudAffectations = [];
+        this.currentEtudAffectations = [];
     }// constructor
     public activate(params?:any,queryString?:any,routeConfig?:any) : any{
         this.displayMode = true;
@@ -50,6 +57,25 @@ export class ProfBaseViewModel extends WorkViewModel {
                 return self.refresh_affectations();
             });
         }// activate
+    protected create_etudEvent(): EtudEvent{
+        return new EtudEvent({
+            departementid:this.departementid,
+            anneeid: this.anneeid,
+            semestreid: this.semestreid,
+            groupeid: this.groupeid,
+            groupeeventid: this.groupeeventid
+            });
+    }    
+    public get currentEvent():EtudEvent{
+        if (this._current_evt === null){
+            this._current_evt = this.create_etudEvent();
+        }
+        return this._current_evt;
+    }    
+    public set currentEvent(s:EtudEvent){
+        this._current_evt = ((s !== undefined) && (s !== null)) ? s:
+        this.create_etudEvent();
+    }
     public setDisplayMode() : void {
         this.displayMode = true;
         this.eventMode = false;
@@ -200,6 +226,17 @@ export class ProfBaseViewModel extends WorkViewModel {
                 (s.trim().length > 0)) ? s.trim().toUpperCase() : null;
         }
     }
+    public get groupeEventDesc():string {
+        let x = this.groupeEvent;
+        return (x !== null) ? x.description : null;
+    }    
+    public set groupeEventDesc(s:string){
+        let x = this.groupeEvent;
+        if (x !== null){
+            x.description = ((s !== undefined) && (s !== null) &&
+                (s.trim().length > 0)) ? s.trim().toUpperCase() : null;
+        }
+    }
      public get startDate(): string {
         return this.date_to_string(this._startDate);
     }
@@ -252,6 +289,9 @@ export class ProfBaseViewModel extends WorkViewModel {
             this._current_groupeevent = this.create_groupeevent();
         }
         this.refresh_events();
+    }
+    public get groupeeventid():string {
+        return (this.groupeEvent !== null)? this.groupeEvent.id : null;
     }
     protected refresh_events() : any {
         this.notes = [];
@@ -322,6 +362,20 @@ export class ProfBaseViewModel extends WorkViewModel {
                 });
         }
     }
+    protected refresh_etudaffectations() :any {
+        this.currentEtudAffectations = [];
+        this.etudAffectations = [];
+        let semid = this.semestreid;
+        let groupeid = this.groupeid;
+        if ((semid === null) || (groupeid === null)){
+            return Promise.resolve(true);
+        }
+        let self = this;
+        let model = new EtudAffectation({semestreid:semid,groupeid:groupeid});
+        return this.dataService.get_all_items(model).then((aa:IEtudAffectationItem[])=>{
+            self.etudAffectations = ((aa !== undefined) && (aa !== null)) ? aa: [];
+            });
+    }
     protected refresh_affectations(): any {
         this.current_affectation = null;
         let semid = this.semestreid;
@@ -355,7 +409,10 @@ export class ProfBaseViewModel extends WorkViewModel {
     }// post_change_departement
     protected post_change_groupe(): any {
         this.modelGroupeEvent.groupeid = this.groupeid;
-        return this.refresh_affectations();
+        let self = this;
+        return this.refresh_affectations().then((r)=>{
+            return self.refresh_etudaffectations();
+            });
     }
     protected post_change_semestre(): any {
         this._startDate = null;
@@ -366,7 +423,10 @@ export class ProfBaseViewModel extends WorkViewModel {
             this._endDate = sem.endDate;
         }
         this.modelGroupeEvent.semestreid = this.semestreid;
-        return this.refresh_affectations();
+        let self = this;
+        return this.refresh_affectations().then((r)=>{
+            return self.refresh_etudaffectations();
+            });
     }
     protected post_change_matiere(): any {
         this.modelGroupeEvent.matiereid = this.matiereid;
