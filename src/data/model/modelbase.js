@@ -11,6 +11,35 @@ export class BaseViewModel {
         this._gen = null;
         this.infoMessage = null;
         this.errorMessage = null;
+        this.genresEvts = [{ text: 'Note', value: 'note' },
+            { text: 'Absence', value: 'abs' },
+            { text: 'Retard léger', value: 'ret1' },
+            { text: 'Grand Retard', value: 'ret2' },
+            { text: 'Comportement', value: 'disc' },
+            { text: 'Autre', value: 'autre' }];
+        this.genresCours = [
+            {
+                text: 'Travaux Pratiques', value: 'TP'
+            },
+            {
+                text: 'Travaux Dirigés', value: 'TD'
+            },
+            {
+                text: 'Cours Magistral', value: 'COURS'
+            },
+            {
+                text: 'Contrôle', value: 'CONTROL'
+            },
+            {
+                text: 'Examen', value: 'EXAM'
+            },
+            {
+                text: 'Devoir facultatif', value: 'FACUL'
+            },
+            {
+                text: 'Autres types', value: 'MISC'
+            }
+        ];
     } // constructor
     activate(params, queryString, routeConfig) {
         return Promise.resolve(true);

@@ -1,5 +1,13 @@
 // infodata.d.ts
 //
+export interface IOptionDesc {
+   text:string;
+   value?:string;
+   description?:string;
+   url?:string;
+   href?:string;
+  }// interface IOptioDEsc
+//
 export interface IBaseItem {
   id: string;
   rev: string;
@@ -263,5 +271,6 @@ export interface IDatabaseManager {
   get_ids: (startkey:string,endKey: any) => Promise<string[]>;
   maintains_workitem: (item:IBaseItem) =>Promise<IBaseItem>;
   check_groupeevent_notes: (grpeventid:string) => Promise<IBaseItem[]>;
+  remove_all_items :(startKey:string,endKey:string) => Promise<any>;
   get_groupeevent_evts : (grpeventid:string,bNote?:boolean) => Promise<IBaseItem[]>;
 }// IDatabaseManager

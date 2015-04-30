@@ -137,14 +137,14 @@ export class GroupeEvent extends WorkItem
         if ((s !== null) && (this.semestreid !== null)) {
             s = s + '-' + this.semestreid;
         }
-        if ((s !== null) && (this.personid !== null)){
-            s = s + '-' + this.personid;
-        }
         if ((s !== null) && (this.matiereid !== null)) {
             s = s + '-' + this.matiereid;
         }
         if ((s !== null) && (this.groupeid !== null)) {
             s = s + '-' + this.groupeid;
+        }
+        if ((s !== null) && (this.personid !== null)){
+            s = s + '-' + this.personid;
         }
         return s;
     }

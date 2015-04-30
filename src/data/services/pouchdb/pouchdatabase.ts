@@ -280,6 +280,28 @@ export class PouchDatabase implements IDatabaseManager {
       });
     });
   }//get_ids
+  public remove_all_items(startKey:string,endKey:string) : Promise<any> {
+    let self = this;
+    let docs:any[] = [];
+    let options: PouchGetOptions = {
+      startkey: startKey, endkey: endKey,include_docs:true
+    };
+    let rdb:PouchDB = null;
+    return this.db.then((xdb)=>{
+      rdb = xdb;
+      return rdb.allDocs(options);
+      }).then((dd)=>{
+         for (let x of dd.rows){
+           let d = x.doc;
+           docs.push(d);
+          }// x
+          if (docs.length > 0){
+            return rdb.bulkDocs(docs);
+          } else {
+            return [];
+          }
+        });
+  }//remove_all_items
   public find_elements(viewName: string, startKey?: any,
     skip?: number, limit?: number, bDesc?: boolean): Promise<IElementDesc[]> {
     let options: PouchQueryOptions = { include_docs: true };
