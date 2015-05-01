@@ -2,6 +2,7 @@
 //
 import {IMatiere} from '../../infodata.d';
 import {DepSigleNameItem} from './depsiglenameitem';
+import {InfoRoot} from '../inforoot';
 //
 export class Matiere extends DepSigleNameItem implements IMatiere {
     //
@@ -38,45 +39,29 @@ export class Matiere extends DepSigleNameItem implements IMatiere {
     public get base_prefix(): string {
         return 'MAT';
     }
-    public set base_prefix(s:string){
+    public set base_prefix(s: string) {
 
     }
     public get type(): string {
         return 'matiere';
     }
-    public set type(s:string){
+    public set type(s: string) {
 
     }
-    public get collection_name(): string {
-        return 'matieres';
-    }
-    public set collection_name(s:string){
-
-    }
-    public create_id() : string {
+    public get start_key(): any {
         let s = this.base_prefix;
-        if ((s !== null) && (this.uniteid !== null)){
-            s = s + '-' + this.uniteid;
-        }
-        if ((s !== null) && (this.sigle !== null)){
-            s = s + '-' + this.sigle.toUpperCase();
-        }
-        return s;
-    } // create_id
-    public get start_key():any{
-         let s = this.base_prefix;
-        if ((s !== null) && (this.uniteid !== null)){
+        if ((s !== null) && (this.uniteid !== null)) {
             s = s + '-' + this.uniteid;
         }
         return s;
     }
-    public set start_key(s:any) {
+    public set start_key(s: any) {
     }
     public get ecs(): number {
         return this._ecs;
     }
     public set ecs(d: number) {
-        let v = this.check_number(d);
+        let v = InfoRoot.check_number(d);
         if ((v != undefined) && (v != null) && (v > 0)) {
             this._ecs = v;
         } else {
@@ -87,7 +72,7 @@ export class Matiere extends DepSigleNameItem implements IMatiere {
         return this._coef;
     }
     public set coefficient(d: number) {
-        let v = this.check_number(d);
+        let v = InfoRoot.check_number(d);
         if ((v != undefined) && (v != null) && (v > 0)) {
             this._coef = v;
         } else {
@@ -100,9 +85,17 @@ export class Matiere extends DepSigleNameItem implements IMatiere {
     public to_map(oMap: any): void {
         super.to_map(oMap);
         oMap.uniteid = this.uniteid;
-        oMap.genre = this.genre;
-        oMap.mat_module = this.mat_module;
-        oMap.coefficient = this.coefficient;
-        oMap.ecs = this.ecs;
+        if (this.genre !== null) {
+            oMap.genre = this.genre;
+        }
+        if (this.mat_module !== null) {
+            oMap.mat_module = this.mat_module;
+        }
+        if (this.coefficient !== null) {
+            oMap.coefficient = this.coefficient;
+        }
+        if (this.ecs !== null) {
+            oMap.ecs = this.ecs;
+        }
     }// to_insert_map
 } // class Unite

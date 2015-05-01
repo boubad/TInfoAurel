@@ -1,11 +1,12 @@
 //baseitem.ts
-/// <reference path='../../../typings/aurelia/aurelia.d.ts' />
 //
-import {IBaseItem} from '../../infodata.d';
+import {IBaseItem,IAttachmentDesc} from '../../infodata.d';
+import {InfoRoot} from '../inforoot';
 //
-export class BaseItem implements IBaseItem {
+export class BaseItem extends InfoRoot implements IBaseItem {
     public id: string;
     public rev: string;
+    public attachmentsDesc:IAttachmentDesc[];
     public attachments: any;
     public avatarid: string;
     public avatardocid: string;
@@ -14,8 +15,10 @@ export class BaseItem implements IBaseItem {
     private _selected;
     //
     constructor(oMap?: any) {
+        super();
         this.id = null;
         this.rev = null;
+        this.attachmentsDesc = null;
         this.attachments = null;
         this.avatarid = null;
         this.avatardocid = null;
@@ -28,6 +31,9 @@ export class BaseItem implements IBaseItem {
             }
             if (oMap._rev !== undefined) {
                 this.rev = oMap._rev;
+            }
+            if (oMap.attachmentsDesc !== undefined){
+                this.attachmentsDesc = oMap.attachmentsDesc;
             }
             if (oMap._attachments !== undefined) {
                 this.attachments = oMap._attachments;
@@ -52,68 +58,23 @@ export class BaseItem implements IBaseItem {
     public get base_prefix(): string {
         return null;
     }
-    public set base_prefix(s: string) {
-
+    public set base_prefix(s:string){}
+    public get start_key(): string {
+        return (this.base_prefix !== null) ? this.base_prefix : null;
     }
-    public get start_key(): any {
-        return (this.base_prefix !== null) ? this.base_prefix + '-' : null;
-    }
-    public set start_key(s: any) {
-
-    }
+    public set start_key(s:string){}
     public get end_key(): any {
         return (this.start_key !== null) ? this.start_key + '\uffff' : null;
     }
-    public get index_name(): string {
-        return (this.collection_name !== null) ?
-            this.collection_name + '/by_id' : null;
-    }
-    public set index_name(s: string) {
-
-    }
     public create_id(): string {
-        let n = Math.floor(Math.random() * 10000.0);
-        let sn = '' + n;
-        while (sn.length < 4) {
-            sn = '0' + sn;
-        }
-        let s = ((new Date()).toISOString()).substr(0, 10) + '-' + sn;
-        return (this.base_prefix !== null) ?
-            this.base_prefix + '-' + s : s;
+       return InfoRoot.create_date_random_id();
     } // create_id
-    public check_date(d: Date): Date {
-        let dRet = null;
-        if ((d !== undefined) && (d !== null)) {
-            let t = Date.parse(d.toString());
-            if (!isNaN(t)) {
-                dRet = new Date(t);
-            }
-        }
-        return dRet;
-    } // check_date
-    public check_number(s: any): number {
-        let dRet: number = null;
-        if ((s !== undefined) && (s !== null)) {
-            try {
-                dRet = parseFloat(s.toString());
-            } catch (e) { }
-        }
-        return dRet;
-    }
     public get type(): string {
         return null;
     }
-    public set type(s: string) {
-
-    }
-    public get collection_name(): string {
-        return null;
-    }
-    public set collection_name(s: string) {
-
-    }
+    public set type(s:string){}
     public is_storeable(): boolean {
-        return (this.type !== null) && (this.collection_name !== null);
+        return (this.type !== null);
     }
     public to_map(oMap: any): void {
         if ((this.id !== undefined) && (this.id !== null)) {
@@ -123,6 +84,9 @@ export class BaseItem implements IBaseItem {
         }
         if ((this.rev !== undefined) && (this.rev !== null)) {
             oMap._rev = this.rev;
+        }
+        if ((this.attachmentsDesc !== undefined) && (this.attachmentsDesc !== null)){
+            oMap.attachmentsDesc = this.attachmentsDesc;
         }
         if ((this.attachments !== undefined) && (this.attachments !== null)) {
             oMap._attachments = this.attachments;
@@ -145,9 +109,6 @@ export class BaseItem implements IBaseItem {
     }
     public get has_url(): boolean {
         return (this.url !== null);
-    }
-    public set has_url(b: boolean) {
-
     }
     public toString(): string {
         let oMap = {};
@@ -174,22 +135,4 @@ export class BaseItem implements IBaseItem {
         }
         return vRet;
     } // sort_func
-    public add_id_to_array(cont: string[], id: string): void {
-        if ((cont !== undefined) && (cont !== null) && (cont.length > 0) &&
-            (id !== undefined) && (id !== null)) {
-            let bFound = false;
-            for (let x of cont) {
-                if (x == id) {
-                    bFound = true;
-                    break;
-                }
-            }
-            if (!bFound) {
-                cont.push(id);
-            }
-        }
-    }// add_id_to_array
-    public update_person(s:any) : void{
-        // do nothing here
-    }
 } // class BaseItem

@@ -3,7 +3,7 @@
 /// <reference path='../../../../typings/pouchdb/pouchdb.d.ts' />
 /// <reference path='../../../infodata.d.ts' />
 //
-import {IBaseItem, IPerson, IItemGenerator, IDatabaseManager, IElementDesc} from '../../../infodata.d';
+import {IBaseItem, IPerson, IItemGenerator, IDatabaseManager} from '../../../infodata.d';
 import {MyCrypto} from '../../domain/mycrypto';
 import {Person} from '../../domain/person';
 import {EtudAffectation} from '../../domain/EtudAffectation';
@@ -13,7 +13,7 @@ import {EtudiantPerson} from '../../domain/etudperson';
 import {ElementDesc} from '../../domain/elementdesc';
 import {ItemGenerator} from '../../domain/itemgenerator';
 //
-const DATABASE_NAME = 'geninfo';
+export const DATABASE_NAME = 'geninfo';
 //
 declare var PouchDB: any;
 //
@@ -302,99 +302,6 @@ export class PouchDatabase implements IDatabaseManager {
           }
         });
   }//remove_all_items
-  public find_elements(viewName: string, startKey?: any,
-    skip?: number, limit?: number, bDesc?: boolean): Promise<IElementDesc[]> {
-    let options: PouchQueryOptions = { include_docs: true };
-    if ((startKey !== undefined) && (startKey !== null)) {
-      options.startkey = startKey;
-    }
-    if ((skip !== undefined) && (skip !== null) && (skip > 0)) {
-      options.skip = skip;
-    }
-    if ((limit !== undefined) && (limit !== null) &&
-      (limit > 0)) {
-      options.limit = limit;
-    }
-    if ((bDesc !== undefined) && (bDesc !== null)) {
-      options.descending = bDesc;
-    }
-    return this.db.then((xdb) => {
-      return xdb.query(viewName, options).then((rr) => {
-        let oRet = [];
-        if ((rr !== undefined) && (rr !== null)) {
-          let data = rr.rows;
-          if ((data !== undefined) && (data !== null)) {
-            for (let r of data) {
-              if ((r.value !== undefined) && (r.value !== null)) {
-                if ((r.error !== undefined) || (r.deleted !== undefined)) {
-                  continue;
-                }
-                var xx = new ElementDesc(r.value);
-                oRet.push(xx);
-              }
-            }// r
-          }// data
-        }// rr
-        return oRet;
-      });
-    });
-  }// find_elements
-  public find_all_elements(item: IBaseItem, bDesc?: boolean): Promise<IElementDesc[]> {
-    let viewName = item.index_name;
-    let startKey = item.start_key;
-    let endKey = item.end_key;
-    let options: PouchQueryOptions = {
-      startkey: item.start_key,
-      endkey: item.end_key, include_docs: true
-    };
-    if ((bDesc !== undefined) && (bDesc !== null)) {
-      options.descending = bDesc;
-    }
-    return this.db.then((xdb) => {
-      return xdb.query(viewName, options).then((rr) => {
-        let oRet = [];
-        if ((rr !== undefined) && (rr !== null)) {
-          let data = rr.rows;
-          if ((data !== undefined) && (data !== null)) {
-            for (let r of data) {
-              if ((r.value !== undefined) && (r.value !== null)) {
-                if ((r.error !== undefined) || (r.deleted !== undefined)) {
-                  continue;
-                }
-                var xx = new ElementDesc(r.value);
-                oRet.push(xx);
-              }
-            }// r
-          }// data
-        }// rr
-        return oRet;
-      });
-    });
-  }// find_all_elements
-  public find_elements_array(item: IBaseItem, ids: string[]): Promise<IElementDesc[]> {
-    let viewName = item.index_name;
-    let options: PouchQueryOptions = { keys: ids, include_docs: true };
-    return this.db.then((xdb) => {
-      return xdb.query(viewName, options).then((rr) => {
-        let oRet = [];
-        if ((rr !== undefined) && (rr !== null)) {
-          let data = rr.rows;
-          if ((data !== undefined) && (data !== null)) {
-            for (let r of data) {
-              if ((r.value !== undefined) && (r.value !== null)) {
-                if ((r.error !== undefined) || (r.deleted !== undefined)) {
-                  continue;
-                }
-                var xx = new ElementDesc(r.value);
-                oRet.push(xx);
-              }
-            }// r
-          }// data
-        }// rr
-        return oRet;
-      });
-    });
-  }// find_elements_array
   protected internal_maintains_one_item(xdb: PouchDB, item: IBaseItem): Promise<IBaseItem> {
     let oMap = {};
     item.to_map(oMap);

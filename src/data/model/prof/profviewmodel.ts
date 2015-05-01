@@ -6,6 +6,7 @@ import {GroupeEvent} from '../../domain/groupeevent';
 import {EtudEvent} from '../../domain/etudevent';
 import {EtudAffectation} from '../../domain/etudaffectation';
 import {WorkViewModel} from '../workviewmodel';
+import {InfoRoot} from '../../inforoot';
 //
 export class ProfBaseViewModel extends WorkViewModel {
     public current_affectation: IBaseItem;
@@ -65,13 +66,13 @@ export class ProfBaseViewModel extends WorkViewModel {
             groupeid: this.groupeid,
             groupeeventid: this.groupeeventid
             });
-    }    
+    }
     public get currentEvent():EtudEvent{
         if (this._current_evt === null){
             this._current_evt = this.create_etudEvent();
         }
         return this._current_evt;
-    }    
+    }
     public set currentEvent(s:EtudEvent){
         this._current_evt = ((s !== undefined) && (s !== null)) ? s:
         this.create_etudEvent();
@@ -81,7 +82,7 @@ export class ProfBaseViewModel extends WorkViewModel {
         this.eventMode = false;
         this.noteMode = false;
         this.attachmentMode = false;
-    }    
+    }
     public setEventMode() : void {
         this.displayMode = false;
         this.eventMode = true;
@@ -123,7 +124,7 @@ export class ProfBaseViewModel extends WorkViewModel {
         if ((x.id === null) || (x.rev === null)){
             return Promise.resolve(false);
         }
-        if (!this.confirm('Voulez-vous vraiment supprimer ' + x.id + '?')){
+        if (!InfoRoot.confirm('Voulez-vous vraiment supprimer ' + x.id + '?')){
             return Promise.resolve(false);
         }
         let self = this;
@@ -159,16 +160,16 @@ export class ProfBaseViewModel extends WorkViewModel {
             (err)=>{
                 self.set_error(err);
                 });
-    }// saveGroupeEvent    
+    }// saveGroupeEvent
     public get coefficient():string {
         let x = this.groupeEvent;
         let d = (x !== null) ? x.coefficient : null;
         return (d !== null) ? d.toString() : null;
-    }    
+    }
     public set coefficient(s:string){
         let x = this.groupeEvent;
         if (x !== null){
-            let d = this.string_to_number(s);
+            let d = InfoRoot.string_to_number(s);
             if ((d !== null) && (d > 0)){
                 x.coefficient = d;
             } else {
@@ -178,25 +179,25 @@ export class ProfBaseViewModel extends WorkViewModel {
     }
     public get genre():string {
         return this._genre;
-    }    
+    }
     public set genre(s:string){
         this._genre =((s !== undefined) && (s !== null) &&
             (s.trim.length > 0)) ? s.trim().toUpperCase(): null;
     }
     public get eventDate():string {
         let x = this.groupeEvent;
-        return (x !== null) ? this.date_to_string(x.eventDate) : null;
-    }    
+        return (x !== null) ? InfoRoot.date_to_string(x.eventDate) : null;
+    }
     public set eventDate(s:string){
         let x = this.groupeEvent;
         if (x !== null){
-            x.eventDate = this.string_to_date(s);
+            x.eventDate = InfoRoot.string_to_date(s);
         }
     }
     public get name():string {
         let x = this.groupeEvent;
         return (x !== null) ? x.name : null;
-    }    
+    }
     public set name(s:string){
         let x = this.groupeEvent;
         if (x !== null){
@@ -207,7 +208,7 @@ export class ProfBaseViewModel extends WorkViewModel {
     public get location():string {
         let x = this.groupeEvent;
         return (x !== null) ? x.location : null;
-    }    
+    }
     public set location(s:string){
         let x = this.groupeEvent;
         if (x !== null){
@@ -218,7 +219,7 @@ export class ProfBaseViewModel extends WorkViewModel {
     public get status():string {
         let x = this.groupeEvent;
         return (x !== null) ? x.status : null;
-    }    
+    }
     public set status(s:string){
         let x = this.groupeEvent;
         if (x !== null){
@@ -229,7 +230,7 @@ export class ProfBaseViewModel extends WorkViewModel {
     public get groupeEventDesc():string {
         let x = this.groupeEvent;
         return (x !== null) ? x.description : null;
-    }    
+    }
     public set groupeEventDesc(s:string){
         let x = this.groupeEvent;
         if (x !== null){
@@ -238,12 +239,12 @@ export class ProfBaseViewModel extends WorkViewModel {
         }
     }
      public get startDate(): string {
-        return this.date_to_string(this._startDate);
+        return InfoRoot.date_to_string(this._startDate);
     }
     public set startDate(s: string) {
     }
     public get endDate(): string {
-        return this.date_to_string(this._endDate);
+        return InfoRoot.date_to_string(this._endDate);
     }
     public set endDate(s: string) {
     }
@@ -385,7 +386,7 @@ export class ProfBaseViewModel extends WorkViewModel {
         if ((semid !== null) && (groupeid !== null) &&
             (matiereid !== null) && (genre !== null)){
             for (let x of this._affs){
-                if ((x.semestreid == semid) && 
+                if ((x.semestreid == semid) &&
                     (x.groupeid == groupeid) &&
                     (x.matiereid == matiereid) && (x.genre == genre)){
                     this.current_affectation = x;

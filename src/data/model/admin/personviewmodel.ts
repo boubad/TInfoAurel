@@ -1,10 +1,11 @@
 // personviewmodel.ts
 //
-import {IBaseItem, IPerson,IDepartementPerson} from '../../../infodata.d';
+import {IBaseItem, IPerson, IDepartementPerson} from '../../../infodata.d';
 //
 import {DepartementChildModel} from './departementchildmodel';
 import {Departement} from '../../domain/departement';
 import {Person} from '../../domain/person';
+import {InfoRoot} from '../../inforoot';
 //
 export class PersonViewModel extends DepartementChildModel {
     //
@@ -19,10 +20,10 @@ export class PersonViewModel extends DepartementChildModel {
         this._currentPerson = null;
         this.currentUrl = null;
     }// constructor
-    public get hasCurrentPhoto():boolean {
+    public get hasCurrentPhoto(): boolean {
         return (this.currentUrl !== null);
     }
-    public set hasCurrentPhoto(s:boolean){}
+    public set hasCurrentPhoto(s: boolean) { }
     public get currentPerson(): IBaseItem {
         if (this._currentPerson === null) {
             this._currentPerson = this.create_person();
@@ -38,8 +39,8 @@ export class PersonViewModel extends DepartementChildModel {
         this.currentPerson = null;
     }// ad
     protected post_change_item(): any {
-        if (this.currentUrl !== null){
-            this.revokeUrl(this.currentUrl);
+        if (this.currentUrl !== null) {
+            InfoRoot.revokeUrl(this.currentUrl);
         }
         this.currentUrl = null;
         this.currentPerson = null;
@@ -55,16 +56,16 @@ export class PersonViewModel extends DepartementChildModel {
         let service = this.dataService;
         return service.find_item_by_id(pid).then((pp) => {
             self.currentPerson = pp;
-            if ((pp !== undefined) && (pp !== null)){
+            if ((pp !== undefined) && (pp !== null)) {
                 let id = pp.id;
                 let vid = pp.avatarid;
-                if ((id !== null) && (vid !== null)){
-                    service.find_attachment(id, vid).then((blob) => { 
-                        let xurl = self.createUrl(blob);
+                if ((id !== null) && (vid !== null)) {
+                    service.find_attachment(id, vid).then((blob) => {
+                        let xurl = InfoRoot.createUrl(blob);
                         self.currentUrl = xurl;
-                        });
+                    });
                 }
-                }// pp
+            }// pp
         });
     }// post_change_item
     public get personid(): string {
@@ -168,24 +169,28 @@ export class PersonViewModel extends DepartementChildModel {
         if (!pPers.is_storeable()) {
             return false;
         }
-        if (pPers.id === null){
+        if (pPers.id === null) {
             pPers.id = pPers.create_id();
         }
         let self = this;
         let service = this.dataService;
         let bOld = (item.rev !== null);
-        if (!bOld){
+        if (!bOld) {
             pPers.reset_password();
         }
         let rx = pPers.departementids;
-        pPers.departementids = this.array_add(rx, depid);
+        if (rx === null){
+            rx = [];
+        }
+        InfoRoot.add_id_to_array(rx, depid);
+        pPers.departementids = rx;
         this.clear_error();
-        return service.maintains_item(pPers).then((r:IPerson) => {
+        return service.maintains_item(pPers).then((r: IPerson) => {
             item.update_person(r);
             return service.maintains_item(r);
-        }).then((rx)=>{
+        }).then((rx) => {
             return service.maintains_item(item);
-            }).then((x) => {
+        }).then((x) => {
             if (bOld) {
                 self.refresh();
             } else {

@@ -5,6 +5,7 @@ import {IBaseItem} from '../../../infodata.d';
 import {PersonViewModel} from './personviewmodel';
 import {EtudiantPerson} from '../../domain/etudperson';
 import {Etudiant} from '../../domain/etudiant';
+import {InfoRoot} from '../../inforoot';
 //
 //
 export class EtudiantViewModel extends PersonViewModel {
@@ -51,12 +52,12 @@ export class EtudiantViewModel extends PersonViewModel {
     public get birthDate(): string {
         let x = this.currentPerson
         let d = ((x !== undefined) && (x !== null)) ? x.birthDate : null;
-        return this.date_to_string(d);
+        return InfoRoot.date_to_string(d);
     }
     public set birthDate(s: string) {
         let x = this.currentPerson;
         if ((x !== undefined) && (x !== null)) {
-            x.birthDate = this.string_to_date(s);
+            x.birthDate = InfoRoot.string_to_date(s);
         }
     }
     public get ville(): string {

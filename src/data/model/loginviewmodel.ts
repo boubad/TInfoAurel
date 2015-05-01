@@ -1,7 +1,9 @@
 //loginviewmodel.js
 //
+import {IPerson} from '../../infodata.d';
+import {Redirect} from 'aurelia-router';
+import {Person} from '../domain/person';
 import {BaseViewModel} from './modelbase';
-import {MaintainsDatabase} from '../services/pouchdb/maintainsdatabase';
 //
 export class LoginViewModel extends BaseViewModel {
     //
@@ -14,11 +16,8 @@ export class LoginViewModel extends BaseViewModel {
         this.password = null;
         this.title = 'Connexion';
     }// constructor
-    public activate(): any {
-        return this.dataService.check_admin().then((x) => {
-            let db = new MaintainsDatabase();
-            return db.check_schema();
-        });
+    public activate(params?: any, queryString?: any, routeConfig?: any): any {
+        return this.dataService.check_admin();
     }// activate
     public get canConnect(): boolean {
         return (this.username !== null) && (this.password !== null) &&
@@ -31,33 +30,39 @@ export class LoginViewModel extends BaseViewModel {
     public connect(): any {
         let suser = (this.username !== null) ? this.username.trim().toLowerCase() : null;
         let spass = this.password;
-        let service = this.dataService;
         let self = this;
-        let userinfo = this.userInfo;
-        service.find_person_by_username(suser).then((pPers) => {
-            if (pPers === null) {
-                self.errorMessage = 'Utilisateur inconnu';
+        let xurl: string = '#login';
+        this.clear_error();
+        return this.dataService.find_person_by_username(suser).then((pPers: IPerson) => {
+            let px: IPerson = pPers;
+            if ((pPers !== null) && pPers.check_password(spass)) {
+                px = pPers;
             } else {
-                if (!pPers.check_password(spass)) {
-                    self.errorMessage = 'Utilisateur inconnu';
-                } else {
-                    userinfo.person = pPers;
-                    let id = pPers.id;
-                    let vid = pPers.avatarid;
-                    if (vid !== null) {
-                        service.find_attachment(id, vid).then((data) => {
-                            if (data !== null) {
-                                let xurl = this.createUrl(data);
-                                userinfo.photoUrl = xurl;
-                                self.username = null;
-                                self.password = null;
-                            }// data
-                        });
-                    }
-                }
+                px = new Person();
             }
-        }, (err) => {
-                self.set_error(err);
-            });
+            return self.retrieve_one_avatar(px);
+        }).then((p: IPerson) => {
+            if ((p !== undefined) && (p !== null) && (p.id !== null) && (p.rev !== null)) {
+                self.username = null;
+                self.password = null;
+                if (p.is_admin) {
+                    xurl = '#admin_home';
+                    self.userInfo.person = p;
+                } else if (p.is_prof) {
+                    xurl = '#prof_home';
+                    self.userInfo.person = p;
+                } else if (p.is_etud) {
+                    xurl = '#etud_home';
+                    self.userInfo.person = p;
+                }
+            } else {
+                self.errorMessage = 'Utilisateur inconnu...';
+            }
+            return new Redirect(xurl);
+        }).catch((err) => {
+            self.set_error(err);
+            return new Redirect(xurl);
+        });      
+        //
     }// connect        
 }// class LoginClass

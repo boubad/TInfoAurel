@@ -3,10 +3,10 @@
 import {IDepartementChildItem} from '../../infodata.d';
 import {BaseItem} from './baseitem';
 //
-export class DepartementChildItem extends BaseItem 
-implements IDepartementChildItem {
-    public departementid:string;
-    constructor(oMap?:any) {
+export class DepartementChildItem extends BaseItem
+    implements IDepartementChildItem {
+    public departementid: string;
+    constructor(oMap?: any) {
         super(oMap);
         this.departementid = null;
         if ((oMap !== undefined) && (oMap !== null)) {
@@ -15,22 +15,19 @@ implements IDepartementChildItem {
             }
         } // oMap
     } // constructor
-    public create_id() : string {
+    public get start_key(): any {
         let s = this.base_prefix;
-        if ((s !== null) && (this.departementid !== null)){
+        if ((s !== null) && (this.departementid !== null)) {
             s = s + '-' + this.departementid;
         }
         return s;
-    } // create_id
-    public get start_key():any{
-        return (this.departementid !== null) ? this.base_prefix + '-' + this.departementid : this.base_prefix;
     }
-    public set start_key(s:any) {
+    public set start_key(s: any) {
     }
-    public  is_storeable() :boolean {
+    public is_storeable(): boolean {
         return super.is_storeable() && (this.departementid !== null);
     }
-    public to_map(oMap:any) : void {
+    public to_map(oMap: any): void {
         super.to_map(oMap);
         oMap.departementid = this.departementid;
     } // toInsertMap

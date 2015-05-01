@@ -2,6 +2,7 @@
 //
 import {IProfAffectationItem, IPerson} from '../../infodata.d';
 import {AffectationItem} from './affectationitem';
+import {InfoRoot} from '../inforoot';
 //
 export class ProfAffectation extends AffectationItem
     implements IProfAffectationItem {
@@ -30,58 +31,50 @@ export class ProfAffectation extends AffectationItem
         if ((pPers !== undefined) && (pPers !== null)) {
             super.update_person(pPers);
             if (this.uniteid !== null) {
-                let cont = pPers.uniteids;
-                this.add_id_to_array(cont, this.uniteid);
-                pPers.uniteids = ((cont !== undefined) && (cont !== null)) ? cont : [];
+                let cont: string[] = pPers.uniteids;
+                if (cont === null) {
+                    cont = [];
+                }
+                InfoRoot.add_id_to_array(cont, this.uniteid);
+                pPers.uniteids = cont;
             }
             if (this.matiereid !== null) {
-                let cont = pPers.matiereids;
-                this.add_id_to_array(cont, this.matiereid);
-                pPers.matiereids = ((cont !== undefined) && (cont !== null)) ? cont : [];
-            }
-            if (this.enseignantid !== null) {
-                let cont = pPers.enseignantids;
-                this.add_id_to_array(cont, this.enseignantid);
-                pPers.enseignantids = ((cont !== undefined) && (cont !== null)) ? cont : [];
+                let cont: string[] = pPers.matiereids;
+                if (cont === null) {
+                    cont = [];
+                }
+                InfoRoot.add_id_to_array(cont, this.matiereid);
+                pPers.matiereids = cont;
             }
         }// pPers
     }// update_person
-    public get start_key(): any {
+    public get start_key(): string {
         let s = this.base_prefix;
         if ((s !== null) && (this.semestreid !== null)) {
             s = s + '-' + this.semestreid;
         }
-        if ((s !== null) && (this.groupeid !== null)) {
-            s = s + '-' + this.groupeid;
-        }
         if ((s !== null) && (this.matiereid !== null)) {
             s = s + '-' + this.matiereid;
         }
-        return s;
-    }
-    public set start_key(s: any) {
-
-    }
-    public create_id(): string {
-        let s = this.base_prefix;
-        if ((s !== null) && (this.semestreid !== null)) {
-            s = s + '-' + this.semestreid;
-        }
         if ((s !== null) && (this.groupeid !== null)) {
             s = s + '-' + this.groupeid;
-        }
-        if ((s !== null) && (this.matiereid !== null)) {
-            s = s + '-' + this.matiereid;
         }
         if ((s !== null) && (this.genre !== null)) {
             s = s + '-' + this.genre;
         }
+        return s;
+    }
+    public set start_key(s: string) { }
+    public create_id(): string {
+        let s = this.start_key;
         if ((s !== null) && (this.personid !== null)) {
             s = s + '-' + this.personid;
         }
         if ((s !== null) && (this.startDate !== null)) {
-            let ss = this.startDate.toISOString().substr(0, 10);
-            s = s + '-' + ss;
+            let ss = InfoRoot.create_date_random_id(this.startDate);
+            if (ss !== null) {
+                s = s + '-' + ss;
+            }
         }
         return s;
     } // create_id
@@ -91,9 +84,15 @@ export class ProfAffectation extends AffectationItem
     }
     public to_map(oMap: any): void {
         super.to_map(oMap);
-        oMap.enseignantid = this.enseignantid;
-        oMap.uniteid = this.uniteid;
-        oMap.matiereid = this.matiereid;
+        if (this.enseignantid !== null) {
+            oMap.enseignantid = this.enseignantid;
+        }
+        if (this.uniteid !== null) {
+            oMap.uniteid = this.uniteid;
+        }
+        if (this.matiereid !== null) {
+            oMap.matiereid = this.matiereid;
+        }
     } // toInsertMap
     public get base_prefix(): string {
         return 'AFP';
@@ -103,12 +102,6 @@ export class ProfAffectation extends AffectationItem
         return 'profaffectation';
     }
     public set type(s: string) {
-
-    }
-    public get collection_name(): string {
-        return 'profaffectations';
-    }
-    public set collection_name(s: string) {
 
     }
 }

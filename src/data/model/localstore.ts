@@ -1,5 +1,7 @@
 //localstore.ts
 //
+import {IObjectStore} from '../../infodata.d';
+//
 import {PouchDatabase} from '../services/pouchdb/pouchdatabase';
 //
 const DEFAULT_LOCAL_DATABASE = 'geninfo';
@@ -7,7 +9,7 @@ const DEFAULT_FIRST_REMOTE_DATABASE =
      'http://boubadiarra.hd.free.fr:5489/geninfo';
 const DEFAULT_SECOND_REMOTE_DATABASE = 'http://localhost:5489/geninfo';     
 //
-export class LocalObjectStore {
+export class LocalObjectStore implements IObjectStore {
   //
   private _localbase:string;
   private _remotebase:string;
@@ -78,7 +80,7 @@ export class LocalObjectStore {
         });
     }
   }
-  protected get_value(key:string) : string {
+  public get_value(key:string) : string {
     let vRet = null;
     if ((key !== undefined) && (key !== null)) {
       let skey = key.trim().toLowerCase();
@@ -91,7 +93,7 @@ export class LocalObjectStore {
     }// exists
     return vRet;
   }// get_value
-  protected store_value(key:string, value:string) : void {
+  public store_value(key:string, value:string) : any {
     if ((key !== undefined) && (key !== null)) {
       let skey = key.trim().toLowerCase();
       if (skey.length > 0) {
@@ -108,7 +110,7 @@ export class LocalObjectStore {
       }// skey
     }// exists
   }// store_value
-  protected remove_value(key:string) : void {
+  public remove_value(key:string) : any {
     return this.store_value(key, null);
   }// remove_value
 }// class LocalObjectStore

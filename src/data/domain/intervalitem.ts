@@ -2,6 +2,7 @@
 //
 import {IIntervalItem} from '../../infodata.d';
 import {DepSigleNameItem} from './depsiglenameitem';
+import {InfoRoot} from '../inforoot';
 //
 export class IntervalItem extends DepSigleNameItem implements IIntervalItem {
     private _start: Date;
@@ -23,28 +24,18 @@ export class IntervalItem extends DepSigleNameItem implements IIntervalItem {
         return this._start;
     }
     public set startDate(d: Date) {
-        this._start = this.check_date(d);
+        this._start = InfoRoot.check_date(d);
     }
     public get endDate(): Date {
         return this._end;
     }
     public set endDate(d: Date) {
-        this._end = this.check_date(d);
-    }
-    public get start_key(): string {
-        return this.base_prefix + '-' + this.departementid;
-    }
-    public set start_key(s: string) {
-
-
+        this._end = InfoRoot.check_date(d);
     }
     public create_id(): string {
-        let d = (this.startDate !== null) ? this.startDate : new Date();
-        let dd = new Date(Date.parse(d.toString()));
-        let ss = dd.toISOString().substr(0, 10);
-        let s = this.base_prefix;
-        if ((s !== null) && (this.departementid !== null)) {
-            s = s + '-' + this.departementid + '-' + ss;
+        let s = this.start_key;
+        if ((s !== null) && (this.startDate !== null)) {
+            s = s + '-' + this.startDate.toISOString().substr(0, 10);
         }
         return s;
     } // create_id
@@ -64,19 +55,19 @@ export class IntervalItem extends DepSigleNameItem implements IIntervalItem {
         oMap.startDate = this.startDate;
         oMap.endDate = this.endDate;
     } // toInsertMap
-    public sort_func(p1:IIntervalItem, p2:IIntervalItem): number {
+    public sort_func(p1: IIntervalItem, p2: IIntervalItem): number {
         var vRet = -1;
         if ((p1 !== undefined) && (p2 !== undefined) && (p1 !== null) && (p2 !== null)) {
             if ((p1.startDate !== undefined) && (p1.startDate !== null)) {
                 if ((p2.startDate !== undefined) && (p2.startDate !== null)) {
                     var s1 = Date.parse(p1.startDate.toString());
                     var s2 = Date.parse(p2.startDate.toString());
-                    if (s1 < s2){
-                      vRet = 1;
-                    } else if (s1 > s2){
-                      vRet = -1;
+                    if (s1 < s2) {
+                        vRet = 1;
+                    } else if (s1 > s2) {
+                        vRet = -1;
                     } else {
-                      vRet = 0;
+                        vRet = 0;
                     }
                 } else {
                     vRet = 1;

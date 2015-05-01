@@ -2,6 +2,7 @@
 //
 import {IAffectationItem, IPerson} from '../../infodata.d';
 import {WorkItem} from './workitem';
+import {InfoRoot} from '../inforoot';
 //
 export class AffectationItem extends WorkItem
     implements IAffectationItem {
@@ -25,50 +26,46 @@ export class AffectationItem extends WorkItem
         return this._start;
     }
     public set startDate(d: Date) {
-        this._start = this.check_date(d);
+        this._start = InfoRoot.check_date(d);
     }
     public get endDate(): Date {
         return this._end;
     }
     public set endDate(d: Date) {
-        this._end = this.check_date(d);
+        this._end = InfoRoot.check_date(d);
     }
     public to_map(oMap: any): void {
         super.to_map(oMap);
-        oMap.startDate = this.startDate;
-        oMap.endDate = this.endDate;
+        if (this.startDate !== null) {
+            oMap.startDate = this.startDate;
+        }
+        if (this.endDate !== null) {
+            oMap.endDate = this.endDate;
+        }
     } // toInsertMap
     public update_person(pPers: IPerson): void {
         if ((pPers !== undefined) && (pPers !== null)) {
             super.update_person(pPers);
-            let cont = pPers.affectationids;
-            this.add_id_to_array(cont, this.id);
-            pPers.affectationids = ((cont !== undefined) && (cont !== null)) ? cont : [];
+            let cont: string[] = pPers.affectationids;
+            if (cont === null) {
+                cont = [];
+            }
+            InfoRoot.add_id_to_array(cont, this.id);
+            pPers.affectationids = cont;
         }// pPers
     }// update_person
-     public sort_func(p1:IAffectationItem, p2:IAffectationItem): number {
-        var vRet = -1;
-        if ((p1 !== undefined) && (p2 !== undefined) && (p1 !== null) && (p2 !== null)) {
-            if ((p1.startDate !== undefined) && (p1.startDate !== null)) {
-                if ((p2.startDate !== undefined) && (p2.startDate !== null)) {
-                    var s1 = Date.parse(p1.startDate.toString());
-                    var s2 = Date.parse(p2.startDate.toString());
-                    if (s1 < s2){
-                      vRet = 1;
-                    } else if (s1 > s2){
-                      vRet = -1;
-                    } else {
-                      vRet = 0;
-                    }
-                } else {
-                    vRet = 1;
-                }
-            } else {
-                vRet = 1;
-            }
-        } else if ((p1 === undefined) || (p1 === null)) {
-            vRet = 1;
+    public is_storeable(): boolean {
+        if (!super.is_storeable()) {
+            return false;
         }
-        return vRet;
-    } // sort_func
+        if ((this.startDate === null) || (this.endDate === null)) {
+            return true;
+        }
+        let t1 = Date.parse(this.startDate.toString());
+        let t2 = Date.parse(this.endDate.toString());
+        if (isNaN(t1) || isNaN(t2)) {
+            return false;
+        }
+        return (t1 <= t2);
+    }// is_storeable
 }

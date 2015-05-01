@@ -13,12 +13,6 @@ export class Unite extends DepSigleNameItem implements IUnite {
     public set type(s:string){
 
     }
-    public get collection_name(): string {
-        return 'unites';
-    }
-    public set collection_name(s:string){
-
-    }
     public get base_prefix() : string {
         return 'UNT';
     }

@@ -1,6 +1,7 @@
 import { IntervalViewModel } from './intervalviewmodel';
 import { Semestre } from '../../domain/semestre';
 import { Annee } from '../../domain/annee';
+import { InfoRoot } from '../../inforoot';
 export class SemestreViewModel extends IntervalViewModel {
     constructor() {
         super(new Semestre());
@@ -97,10 +98,10 @@ export class SemestreViewModel extends IntervalViewModel {
     set canSave(s) {
     }
     get anneeStartDate() {
-        return (this.parentStartDate !== null) ? this.date_to_string(this.parentStartDate) : null;
+        return (this.parentStartDate !== null) ? InfoRoot.date_to_string(this.parentStartDate) : null;
     }
     get anneeEndDate() {
-        return (this.parentEndDate !== null) ? this.date_to_string(this.parentEndDate) : null;
+        return (this.parentEndDate !== null) ? InfoRoot.date_to_string(this.parentEndDate) : null;
     }
     get anneeStatus() {
         let s1 = this.anneeStartDate;

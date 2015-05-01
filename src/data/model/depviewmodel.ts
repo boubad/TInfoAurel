@@ -1,13 +1,14 @@
 //depviewmodel.ts
 //
-import {IBaseItem} from '../../infodata.d';
+import {IBaseItem, IDepartement} from '../../infodata.d';
 import {Departement} from '../domain/departement';
+import {InfoRoot} from '../inforoot';
 import {BaseViewModel} from './modelbase';
 //
 export class DepViewModel extends BaseViewModel {
     //
-    protected _departement: IBaseItem;
-    public departements: IBaseItem[];
+    protected _departement: IDepartement;
+    public departements: IDepartement[];
     //
     constructor() {
         super();
@@ -18,13 +19,13 @@ export class DepViewModel extends BaseViewModel {
         return Promise.resolve(true);
     }// post_change_departement
     //
-    public get departement(): IBaseItem {
+    public get departement(): IDepartement {
         if (this._departement === null) {
             this._departement = new Departement();
         }
         return this._departement;
     }
-    public set departement(s: IBaseItem) {
+    public set departement(s: IDepartement) {
         this._departement = ((s !== undefined) && (s !== null)) ? s : new Departement();
         this.userInfo.departementid = this.departementid;
         this.post_change_departement();
@@ -36,22 +37,34 @@ export class DepViewModel extends BaseViewModel {
     public get departementid(): string {
         return (this.departement !== null) ? this.departement.id : null;
     }
-    public activate(params?:any,queryString?:any,routeConfig?:any) : any {
-            let userinfo = this.userInfo;
-            let id = userinfo.departementid;
-            if (this.departements.length > 0){
-                let dep = this.sync_array(this.departements,id);
-                this.departement = dep;
-                return Promise.resolve(true);
+    public activate(params?: any, queryString?: any, routeConfig?: any): any {
+        let userinfo = this.userInfo;
+        let id = userinfo.departementid;
+        if (this.departements.length > 0) {
+            let dep = InfoRoot.sync_array(this.departements, id);
+            if (dep !== null) {
+                let oMap: any = {};
+                dep.to_map(oMap);
+                this.departement = new Departement(oMap);
+            } else {
+                this.departement = null;
             }
-            let self = this;
-            return this.fill_departements().then((r)=>{
-                let dep = this.sync_array(this.departements,id);
-                this.departement = dep;
-                return true;
-                });
-        }// activate
-    protected fill_departements(): Promise<IBaseItem[]> {
+            return Promise.resolve(true);
+        }
+        let self = this;
+        return this.fill_departements().then((r) => {
+            let dep = InfoRoot.sync_array(this.departements, id);
+            if (dep !== null) {
+                let oMap: any = {};
+                dep.to_map(oMap);
+                this.departement = new Departement(oMap);
+            } else {
+                this.departement = null;
+            }
+            return true;
+        });
+    }// activate
+    protected fill_departements(): Promise<IDepartement[]> {
         let userinfo = this.userInfo;
         let pPers = userinfo.person;
         if ((pPers === undefined) || (pPers === null)) {
@@ -63,7 +76,7 @@ export class DepViewModel extends BaseViewModel {
         let self = this;
         if (bSuper) {
             let model = new Departement();
-            return service.get_all_items(model).then((rr) => {
+            return service.get_all_items(model).then((rr: IDepartement[]) => {
                 self.departements = ((rr !== undefined) && (rr !== null)) ? rr : [];
                 return [];
             });
@@ -74,7 +87,7 @@ export class DepViewModel extends BaseViewModel {
             if (ids.length < 1) {
                 return Promise.resolve([]);
             } else {
-                return service.find_items_array(ids).then((rr) => {
+                return service.find_items_array(ids).then((rr: IDepartement[]) => {
                     self.departements = ((rr !== undefined) && (rr !== null)) ? rr : [];
                     return [];
                 });

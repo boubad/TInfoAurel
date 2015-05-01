@@ -2,6 +2,7 @@
 //
 import {IEtudEvent, IPerson} from '../../infodata.d';
 import {WorkItem} from './workitem';
+import {InfoRoot} from '../inforoot';
 //
 export class EtudEvent extends WorkItem
     implements IEtudEvent {
@@ -35,7 +36,7 @@ export class EtudEvent extends WorkItem
         return this._note;
     }
     public set note(s:number){
-        let d = this.check_number(s);
+        let d = InfoRoot.check_number(s);
         if ((d !== null) && (d >= 0)){
             this._note = d;
         }
@@ -45,44 +46,51 @@ export class EtudEvent extends WorkItem
         oMap.groupeeventid = this.groupeeventid;
         oMap.etudiantid = this.etudiantid;
         oMap.etudaffectationid = this.etudaffectationid;
+        if (this.note !== null){
         oMap.note = this.note;
+    }
     } // toInsertMap
     public update_person(pPers: IPerson): void {
         if ((pPers !== undefined) && (pPers !== null)) {
             super.update_person(pPers);
-            let cont = pPers.eventids;
-            this.add_id_to_array(cont, this.id);
-            pPers.eventids = ((cont !== undefined) && (cont !== null)) ? cont : [];
+            let cont:string[] = pPers.eventids;
+            if (cont === null){
+                cont = [];
+            }
+            InfoRoot.add_id_to_array(cont, this.id);
+            pPers.eventids = cont;
         }// pPers
     }// update_person
-    public toString():string {
-        let s = this.lastname;
-        if ((s !== null) && (this.firstname !== null)){
-            s = s + ' ' + this.firstname;
-        }
-        return s;
-    }
     public is_storeable(): boolean {
-        let bRet = super.is_storeable() && (this.groupeeventid !== null) &&
-            (this.etudiantid !== null);
-            return bRet;
+        return super.is_storeable() && (this.groupeeventid !== null) &&
+            (this.etudiantid !== null) && (this.etudaffectationid !== null) &&
+            (this.genre !== null);
     }
-    public get start_key(): any {
+    public get start_key(): string {
         let s = this.base_prefix;
         if ((s !== null) && (this.groupeeventid !== null)) {
             s = s + '-' + this.groupeeventid;
         }
         return s;
     }
-    public set start_key(s: any) {
+    public set start_key(s: string) {
     }
     public create_id(): string {
         let s = this.start_key;
         if ((s !== null) && (this.lastname !== null)){
-            s = s + '-' + this.lastname.toUpperCase();
+            let s1 = InfoRoot.check_name(this.lastname);
+            if (s1 !== null){
+                s = s + '-' + s1;
+            }
         }
-        if ((s !== null) && (this.firstname !== null)) {
-            s = s + '-' + this.firstname.toUpperCase();
+        if ((s !== null) && (this.firstname !== null)){
+            let s1 = InfoRoot.check_name(this.firstname);
+            if (s1 !== null){
+                s = s + '-' + s1;
+            }
+        }
+        if (s !== null){
+            s = s + '-' + InfoRoot.create_random_id();
         }
         return s;
     } // create_id
@@ -90,11 +98,6 @@ export class EtudEvent extends WorkItem
         return 'etudevent';
     }
     public set type(s:string){
-    }
-    public get collection_name():string {
-        return 'etudevents';
-    }
-    public set collection_name(s:string){
     }
     public get base_prefix():string {
         return 'EVT';

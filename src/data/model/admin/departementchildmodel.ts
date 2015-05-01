@@ -3,6 +3,7 @@ import {IBaseItem, IDepartementChildItem} from '../../../infodata.d';
 //
 import {PagedViewModel} from './pagedviewmodel';
 import {Departement} from '../../domain/departement';
+import {InfoRoot} from '../../inforoot';
 //
 export class DepartementChildModel extends PagedViewModel {
   private _departement: IBaseItem;
@@ -51,13 +52,13 @@ export class DepartementChildModel extends PagedViewModel {
             let userinfo = this.userInfo;
             let id = userinfo.departementid;
             if (this.departements.length > 0){
-                let dep = this.sync_array(this.departements,id);
+                let dep = InfoRoot.sync_array(this.departements,id);
                 this.departement = dep;
                 return Promise.resolve(true);
             }
             let self = this;
             return this.fill_departements().then((r)=>{
-                let dep = this.sync_array(this.departements,id);
+                let dep = InfoRoot.sync_array(this.departements,id);
                 this.departement = dep;
                 return true;
                 });

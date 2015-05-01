@@ -2,6 +2,7 @@
 //
 import {IWorkItem, IPerson} from '../../infodata.d';
 import {DepartementPerson} from './departementperson';
+import {InfoRoot} from '../inforoot';
 //
 export class WorkItem extends DepartementPerson
     implements IWorkItem {
@@ -31,7 +32,7 @@ export class WorkItem extends DepartementPerson
                 this.groupeid = oMap.groupeid;
             }
             if (oMap.eventDate !== undefined) {
-                this.eventDate= oMap.eventDate;
+                this.eventDate = oMap.eventDate;
             }
             if (oMap.status !== undefined) {
                 this.status = oMap.status;
@@ -45,19 +46,28 @@ export class WorkItem extends DepartementPerson
         if ((pPers !== undefined) && (pPers !== null)) {
             super.update_person(pPers);
             if (this.anneeid !== null) {
-                let cont = pPers.anneeids;
-                this.add_id_to_array(cont, this.anneeid);
-                pPers.anneeids = ((cont !== undefined) && (cont !== null)) ? cont : [];
+                let cont: string[] = pPers.anneeids;
+                if (cont === null) {
+                    cont = [];
+                }
+                InfoRoot.add_id_to_array(cont, this.anneeid);
+                pPers.anneeids = cont;
             }
             if (this.semestreid !== null) {
-                let cont = pPers.semestreids;
-                this.add_id_to_array(cont, this.semestreid);
-                pPers.semestreids = ((cont !== undefined) && (cont !== null)) ? cont : [];
+                let cont: string[] = pPers.semestreids;
+                if (cont === null) {
+                    cont = [];
+                }
+                InfoRoot.add_id_to_array(cont, this.semestreid);
+                pPers.semestreids = cont;
             }
             if (this.groupeid !== null) {
-                let cont = pPers.groupeids;
-                this.add_id_to_array(cont, this.groupeid);
-                pPers.groupeids = ((cont !== undefined) && (cont !== null)) ? cont : [];
+                let cont: string[] = pPers.groupeids;
+                if (cont === null) {
+                    cont = [];
+                }
+                InfoRoot.add_id_to_array(cont, this.groupeid);
+                pPers.groupeids = cont;
             }
         }// pPers
     }// update_person
@@ -65,9 +75,9 @@ export class WorkItem extends DepartementPerson
         return this._date;
     }
     public set eventDate(d: Date) {
-        this._date = this.check_date(d);
+        this._date = InfoRoot.check_date(d);
     }
-    public get start_key(): any {
+    public get start_key(): string {
         let s = this.base_prefix;
         if ((s !== null) && (this.semestreid !== null)) {
             s = s + '-' + this.semestreid;
@@ -77,7 +87,7 @@ export class WorkItem extends DepartementPerson
         }
         return s;
     }
-    public set start_key(s: any) {
+    public set start_key(s: string) {
 
     }
 
@@ -87,11 +97,23 @@ export class WorkItem extends DepartementPerson
     }
     public to_map(oMap: any): void {
         super.to_map(oMap);
-        oMap.anneeid = this.anneeid;
-        oMap.semestreid = this.semestreid;
-        oMap.groupeid = this.groupeid;
-        oMap.eventDate = this.eventDate;
-        oMap.status = this.status;
-        oMap.genre = this.genre;
+        if (this.anneeid !== null) {
+            oMap.anneeid = this.anneeid;
+        }
+        if (this.semestreid !== null) {
+            oMap.semestreid = this.semestreid;
+        }
+        if (this.groupeid !== null) {
+            oMap.groupeid = this.groupeid;
+        }
+        if (this.eventDate !== null) {
+            oMap.eventDate = this.eventDate;
+        }
+        if (this.status !== null) {
+            oMap.status = this.status;
+        }
+        if (this.genre !== null) {
+            oMap.genre = this.genre;
+        }
     } // toInsertMap
 }

@@ -1,16 +1,16 @@
 //modelbase.ts
+/// <reference path='../../../typings/aurelia/aurelia.d.ts' />
 //
 import {Router, Redirect} from 'aurelia-router';
 //
-import {IBaseItem,IOptionDesc,
-IItemGenerator, IElementDesc, IPerson, IDatabaseManager} from '../../infodata.d';
+import {IBaseItem,
+IOptionDesc, IItemGenerator, IPerson, IDatabaseManager} from '../../infodata.d';
 import {DataService} from '../services/dataservice';
 import {ItemGenerator} from '../domain/itemgenerator';
 import {UserInfo} from './userinfo';
+import {InfoRoot} from '../inforoot';
 //
-declare var window: any;
-//
-export class BaseViewModel {
+export class BaseViewModel extends InfoRoot {
     //
     private _userinfo: UserInfo;
     private _dataService: IDatabaseManager;
@@ -19,127 +19,61 @@ export class BaseViewModel {
     public title: string;
     public errorMessage: string;
     public infoMessage: string;
-    public genresCours:IOptionDesc[];
-    public genresEvts:IOptionDesc[];
+    public _genresCours: IOptionDesc[];
+    public _genresEvts: IOptionDesc[];
     //
     constructor() {
+        super();
         this._userinfo = null;
         this._dataService = null;
         this._gen = null;
         this.infoMessage = null;
         this.errorMessage = null;
-        this.genresEvts = [{text:'Note',value:'note'},
-        {text:'Absence', value:'abs'},
-        {text:'Retard léger', value:'ret1'},
-        {text:'Grand Retard', value:'ret2'},
-        {text:'Comportement', value:'disc'},
-        {text:'Autre', value:'autre'}];
-        this.genresCours = [
-        {
-            text:'Travaux Pratiques',value:'TP'
-            },
-            {
-            text:'Travaux Dirigés',value:'TD'
-            },
-            {
-            text:'Cours Magistral',value:'COURS'
-            },
-            {
-            text:'Contrôle',value:'CONTROL'
-            },
-            {
-            text:'Examen',value:'EXAM'
-            },
-            {
-            text:'Devoir facultatif',value:'FACUL'
-            },
-            {
-            text:'Autres types',value:'MISC'
-            }
-        ];
+        this._genresCours = null;
+        this._genresEvts = null;
     }// constructor
-    public activate(params?:any,queryString?:any,routeConfig?:any) : any {
-            return Promise.resolve(true);
-        }// activate
-    protected sync_array(cont: IBaseItem[], id: string): IBaseItem {
-        let pSel: IBaseItem = null;
-        if ((cont !== undefined) && (cont !== null) && (cont.length > 0)) {
-            if ((id !== undefined) && (id !== null)) {
-                for (let x of cont) {
-                    if ((x !== null) && (x.id !== undefined) && (x.id == id)) {
-                        pSel = x;
-                        break;
-                    }
-                }// x
-            }// id
-            if (pSel === null) {
-                pSel = cont[0];
-            }
-        }// cont
-        return pSel;
-    }// sync_departements
-    protected string_to_date(s: string): Date {
-        let dRet: Date = null;
-        if ((s !== undefined) && (s !== null)) {
-            try {
-                let t = Date.parse(s.toString());
-                if (!isNaN(t)) {
-                    dRet = new Date(t);
+    public get genresEvts(): IOptionDesc[] {
+        if (this._genresEvts === null) {
+            this._genresEvts = [{ text: 'Note', value: 'note' },
+                { text: 'Absence', value: 'abs' },
+                { text: 'Retard léger', value: 'ret1' },
+                { text: 'Grand Retard', value: 'ret2' },
+                { text: 'Comportement', value: 'disc' },
+                { text: 'Autre', value: 'autre' }];
+        }
+        return this._genresEvts;
+    }
+    public get genresCours(): IOptionDesc[] {
+        if (this._genresCours === null) {
+            this._genresCours = [
+                {
+                    text: 'Travaux Pratiques', value: 'TP'
+                },
+                {
+                    text: 'Travaux Dirigés', value: 'TD'
+                },
+                {
+                    text: 'Cours Magistral', value: 'COURS'
+                },
+                {
+                    text: 'Contrôle', value: 'CONTROL'
+                },
+                {
+                    text: 'Examen', value: 'EXAM'
+                },
+                {
+                    text: 'Devoir facultatif', value: 'FACUL'
+                },
+                {
+                    text: 'Autres types', value: 'MISC'
                 }
-            } catch (e) {
-            }
+            ];
         }
-        return dRet;
+        return this._genresCours;
     }
-    protected date_to_string(d: Date): string {
-        let sRet: string = null;
-        if ((d !== undefined) && (d !== null)) {
-            try {
-                let t = Date.parse(d.toString());
-                if (!isNaN(t)) {
-                    let dd = new Date(t);
-                    sRet = dd.toISOString().substr(0, 10);
-                }
-            } catch (e) { }
-        }
-        return sRet;
-    }
-    protected number_to_string(n:number) : string{
-        return ((n !== undefined) && (n !== null)) ? n.toString() : null;
-    }
-    protected string_to_number(s:string) : number {
-        let dRet: number = null;
-        if ((s !== undefined) && (s !== null)){
-            try {
-                let x = parseFloat(s);
-                if (!isNaN(x)){
-                    dRet = x;
-                }
-              }catch(e){}
-          }// s
-        return dRet;
-    }
-    protected confirm(message: string): boolean {
-        return window.confirm(message);
-    }
-    protected createUrl(blob: Blob): string {
-        let sRet: string = null;
-        if ((blob !== undefined) && (blob !== null)) {
-            try {
-                sRet = window.URL.createObjectURL(blob);
-            } catch (e) {
-                console.log(e.toString());
-            }
-        }
-        return sRet;
-    }
-    protected revokeUrl(s: string): void {
-        if ((s !== undefined) && (s !== null)) {
-            try {
-                window.URL.revokeObjectURL(s);
-            } catch (e) { }
-        }
-    }
+    public activate(params?: any, queryString?: any, routeConfig?: any): any {
+        return Promise.resolve(true);
+    }// activate
     public get generator(): IItemGenerator {
         if (this._gen === null) {
             this._gen = new ItemGenerator();
@@ -161,16 +95,15 @@ export class BaseViewModel {
     protected update_title(): void {
     } // update_title
     public get hasErrorMessage(): boolean {
-        return (this.errorMessage !== null) && (this.errorMessage.length > 0);
+        return (this.errorMessage !== null) && (this.errorMessage.trim().length > 0);
     }
     public set hasErrorMessage(b: boolean) {
 
     }
     public get hasInfoMessage(): boolean {
-        return (this.infoMessage !== null) && (this.infoMessage.length > 0);
+        return (this.infoMessage !== null) && (this.infoMessage.trim().length > 0);
     }
     public set hasInfoMessage(b: boolean) {
-
     }
     public clear_error(): void {
         this.errorMessage = null;
@@ -196,16 +129,14 @@ export class BaseViewModel {
         return x.isConnected;
     }// isConnected
     public set isConnected(s: boolean) {
-
     }
     public get isNotConnected(): boolean {
         return (!this.isConnected);
     }
     public set isNotConnected(s: boolean) {
-
     }
     public disconnect(): any {
-        if (this.confirm("Voulez-vous vraiment quitter?")) {
+        if (InfoRoot.confirm("Voulez-vous vraiment quitter?")) {
             this.userInfo.person = null;
             return new Redirect('#home');
         }
@@ -221,7 +152,6 @@ export class BaseViewModel {
         return this.userInfo.hasPhoto;
     }
     public set hasPhoto(s: boolean) {
-
     }
     public get isSuper(): boolean {
         let bRet = false;
@@ -273,7 +203,7 @@ export class BaseViewModel {
                     if ((blob === undefined) || (blob === null)) {
                         resolve(item);
                     } else {
-                        let x = self.createUrl(blob);
+                        let x = InfoRoot.createUrl(blob);
                         item.url = x;
                         resolve(item);
                     }
@@ -290,27 +220,4 @@ export class BaseViewModel {
         }
         return Promise.all(pp);
     }// retrieve_avatars
-    protected array_add(cont: string[], val: string): string[] {
-        let cRet: string[] = [];
-        if ((cont === undefined) || (cont === null)) {
-            if ((val !== undefined) && (val !== null)) {
-                cRet.push(val);
-            }
-            return cRet;
-        }
-        if ((val === null) || (val === null)) {
-            return cont;
-        }
-        let bFound = false;
-        for (let s of cont) {
-            if (s == val) {
-                bFound = true;
-            }
-            cRet.push(s);
-        }
-        if (!bFound) {
-            cRet.push(val);
-        }
-        return cRet;
-    }// _array_add
 }// class BaseViewModel

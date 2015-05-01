@@ -1,24 +1,25 @@
 //affecttaionviewmodel.ts
 //
-import {IBaseItem, IPerson,IDepartementPerson,IAffectationItem} from '../../../infodata.d';
+import {IBaseItem, IPerson, IDepartementPerson, IAffectationItem} from '../../../infodata.d';
 //
 import {WorkViewModel} from '../workviewmodel';
+import {InfoRoot} from '../../inforoot';
 //
 export class AffectationViewModel extends WorkViewModel {
-    private _affModel:IBaseItem;
-    private _persModel:IDepartementPerson;
+    private _affModel: IBaseItem;
+    private _persModel: IDepartementPerson;
     //
-    public personElements:IBaseItem[];
-    public current_personElements:IBaseItem[];
+    public personElements: IBaseItem[];
+    public current_personElements: IBaseItem[];
     //
     public affectations: IBaseItem[];
     public current_affectation: IBaseItem;
     //
     protected _startDate: Date;
     protected _endDate: Date;
-     public genre: string;
+    public genre: string;
     //
-    constructor(model:IAffectationItem,persModel:IDepartementPerson) {
+    constructor(model: IAffectationItem, persModel: IDepartementPerson) {
         super();
         this._affModel = model;
         this._persModel = persModel;
@@ -31,22 +32,22 @@ export class AffectationViewModel extends WorkViewModel {
         this.genre = null;
     }// constructor
     public get startDate(): string {
-        return this.date_to_string(this._startDate);
-        
+        return InfoRoot.date_to_string(this._startDate);
+
     }
     public set startDate(s: string) {
-        this._startDate = this.string_to_date(s);
+        this._startDate = InfoRoot.string_to_date(s);
     }
     public get endDate(): string {
-        return this.date_to_string(this._endDate);
+        return InfoRoot.date_to_string(this._endDate);
     }
     public set endDate(s: string) {
-        this._endDate = this.string_to_date(s);
+        this._endDate = InfoRoot.string_to_date(s);
     }
     protected post_change_departement(): any {
         let self = this;
         let gen = this.generator;
-        return super.post_change_departement().then((r)=>{
+        return super.post_change_departement().then((r) => {
             self.personElements = [];
             self.current_personElements = [];
             self.affectations = [];
@@ -57,7 +58,7 @@ export class AffectationViewModel extends WorkViewModel {
             if (id === null) {
                 return true;
             }
-            let model = gen.create_item({departementid: id, type: self._persModel.type});
+            let model = gen.create_item({ departementid: id, type: self._persModel.type });
             self.dataService.get_all_items(model).then((pp) => {
                 self.personElements = pp;
             });
@@ -76,11 +77,11 @@ export class AffectationViewModel extends WorkViewModel {
         let model = gen.create_item({
             type: this._affModel.type,
             departementid: this.departementid,
-            anneeid: this.anneeid, 
+            anneeid: this.anneeid,
             semestreid: semid,
             matiereid: matid,
             groupeid: grpid
-            });
+        });
         let self = this;
         return this.dataService.get_all_items(model).then((aa) => {
             self.affectations = aa;
@@ -107,7 +108,7 @@ export class AffectationViewModel extends WorkViewModel {
             (this.current_personElements !== null) &&
             (this.current_personElements.length > 0) &&
             (this.departementid !== null) && (this.anneeid !== null) &&
-            (this.semestreid !== null) && 
+            (this.semestreid !== null) &&
             (this.groupeid !== null) && (this._startDate !== null) &&
             (this._endDate !== null);
         if (!bRet) {
@@ -119,7 +120,7 @@ export class AffectationViewModel extends WorkViewModel {
             return false;
         }
         return (t1 <= t2);
-        }// is_storeable
+    }// is_storeable
     public get canSave(): boolean {
         return this.is_storeable();
     }// canSave
@@ -128,13 +129,13 @@ export class AffectationViewModel extends WorkViewModel {
             (this.personElements !== null) &&
             (this.personElements.length > 0) &&
             (this.departementid !== null) && (this.anneeid !== null) &&
-            (this.semestreid !== null) && 
+            (this.semestreid !== null) &&
             (this.groupeid !== null);
     }// canProcess
-    public get canProcess():boolean {
+    public get canProcess(): boolean {
         return this.is_process();
     }
-    public set canProcess(s:boolean){}
+    public set canProcess(s: boolean) { }
     public set canSave(s: boolean) { }
     public get cannotSave(): boolean {
         return (!this.canSave);
@@ -149,13 +150,13 @@ export class AffectationViewModel extends WorkViewModel {
         return (!this.canRemove);
     }
     public set cannotRemove(s: boolean) { }
-    protected create_affectation(prof: IDepartementPerson) : IAffectationItem {
+    protected create_affectation(prof: IDepartementPerson): IAffectationItem {
         return null;
     }
-    protected maintains_one_affectation(prof: any) : Promise<any> {
+    protected maintains_one_affectation(prof: any): Promise<any> {
         let item = this.create_affectation(prof);
         return this.dataService.maintains_workitem(item);
-        }// retrieve_affectation
+    }// retrieve_affectation
     public save(): any {
         if (!this.canSave) {
             return false;
@@ -181,7 +182,7 @@ export class AffectationViewModel extends WorkViewModel {
         if (item.id === null) {
             return false;
         }
-        if (this.confirm('Voulez-vous vraiment supprimer ' + item.id + '?')) {
+        if (InfoRoot.confirm('Voulez-vous vraiment supprimer ' + item.id + '?')) {
             let self = this;
             return this.dataService.remove_item(item).then((r) => {
                 self.refresh_affectations();

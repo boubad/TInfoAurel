@@ -13,12 +13,6 @@ export class Groupe extends DepSigleNameItem implements IGroupe {
     public set type(s:string){
 
     }
-    public get collection_name(): string {
-        return 'groupes';
-    }
-    public set collection_name(s:string){
-
-    }
     public get base_prefix() : string {
         return 'GRP';
     }

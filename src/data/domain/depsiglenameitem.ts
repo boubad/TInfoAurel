@@ -2,6 +2,7 @@
 //
 import {IDepSigleNameItem} from '../../infodata.d';
 import {SigleNameItem} from './siglenameitem';
+import {InfoRoot} from '../inforoot';
 //
 export class DepSigleNameItem extends SigleNameItem implements IDepSigleNameItem {
     public departementid: string;
@@ -14,16 +15,6 @@ export class DepSigleNameItem extends SigleNameItem implements IDepSigleNameItem
             }
         } // oMap
     } // constructor
-    public create_id(): string {
-        let s = this.base_prefix;
-        if ((s !== null) && (this.departementid !== null)) {
-            s = s + '-' + this.departementid;
-        }
-        if ((s !== null) && (this.sigle !== null)) {
-            s = s + '-' + this.sigle.toUpperCase();
-        }
-        return s;
-    } // create_id
     public get start_key(): any {
         let s = this.base_prefix;
         if ((s !== null) && (this.departementid !== null)) {
@@ -33,11 +24,23 @@ export class DepSigleNameItem extends SigleNameItem implements IDepSigleNameItem
     }
     public set start_key(s: any) {
     }
+    public create_id(): string {
+        let s = this.start_key;
+        if ((s !== null) && (this.sigle !== null)) {
+            let ss = InfoRoot.check_name(this.sigle);
+            if (ss !== null){
+                s = s + '-' + ss;
+            }
+        }
+        return s;
+    } // create_id
     public is_storeable(): boolean {
         return super.is_storeable() && (this.departementid !== null);
     }
     public to_map(oMap: any): void {
         super.to_map(oMap);
-        oMap.departementid = this.departementid;
+        if (this.departementid !== null) {
+            oMap.departementid = this.departementid;
+        }
     } // toInsertMap
 }

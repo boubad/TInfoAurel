@@ -1,28 +1,66 @@
+import { InfoRoot } from '../inforoot';
 import { BaseViewModel } from './modelbase';
 export class ProfilViewModel extends BaseViewModel {
     constructor() {
         super();
-        this.title = 'Avatar';
-        this.personid = null;
+        this.title = 'Profil';
         this._url = null;
         this.imageData = null;
         this.hasUrl = false;
         this.filename = null;
         this.filetype = null;
-        this.avatarid = null;
-        this.oldUrl = null;
-        this.hasOldUrl = false;
         this.profilMode = true;
         this.passwordMode = false;
         this.avatarMode = false;
-        this.firstname = null;
-        this.lastname = null;
-        this.email = null;
-        this.phone = null;
-        this.description = null;
         this.newPassword = null;
         this.confirmPassword = null;
     }
+    get description() {
+        return this.userInfo.description;
+    }
+    set description(s) {
+        this.userInfo.description = s;
+    }
+    get phone() {
+        return this.userInfo.phone;
+    }
+    set phone(s) {
+        this.userInfo.phone = s;
+    }
+    get email() {
+        return this.userInfo.email;
+    }
+    set email(s) {
+        this.userInfo.email = s;
+    }
+    get personid() {
+        return this.userInfo.personid;
+    }
+    get firstname() {
+        return this.userInfo.firstname;
+    }
+    get avatarid() {
+        return this.userInfo.avatarid;
+    }
+    set firstname(s) {
+        this.userInfo.firstname = s;
+    }
+    get lastname() {
+        return this.userInfo.lastname;
+    }
+    set lastname(s) {
+        this.userInfo.lastname = s;
+    }
+    get oldUrl() {
+        return this.userInfo.photoUrl;
+    }
+    set oldUrl(s) {
+        this.userInfo.photoUrl = s;
+    }
+    get hasOldUrl() {
+        return this.userInfo.hasPhoto;
+    }
+    set hasOldUrl(s) { }
     set_profil() {
         this.profilMode = true;
         this.passwordMode = false;
@@ -44,46 +82,14 @@ export class ProfilViewModel extends BaseViewModel {
         this.hasUrl = false;
         this.filename = null;
         this.filetype = null;
-    }
-    fill_data() {
-        let userinfo = this.userInfo;
-        let pPers = userinfo.person;
-        if (pPers !== null) {
-            this.avatarid = pPers.avatarid;
-            this.personid = pPers.id;
-            this.firstname = pPers.firstname;
-            this.lastname = pPers.lastname;
-            this.email = pPers.email;
-            this.phone = pPers.phone;
-            this.description = pPers.description;
-            this.oldUrl = userinfo.photoUrl;
-            this.hasOldUrl = (this.oldUrl !== null);
-        }
-        else {
-            this.personid = null;
-            this._url = null;
-            this.imageData = null;
-            this.hasUrl = false;
-            this.filename = null;
-            this.filetype = null;
-            this.avatarid = null;
-            this.oldUrl = null;
-            this.hasOldUrl = false;
-            this.firstname = null;
-            this.lastname = null;
-            this.email = null;
-            this.phone = null;
-            this.description = null;
-            this.newPassword = null;
-            this.confirmPassword = null;
-        }
+        this.newPassword = null;
+        this.confirmPassword = null;
     }
     canActivate() {
         return this.isConnected;
     }
     activate() {
         this.reset_data();
-        this.fill_data();
         return true;
     }
     get canChangePwd() {
@@ -112,11 +118,6 @@ export class ProfilViewModel extends BaseViewModel {
         let self = this;
         let userinfo = this.userInfo;
         let pPers = userinfo.person;
-        pPers.firstname = this.firstname;
-        pPers.lastname = this.lastname;
-        pPers.email = this.email;
-        pPers.phone = this.phone;
-        pPers.description = this.description;
         this.clear_error();
         return this.dataService.maintains_item(pPers).then((r) => {
             self.infoMessage = 'Informations enregistrées!';
@@ -129,7 +130,7 @@ export class ProfilViewModel extends BaseViewModel {
     }
     set url(s) {
         if (this._url !== null) {
-            this.revokeUrl(this._url);
+            InfoRoot.revokeUrl(this._url);
         }
         this._url = s;
     }
@@ -151,7 +152,7 @@ export class ProfilViewModel extends BaseViewModel {
                 let dd = new Uint8Array(data);
                 let blob = new Blob([dd]);
                 self.imageData = blob;
-                self.url = this.createUrl(blob);
+                self.url = InfoRoot.createUrl(blob);
                 self.hasUrl = true;
                 self.filename = file.name;
                 self.filetype = file.type;
@@ -160,17 +161,13 @@ export class ProfilViewModel extends BaseViewModel {
         }
     }
     remove() {
-        if (this.confirm('Voulez-vous vraiment supprimer cet avatar?')) {
+        if (InfoRoot.confirm('Voulez-vous vraiment supprimer cet avatar?')) {
             let self = this;
             let userinfo = this.userInfo;
             let pPers = userinfo.person;
             return this.dataService.remove_attachment(this.personid, this.avatarid).then((r) => {
-                pPers.avatarid = null;
-                userinfo.person = pPers;
-                userinfo.photoUrl = null;
                 userinfo.avatarid = null;
-                self.oldUrl = null;
-                self.hasOldUrl = false;
+                userinfo.photoUrl = null;
             }, (err) => {
                 self.set_error(err);
             });
@@ -189,13 +186,10 @@ export class ProfilViewModel extends BaseViewModel {
         return service.maintains_attachment(id, this.filename, this.imageData, this.filetype).then((r) => {
             pPers.avatarid = self.filename;
             pPers.avatardocid = id;
-            userinfo.person = pPers;
-            userinfo.photoUrl = self.url;
-            userinfo.avatarid = self.filename;
-            self.oldUrl = self.url;
-            self.hasOldUrl = true;
-            self.reset_data();
             return service.maintains_item(pPers);
+        }).then((p) => {
+            self.userInfo.person = p;
+            self.reset_data();
         });
     }
 }

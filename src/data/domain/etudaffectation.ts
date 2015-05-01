@@ -2,6 +2,7 @@
 //
 import {IPerson, IEtudAffectationItem} from '../../infodata.d';
 import {AffectationItem} from './affectationitem';
+import {InfoRoot} from '../inforoot';
 //
 export class EtudAffectation extends AffectationItem
     implements IEtudAffectationItem {
@@ -16,34 +17,22 @@ export class EtudAffectation extends AffectationItem
             }
         } // oMap
     } // constructor
-    public get start_key(): any {
-        let s = this.base_prefix;
-        if ((s !== null) && (this.semestreid !== null)) {
-            s = s + '-' + this.semestreid;
-        }
-        if ((s !== null) && (this.groupeid !== null)) {
-            s = s + '-' + this.groupeid;
-        }
-        return s;
-    }
-    public set start_key(s: any) {
-
-    }
     public create_id(): string {
         let s = this.start_key;
         if ((s !== null) && (this.lastname !== null)) {
-            s = s + '-' + this.lastname.toUpperCase();
+            let s1 = InfoRoot.check_name(this.lastname);
+            if (s1 !== null) {
+                s = s + '-' + s1;
+            }
         }
         if ((s !== null) && (this.firstname !== null)) {
-            s = s + '-' + this.firstname.toUpperCase();
+            let s1 = InfoRoot.check_name(this.firstname);
+            if (s1 !== null) {
+                s = s + '-' + s1;
+            }
         }
-        let n = Math.floor(Math.random() * 10000.0);
-        let sn = '' + n;
-        while (sn.length < 4) {
-            sn = '0' + sn;
-        }
-        if (s !== null)  {
-            s = s + '-' + sn;
+        if (s !== null) {
+            s = s + '-' + InfoRoot.create_random_id();
         }
         return s;
     } // create_id
@@ -62,22 +51,5 @@ export class EtudAffectation extends AffectationItem
         return 'etudaffectation';
     }
     public set type(s: string) {
-
     }
-    public get collection_name(): string {
-        return 'etudaffectations';
-    }
-    public set collection_name(s: string) {
-
-    }
-    public update_person(pPers: IPerson): void {
-        if ((pPers !== undefined) && (pPers !== null)) {
-            super.update_person(pPers);
-            if (this.etudiantid !== null) {
-                let cont = pPers.etudiantids;
-                this.add_id_to_array(cont, this.etudiantid);
-                pPers.etudiantids = ((cont !== undefined) && (cont !== null)) ? cont : [];
-            }
-        }// pPers
-    }// update_person
 }

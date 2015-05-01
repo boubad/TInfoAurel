@@ -1,6 +1,7 @@
 import { DepSigleNameModel } from './depsiglenamemodel';
 import { Unite } from '../../domain/unite';
 import { Matiere } from '../../domain/matiere';
+import { InfoRoot } from '../../inforoot';
 export class MatiereViewModel extends DepSigleNameModel {
     constructor() {
         super(new Matiere());
@@ -92,23 +93,23 @@ export class MatiereViewModel extends DepSigleNameModel {
     get coefficient() {
         let x = this.current_item;
         let v = ((x !== undefined) && (x !== null)) ? x.coefficient : null;
-        return this.number_to_string(v);
+        return InfoRoot.number_to_string(v);
     }
     set coefficient(s) {
         let x = this.current_item;
         if ((x !== undefined) && (x !== null)) {
-            x.coefficient = this.string_to_number(s);
+            x.coefficient = InfoRoot.string_to_number(s);
         }
     }
     get ecs() {
         let x = this.current_item;
         let v = ((x !== undefined) && (x !== null)) ? x.ecs : null;
-        return this.number_to_string(v);
+        return InfoRoot.number_to_string(v);
     }
     set ecs(s) {
         let x = this.current_item;
         if ((x !== undefined) && (x !== null)) {
-            x.ecs = this.string_to_number(s);
+            x.ecs = InfoRoot.string_to_number(s);
         }
     }
 }

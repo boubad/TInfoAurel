@@ -1,8 +1,8 @@
-//avatar-model.js
+//profil-model.js
 //
 import {ProfilViewModel} from '../data/model/profilmodelview';
 //
-export class AvatarModel extends ProfilViewModel {
+export class ProfilModel extends ProfilViewModel {
 	constructor(){
 		super();
 		this.title='Profil';

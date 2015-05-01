@@ -1,4 +1,5 @@
 import { BaseViewModel } from '../modelbase';
+import { InfoRoot } from '../../inforoot';
 export class PagedViewModel extends BaseViewModel {
     constructor(model) {
         super();
@@ -141,7 +142,7 @@ export class PagedViewModel extends BaseViewModel {
         if (item.id === null) {
             return false;
         }
-        if (this.confirm('Voulez-vous vraiment supprimer ' + item.id + '?')) {
+        if (InfoRoot.confirm('Voulez-vous vraiment supprimer ' + item.id + '?')) {
             let self = this;
             return this.dataService.remove_item(item).then((r) => {
                 self.refreshAll();
@@ -182,7 +183,7 @@ export class PagedViewModel extends BaseViewModel {
         for (let elem of this.elements) {
             let x = elem.url;
             if (x !== null) {
-                this.revokeUrl(x);
+                InfoRoot.revokeUrl(x);
                 elem.url = null;
             }
         }

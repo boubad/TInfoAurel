@@ -5,6 +5,7 @@ import {IBaseItem} from '../../../infodata.d';
 import {IntervalViewModel} from './intervalviewmodel';
 import {Semestre} from '../../domain/semestre';
 import {Annee} from '../../domain/annee';
+import {InfoRoot} from '../../inforoot';
 //
 export class SemestreViewModel extends IntervalViewModel {
   private _annee: IBaseItem;
@@ -107,10 +108,10 @@ export class SemestreViewModel extends IntervalViewModel {
 
   }
   public get anneeStartDate(): string {
-    return (this.parentStartDate !== null) ? this.date_to_string(this.parentStartDate) : null;
+    return (this.parentStartDate !== null) ? InfoRoot.date_to_string(this.parentStartDate) : null;
   }
   public get anneeEndDate(): string {
-    return (this.parentEndDate !== null) ? this.date_to_string(this.parentEndDate) : null;
+    return (this.parentEndDate !== null) ? InfoRoot.date_to_string(this.parentEndDate) : null;
   }
   public get anneeStatus(): string {
     let s1 = this.anneeStartDate;

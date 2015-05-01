@@ -2,6 +2,7 @@
 import {IBaseItem, IIntervalItem} from '../../../infodata.d';
 //
 import {DepSigleNameModel} from './depsiglenamemodel';
+import {InfoRoot} from '../../inforoot';
 //
 export class IntervalViewModel extends DepSigleNameModel {
   //
@@ -11,23 +12,23 @@ export class IntervalViewModel extends DepSigleNameModel {
   public get startDate(): string {
     let x = this.current_item;
     let d = ((x !== undefined) && (x !== null)) ? x.startDate : null;
-    return this.date_to_string(d);
+    return InfoRoot.date_to_string(d);
   }
   public set startDate(s: string) {
     let x = this.current_item;
     if ((x !== undefined) && (x !== null)) {
-      x.startDate = this.string_to_date(s);
+      x.startDate = InfoRoot.string_to_date(s);
     }
   }
   public get endDate(): string {
     let x = this.current_item;
     let d = ((x !== undefined) && (x !== null)) ? x.endDate : null;
-    return this.date_to_string(d);
+    return InfoRoot.date_to_string(d);
   }
   public set endDate(s: string) {
     let x = this.current_item;
     if ((x !== undefined) && (x !== null)) {
-      x.endDate = this.string_to_date(s);
+      x.endDate = InfoRoot.string_to_date(s);
     }
   }
 }// class IntervalViewModel

@@ -2,11 +2,12 @@
 //
 import {ISigleNameItem} from '../../infodata.d';
 import {BaseItem} from './baseitem';
+import {InfoRoot} from '../inforoot';
 //
 export class SigleNameItem extends BaseItem implements ISigleNameItem {
-	public sigle:string;
-	public name:string;
-	constructor(oMap?:any) {
+    public sigle: string;
+    public name: string;
+    constructor(oMap?: any) {
         super(oMap);
         this.sigle = null;
         this.name = null;
@@ -19,36 +20,34 @@ export class SigleNameItem extends BaseItem implements ISigleNameItem {
             }
         } // oMap
     } // constructor
-    public create_id() : string {
-        let ss = this.sigle;
-        if (ss === null) {
-            return super.create_id();
-        }
-        ss = ss.toUpperCase();
-        let s = this.base_prefix;
-        if (s !== null) {
-            s = s + "-" + ss;
-        } else {
-            s = ss;
+    public create_id(): string {
+        let s = this.start_key;
+        if ((s !== null) && (this.sigle !== null)){
+            let ss = InfoRoot.check_name(this.sigle);
+            if (ss !== null){
+                s = s + "-" + ss;
+            }
         }
         return s;
     } // create_id
-    public  is_storeable() :boolean {
+    public is_storeable(): boolean {
         return super.is_storeable() && (this.sigle !== null);
     }
-    public to_map(oMap:any) : void {
+    public to_map(oMap: any): void {
         super.to_map(oMap);
         oMap.sigle = this.sigle;
-        oMap.name = this.name;
+        if (this.name !== null) {
+            oMap.name = this.name;
+        }
     } // toInsertMap
-   public  toString(): string{
+    public toString(): string {
         let sRet = this.name;
-        if (sRet === null){
+        if (sRet === null) {
             sRet = this.sigle;
         }
-       return sRet;
+        return sRet;
     } // toString
-   public  sort_func(p1:ISigleNameItem, p2:ISigleNameItem): number {
+    public sort_func(p1: ISigleNameItem, p2: ISigleNameItem): number {
         let vRet = -1;
         if ((p1 !== undefined) && (p2 !== undefined) && (p1 !== null) && (p2 !==
             null)) {

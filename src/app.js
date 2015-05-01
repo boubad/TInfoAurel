@@ -12,8 +12,11 @@ export class App {
     this.router.configure(config => {
       config.title = 'InfoApp';
       config.map([
-        { route: ['','home'],  moduleId: './viewmodels/login',      nav: true, title:'Accueil' },
-        { route: 'avatar',  moduleId: './viewmodels/avatar-model', nav: true, title:'Profil' },
+        { route: ['','login'],  moduleId: './viewmodels/login',      nav: true, title:'Connexion' },
+        { route: 'admin-home',  moduleId: './viewmodels/admin-home', nav: false, title:'Accueil' },
+        { route: 'prof-home',  moduleId: './viewmodels/prof-home', nav: false, title:'Accueil' },
+        { route: 'etud-home',  moduleId: './viewmodels/etud-home', nav: false, title:'Accueil' },
+        { route: 'profil',  moduleId: './viewmodels/profil-model', nav: true, title:'Profil' },
         { route: 'admin-router',  moduleId: './viewmodels/admin/admin-router', nav: true, title:'Administration' }
       ]);
     });
