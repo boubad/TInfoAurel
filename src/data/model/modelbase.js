@@ -3,7 +3,9 @@ import { DataService } from '../services/dataservice';
 import { ItemGenerator } from '../domain/itemgenerator';
 import { UserInfo } from './userinfo';
 import { InfoRoot } from '../inforoot';
+//
 export class BaseViewModel extends InfoRoot {
+    //
     constructor() {
         super();
         this._userinfo = null;
@@ -13,7 +15,7 @@ export class BaseViewModel extends InfoRoot {
         this.errorMessage = null;
         this._genresCours = null;
         this._genresEvts = null;
-    }
+    } // constructor
     get genresEvts() {
         if (this._genresEvts === null) {
             this._genresEvts = [{ text: 'Note', value: 'note' },
@@ -55,7 +57,7 @@ export class BaseViewModel extends InfoRoot {
     }
     activate(params, queryString, routeConfig) {
         return Promise.resolve(true);
-    }
+    } // activate
     get generator() {
         if (this._gen === null) {
             this._gen = new ItemGenerator();
@@ -67,15 +69,15 @@ export class BaseViewModel extends InfoRoot {
             this._userinfo = new UserInfo();
         }
         return this._userinfo;
-    }
+    } // userInfo
     get dataService() {
         if (this._dataService === null) {
             this._dataService = new DataService();
         }
         return this._dataService;
-    }
+    } // dataService
     update_title() {
-    }
+    } // update_title
     get hasErrorMessage() {
         return (this.errorMessage !== null) && (this.errorMessage.trim().length > 0);
     }
@@ -108,11 +110,11 @@ export class BaseViewModel extends InfoRoot {
         else {
             this.errorMessage = 'Erreur inconnue...';
         }
-    }
+    } // set_error
     get isConnected() {
         let x = this.userInfo;
         return x.isConnected;
-    }
+    } // isConnected
     set isConnected(s) {
     }
     get isNotConnected() {
@@ -126,7 +128,7 @@ export class BaseViewModel extends InfoRoot {
             return new Redirect('#home');
         }
         return false;
-    }
+    } // disconnect
     get fullname() {
         return this.userInfo.fullname;
     }
@@ -199,12 +201,13 @@ export class BaseViewModel extends InfoRoot {
                 });
             }
         });
-    }
+    } // retrieve_one_avatar
     retrieve_avatars(elems) {
         let pp = [];
         for (let elem of elems) {
             pp.push(this.retrieve_one_avatar(elem));
         }
         return Promise.all(pp);
-    }
+    } // retrieve_avatars
 }
+ // class BaseViewModel

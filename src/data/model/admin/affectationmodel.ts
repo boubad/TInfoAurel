@@ -44,6 +44,12 @@ export class AffectationViewModel extends WorkViewModel {
     public set endDate(s: string) {
         this._endDate = InfoRoot.string_to_date(s);
     }
+    public get minDate():string {
+        return (this.semestre !== null) ? InfoRoot.date_to_string(this.semestre.startDate) : null;
+    }
+    public get maxDate():string {
+        return (this.semestre !== null) ? InfoRoot.date_to_string(this.semestre.endDate) : null;
+    }
     protected post_change_departement(): any {
         let self = this;
         let gen = this.generator;

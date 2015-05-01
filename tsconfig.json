@@ -69,7 +69,6 @@
         "./src/infodata.d.ts",
         "./src/resources/index.ts",
         "./typings/aurelia/aurelia.d.ts",
-        "./typings/es6-promise/es6-promise.d.ts",
         "./typings/pouchdb/pouchdb.d.ts"
     ]
 }

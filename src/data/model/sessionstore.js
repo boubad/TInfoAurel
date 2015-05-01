@@ -1,6 +1,7 @@
+//
 export class SessionObjectStore {
     constructor() {
-    }
+    } // constructor
     get_value(key) {
         let vRet = null;
         if ((key !== undefined) && (key !== null)) {
@@ -10,10 +11,10 @@ export class SessionObjectStore {
                 if ((vRet !== null) && (vRet == "null")) {
                     vRet = null;
                 }
-            }
-        }
+            } // skey
+        } // exists
         return vRet;
-    }
+    } // get_value
     store_value(key, value) {
         if ((key !== undefined) && (key !== null)) {
             let skey = key.trim().toLowerCase();
@@ -29,10 +30,11 @@ export class SessionObjectStore {
                 catch (e) {
                     console.log('SessionObjectStore error: ' + e.toString());
                 }
-            }
-        }
-    }
+            } // skey
+        } // exists
+    } // store_value
     remove_value(key) {
         return this.store_value(key, null);
-    }
+    } // remove_value
 }
+ // class SessionObjectStore

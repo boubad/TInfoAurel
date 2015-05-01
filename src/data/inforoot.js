@@ -1,8 +1,11 @@
+//
 const upperBoundUpper = 'A'.charCodeAt(0);
 const lowerBoundUpper = 'Z'.charCodeAt(0);
+//
 export class InfoRoot {
+    //
     constructor() {
-    }
+    } // constructor
     static check_name(s, bSpace) {
         let sRet = null;
         if ((s !== undefined) && (s !== null)) {
@@ -16,7 +19,7 @@ export class InfoRoot {
                     if (c != ' ') {
                         sRet = sRet + c;
                     }
-                }
+                } // i
             }
             else {
                 for (let i = 0; i < n; ++i) {
@@ -29,9 +32,9 @@ export class InfoRoot {
             if (sRet.length < 1) {
                 sRet = null;
             }
-        }
+        } // s
         return sRet;
-    }
+    } // check_name
     static create_random_id() {
         let n = Math.floor(Math.random() * 10000.0);
         let sn = '' + n;
@@ -39,13 +42,13 @@ export class InfoRoot {
             sn = '0' + sn;
         }
         return sn;
-    }
+    } // create_random_id
     static create_date_random_id(seed) {
         let sn = InfoRoot.create_random_id();
         let d = ((seed !== undefined) && (seed !== null)) ? seed : new Date();
         let s = d.toISOString() + '-' + sn;
         return s;
-    }
+    } // create_date_random_id
     static sync_array(cont, id) {
         let pSel = null;
         if ((cont !== undefined) && (cont !== null) && (cont.length > 0)) {
@@ -55,14 +58,14 @@ export class InfoRoot {
                         pSel = x;
                         break;
                     }
-                }
-            }
+                } // x
+            } // id
             if (pSel === null) {
                 pSel = cont[0];
             }
-        }
+        } // cont
         return pSel;
-    }
+    } // sync_departements
     static add_id_to_array(cont, id) {
         if ((cont !== undefined) && (cont !== null) && (cont.length > 0) &&
             (id !== undefined) && (id !== null)) {
@@ -77,7 +80,7 @@ export class InfoRoot {
                 cont.push(id);
             }
         }
-    }
+    } // add_id_to_array
     static string_to_date(s) {
         let dRet = null;
         if ((s !== undefined) && (s !== null)) {
@@ -119,7 +122,7 @@ export class InfoRoot {
                 }
             }
             catch (e) { }
-        }
+        } // s
         return dRet;
     }
     static confirm(message) {
@@ -147,8 +150,9 @@ export class InfoRoot {
     }
     static check_date(d) {
         return InfoRoot.string_to_date(d);
-    }
+    } // check_date
     static check_number(s) {
         return InfoRoot.string_to_number(s);
     }
 }
+ // class InfoRoot
